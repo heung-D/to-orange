@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>보낸편지함 - To-orange</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: #F7F7F7;
+            color: #000;
+        }
+
+        /* 헤더 */
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #E8E8E8;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 25px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: none;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 16px;
+        }
+
+        .btn-back:hover {
+            color: #000;
+        }
+
+        /* 메인 컨테이너 */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 60px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        /* 필터 및 검색 */
+        .filter-bar {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .filter-left {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #E8E8E8;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 1px solid #E8E8E8;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 250px;
+        }
+
+        .btn-search {
+            padding: 10px 20px;
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-search:hover {
+            background: #333;
+        }
+
+        /* 편지 리스트 */
+        .letter-list {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .letter-item {
+            display: grid;
+            grid-template-columns: 60px 1fr 150px 120px 150px;
+            align-items: center;
+            padding: 25px 30px;
+            border-bottom: 1px solid #E8E8E8;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .letter-item:hover {
+            background: #F7F9FC;
+        }
+
+        .letter-item:last-child {
+            border-bottom: none;
+        }
+
+        .letter-checkbox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .letter-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .letter-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .letter-recipient {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .letter-preview {
+            font-size: 14px;
+            color: #666;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .letter-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-delivered {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .status-pending {
+            background: #FFF9E6;
+            color: #F57C00;
+        }
+
+        .status-failed {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        .letter-date {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+
+        .letter-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-action {
+            padding: 8px 12px;
+            border: 1px solid #E8E8E8;
+            background: #fff;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-action:hover {
+            border-color: #000;
+            background: #F7F7F7;
+        }
+
+        /* 빈 상태 */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .empty-text {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .btn-write {
+            display: inline-block;
+            padding: 14px 30px;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-write:hover {
+            background: #333;
+        }
+
+        /* 페이지네이션 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 30px;
+        }
+
+        .page-btn {
+            padding: 10px 15px;
+            border: 1px solid #E8E8E8;
+            background: #fff;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .page-btn:hover {
+            border-color: #000;
+        }
+
+        .page-btn.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .letter-item {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .letter-status,
+            .letter-date,
+            .letter-actions {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo" onclick="location.href='index.html'">To-orange</div>
+            <button class="btn-back" onclick="window.history.back()">← 뒤로가기</button>
+        </div>
+    </div>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <h1 class="page-title">보낸편지함</h1>
+
+        <!-- 필터 및 검색 -->
+        <div class="filter-bar">
+            <div class="filter-left">
+                <select class="filter-select">
+                    <option>전체</option>
+                    <option>전달완료</option>
+                    <option>전달중</option>
+                    <option>전달실패</option>
+                </select>
+                <select class="filter-select">
+                    <option>최신순</option>
+                    <option>오래된순</option>
+                    <option>받는이 순</option>
+                </select>
+            </div>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="받는 사람 검색...">
+                <button class="btn-search">🔍 검색</button>
+            </div>
+        </div>
+
+        <!-- 편지 리스트 -->
+        <div class="letter-list" id="letterList">
+            <!-- 편지 아이템 1 -->
+            <div class="letter-item">
+                <div class="letter-checkbox">
+                    <input type="checkbox">
+                </div>
+                <div class="letter-info">
+                    <div class="letter-recipient">홍길동님께</div>
+                    <div class="letter-preview">안녕하세요. 오늘도 당신을 생각하며 편지를 씁니다...</div>
+                </div>
+                <div class="letter-status">
+                    <span class="status-badge status-delivered">✓ 전달완료</span>
+                </div>
+                <div class="letter-date">2025.10.28</div>
+                <div class="letter-actions">
+                    <button class="btn-action">📄 상세보기</button>
+                    <button class="btn-action">🗑️ 삭제</button>
+                </div>
+            </div>
+
+            <!-- 편지 아이템 2 -->
+            <div class="letter-item">
+                <div class="letter-checkbox">
+                    <input type="checkbox">
+                </div>
+                <div class="letter-info">
+                    <div class="letter-recipient">김민수님께</div>
+                    <div class="letter-preview">항상 응원하고 있어요. 조금만 더 힘내세요!</div>
+                </div>
+                <div class="letter-status">
+                    <span class="status-badge status-pending">⏳ 전달중</span>
+                </div>
+                <div class="letter-date">2025.10.27</div>
+                <div class="letter-actions">
+                    <button class="btn-action">📄 상세보기</button>
+                    <button class="btn-action">📍 추적</button>
+                </div>
+            </div>
+
+            <!-- 편지 아이템 3 -->
+            <div class="letter-item">
+                <div class="letter-checkbox">
+                    <input type="checkbox">
+                </div>
+                <div class="letter-info">
+                    <div class="letter-recipient">박영희님께</div>
+                    <div class="letter-preview">건강 조심하시고 곧 다시 만나요.</div>
+                </div>
+                <div class="letter-status">
+                    <span class="status-badge status-delivered">✓ 전달완료</span>
+                </div>
+                <div class="letter-date">2025.10.25</div>
+                <div class="letter-actions">
+                    <button class="btn-action">📄 상세보기</button>
+                    <button class="btn-action">🗑️ 삭제</button>
+                </div>
+            </div>
+
+            <!-- 편지 아이템 4 -->
+            <div class="letter-item">
+                <div class="letter-checkbox">
+                    <input type="checkbox">
+                </div>
+                <div class="letter-info">
+                    <div class="letter-recipient">이철수님께</div>
+                    <div class="letter-preview">가족 모두 잘 지내고 있어요. 걱정하지 마세요.</div>
+                </div>
+                <div class="letter-status">
+                    <span class="status-badge status-failed">✕ 전달실패</span>
+                </div>
+                <div class="letter-date">2025.10.24</div>
+                <div class="letter-actions">
+                    <button class="btn-action">📄 상세보기</button>
+                    <button class="btn-action">🔄 재전송</button>
+                </div>
+            </div>
+
+            <!-- 편지 아이템 5 -->
+            <div class="letter-item">
+                <div class="letter-checkbox">
+                    <input type="checkbox">
+                </div>
+                <div class="letter-info">
+                    <div class="letter-recipient">최수진님께</div>
+                    <div class="letter-preview">생일 축하해요! 좋은 일만 가득하길 바랍니다.</div>
+                </div>
+                <div class="letter-status">
+                    <span class="status-badge status-delivered">✓ 전달완료</span>
+                </div>
+                <div class="letter-date">2025.10.22</div>
+                <div class="letter-actions">
+                    <button class="btn-action">📄 상세보기</button>
+                    <button class="btn-action">🗑️ 삭제</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div class="pagination">
+            <button class="page-btn">‹</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">5</button>
+            <button class="page-btn">›</button>
+        </div>
+
+        <!-- 빈 상태 (편지가 없을 때) - 기본적으로 숨김 -->
+        <div class="empty-state" style="display: none;">
+            <div class="empty-icon">📭</div>
+            <h2 class="empty-title">보낸 편지가 없습니다</h2>
+            <p class="empty-text">소중한 사람에게 첫 편지를 보내보세요!</p>
+            <a href="letter-service-flow.html" class="btn-write">✍️ 편지 쓰러 가기</a>
+        </div>
+    </div>
+
+    <script>
+        // 편지 아이템 클릭 이벤트
+        document.querySelectorAll('.letter-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                // 체크박스나 버튼 클릭은 제외
+                if (e.target.type === 'checkbox' || e.target.closest('.btn-action')) {
+                    return;
+                }
+                alert('편지 상세보기 페이지로 이동합니다.');
+            });
+        });
+
+        // 상세보기 버튼
+        document.querySelectorAll('.btn-action').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const action = this.textContent.trim();
+                
+                if (action.includes('상세보기')) {
+                    alert('편지 상세 내용을 확인합니다.');
+                } else if (action.includes('삭제')) {
+                    if (confirm('이 편지를 삭제하시겠습니까?')) {
+                        this.closest('.letter-item').remove();
+                        checkEmptyState();
+                    }
+                } else if (action.includes('추적')) {
+                    alert('배송 추적 정보를 확인합니다.');
+                } else if (action.includes('재전송')) {
+                    if (confirm('이 편지를 다시 보내시겠습니까?')) {
+                        alert('편지를 재전송합니다.');
+                    }
+                }
+            });
+        });
+
+        // 빈 상태 확인
+        function checkEmptyState() {
+            const letterList = document.getElementById('letterList');
+            const emptyState = document.querySelector('.empty-state');
+            
+            if (letterList.children.length === 0) {
+                letterList.style.display = 'none';
+                emptyState.style.display = 'block';
+            }
+        }
+
+        // 전체 선택 체크박스 (추가 기능)
+        document.querySelectorAll('.letter-checkbox input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+    </script>
+</body>
+</html>

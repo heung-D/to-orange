@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>법률도우미 상담신청 - To-orange</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: #F7F7F7;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* 헤더 */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        /* 진행 단계 표시 */
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 30px 40px;
+            background: white;
+            border-bottom: 1px solid #E8E8E8;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .progress-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 100%;
+            height: 3px;
+            background: #E8E8E8;
+            z-index: 0;
+        }
+
+        .progress-step.active:not(:last-child)::after {
+            background: #667eea;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #E8E8E8;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 0 auto 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-step.active .step-circle {
+            background: #667eea;
+            color: white;
+        }
+
+        .progress-step.completed .step-circle {
+            background: #10B981;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 13px;
+            color: #999;
+            font-weight: 500;
+        }
+
+        .progress-step.active .step-label {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* 폼 컨텐츠 */
+        .form-content {
+            padding: 40px;
+        }
+
+        .step-section {
+            display: none;
+        }
+
+        .step-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 35px;
+            line-height: 1.6;
+        }
+
+        /* 카테고리 카드 */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .category-card {
+            border: 2px solid #E8E8E8;
+            border-radius: 12px;
+            padding: 25px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .category-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.15);
+        }
+
+        .category-card.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+        }
+
+        .category-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .category-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #1a1a1a;
+        }
+
+        .category-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* 체크박스 리스트 */
+        .checkbox-list {
+            margin-bottom: 30px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 20px;
+            border: 2px solid #E8E8E8;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-item:hover {
+            border-color: #667eea;
+            background: #F9FAFB;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .checkbox-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #1a1a1a;
+            cursor: pointer;
+        }
+
+        /* 입력 필드 */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .form-label .required {
+            color: #E63946;
+            margin-left: 4px;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 16px 18px;
+            border: 2px solid #E8E8E8;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .help-text {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        /* 라디오 버튼 */
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .radio-item {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border: 2px solid #E8E8E8;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-label:hover {
+            border-color: #667eea;
+            background: #F9FAFB;
+        }
+
+        .radio-label input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .radio-label span {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* 버튼 */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #E8E8E8;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-prev {
+            background: #F7F7F7;
+            color: #666;
+        }
+
+        .btn-prev:hover {
+            background: #E8E8E8;
+        }
+
+        .btn-next,
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-next:hover,
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 완료 화면 */
+        .completion-screen {
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .completion-icon {
+            font-size: 80px;
+            margin-bottom: 25px;
+        }
+
+        .completion-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+
+        .completion-message {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .info-box {
+            background: #F7F9FC;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .info-box-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .info-box-content {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .btn-home {
+            display: inline-block;
+            padding: 18px 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-bar {
+                padding: 20px 15px;
+            }
+
+            .step-circle {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
+            }
+
+            .step-label {
+                font-size: 11px;
+            }
+
+            .form-content {
+                padding: 25px 20px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .radio-item {
+                flex: 1 1 100%;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>💼 법률도우미 무료상담</h1>
+            <p>복잡한 법률 문제, 쉽게 해결하세요<br>전문 법률가가 친절하게 도와드립니다</p>
+        </div>
+
+        <!-- 진행 단계 -->
+        <div class="progress-bar">
+            <div class="progress-step active" data-step="1">
+                <div class="step-circle">1</div>
+                <div class="step-label">문제유형</div>
+            </div>
+            <div class="progress-step" data-step="2">
+                <div class="step-circle">2</div>
+                <div class="step-label">상황설명</div>
+            </div>
+            <div class="progress-step" data-step="3">
+                <div class="step-circle">3</div>
+                <div class="step-label">연락처</div>
+            </div>
+            <div class="progress-step" data-step="4">
+                <div class="step-circle">4</div>
+                <div class="step-label">완료</div>
+            </div>
+        </div>
+
+        <!-- 폼 컨텐츠 -->
+        <form class="form-content" id="consultForm">
+            <!-- Step 1: 문제 유형 선택 -->
+            <div class="step-section active" data-step="1">
+                <h2 class="section-title">어떤 도움이 필요하신가요?</h2>
+                <p class="section-subtitle">해당하는 항목을 선택해 주세요. 잘 모르시면 가장 비슷한 것을 선택하시면 됩니다.</p>
+
+                <div class="category-grid">
+                    <div class="category-card" onclick="selectCategory(this, 'criminal')">
+                        <div class="category-icon">⚖️</div>
+                        <div class="category-title">형사사건</div>
+                        <div class="category-desc">재판, 형량, 석방 관련</div>
+                    </div>
+
+                    <div class="category-card" onclick="selectCategory(this, 'civil')">
+                        <div class="category-icon">💰</div>
+                        <div class="category-title">민사사건</div>
+                        <div class="category-desc">돈, 재산, 계약 문제</div>
+                    </div>
+
+                    <div class="category-card" onclick="selectCategory(this, 'family')">
+                        <div class="category-icon">👨‍👩‍👧‍👦</div>
+                        <div class="category-title">가족문제</div>
+                        <div class="category-desc">이혼, 양육권, 상속</div>
+                    </div>
+
+                    <div class="category-card" onclick="selectCategory(this, 'employment')">
+                        <div class="category-icon">💼</div>
+                        <div class="category-title">취업/노동</div>
+                        <div class="category-desc">출소 후 취업, 임금</div>
+                    </div>
+
+                    <div class="category-card" onclick="selectCategory(this, 'debt')">
+                        <div class="category-icon">📝</div>
+                        <div class="category-title">빚/채무</div>
+                        <div class="category-desc">대출, 빚독촉, 파산</div>
+                    </div>
+
+                    <div class="category-card" onclick="selectCategory(this, 'other')">
+                        <div class="category-icon">❓</div>
+                        <div class="category-title">기타</div>
+                        <div class="category-desc">위에 없는 다른 문제</div>
+                    </div>
+                </div>
+
+                <input type="hidden" id="categoryInput" name="category" required>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-next" onclick="nextStep()" disabled id="step1Next">다음으로</button>
+                </div>
+            </div>
+
+            <!-- Step 2: 상황 설명 -->
+            <div class="step-section" data-step="2">
+                <h2 class="section-title">상황을 알려주세요</h2>
+                <p class="section-subtitle">해당되는 것이 있으면 체크해 주세요. (여러 개 선택 가능)</p>
+
+                <div class="checkbox-list">
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="situation" value="urgent">
+                        <span class="checkbox-label">🚨 급하게 도움이 필요해요</span>
+                    </label>
+
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="situation" value="first-time">
+                        <span class="checkbox-label">🔰 처음 겪는 문제예요</span>
+                    </label>
+
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="situation" value="ongoing">
+                        <span class="checkbox-label">⏳ 이미 진행 중인 사건이에요</span>
+                    </label>
+
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="situation" value="document-help">
+                        <span class="checkbox-label">📄 서류 작성이 어려워요</span>
+                    </label>
+
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="situation" value="counseling">
+                        <span class="checkbox-label">💬 상담만 받고 싶어요</span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        어떤 일인지 편하게 말씀해 주세요 <span class="required">*</span>
+                    </label>
+                    <textarea 
+                        class="form-textarea" 
+                        name="description" 
+                        placeholder="예시: 아버지가 교도소에 계신데 언제 나오시는지 알고 싶어요.
+예시: 출소하는데 일자리를 구하고 싶어요.
+예시: 빚 때문에 걱정이 많은데 어떻게 해야 할지 모르겠어요.
+
+어렵게 생각하지 마시고 편하게 써주시면 됩니다."
+                        required
+                    ></textarea>
+                    <div class="help-text">💡 자세히 쓰실수록 더 정확한 도움을 드릴 수 있어요</div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-prev" onclick="prevStep()">이전으로</button>
+                    <button type="button" class="btn btn-next" onclick="nextStep()">다음으로</button>
+                </div>
+            </div>
+
+            <!-- Step 3: 연락처 정보 -->
+            <div class="step-section" data-step="3">
+                <h2 class="section-title">연락처를 알려주세요</h2>
+                <p class="section-subtitle">상담 결과를 보내드릴 연락처입니다. 안전하게 보관됩니다.</p>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        이름 <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        class="form-input" 
+                        name="name" 
+                        placeholder="홍길동"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        전화번호 <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="tel" 
+                        class="form-input" 
+                        name="phone" 
+                        placeholder="010-1234-5678"
+                        required
+                    >
+                    <div class="help-text">📞 상담사가 이 번호로 연락드립니다</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">연락 가능한 시간대</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <label class="radio-label">
+                                <input type="radio" name="contact-time" value="morning" checked>
+                                <span>오전 (9시~12시)</span>
+                            </label>
+                        </div>
+                        <div class="radio-item">
+                            <label class="radio-label">
+                                <input type="radio" name="contact-time" value="afternoon">
+                                <span>오후 (12시~6시)</span>
+                            </label>
+                        </div>
+                        <div class="radio-item">
+                            <label class="radio-label">
+                                <input type="radio" name="contact-time" value="anytime">
+                                <span>언제든지</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">이메일 (선택)</label>
+                    <input 
+                        type="email" 
+                        class="form-input" 
+                        name="email" 
+                        placeholder="example@email.com"
+                    >
+                    <div class="help-text">✉️ 이메일로도 상담 자료를 받으실 수 있어요</div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-prev" onclick="prevStep()">이전으로</button>
+                    <button type="submit" class="btn btn-submit">신청 완료하기</button>
+                </div>
+            </div>
+
+            <!-- Step 4: 완료 -->
+            <div class="step-section" data-step="4">
+                <div class="completion-screen">
+                    <div class="completion-icon">✅</div>
+                    <h2 class="completion-title">상담 신청이 완료되었습니다!</h2>
+                    <p class="completion-message">
+                        <span id="userName"></span>님의 소중한 신청 감사합니다.<br>
+                        전문 법률가가 검토 후 빠른 시일 내에 연락드리겠습니다.
+                    </p>
+
+                    <div class="info-box">
+                        <div class="info-box-title">📋 다음 단계</div>
+                        <div class="info-box-content">
+                            1. 24시간 내 법률도우미가 배정됩니다<br>
+                            2. 배정된 도우미가 전화 또는 문자로 연락드립니다<br>
+                            3. 편하신 시간에 전화 또는 방문 상담을 진행합니다<br>
+                            4. 모든 상담은 무료입니다
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-box-title">💡 알아두세요</div>
+                        <div class="info-box-content">
+                            • 급한 경우 고객센터(1588-0000)로 직접 전화주세요<br>
+                            • 마이페이지에서 상담 진행 상황을 확인할 수 있어요<br>
+                            • 개인정보는 안전하게 보호됩니다
+                        </div>
+                    </div>
+
+                    <a href="#" class="btn-home" onclick="resetForm(); return false;">홈으로 돌아가기</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let selectedCategory = null;
+
+        // 카테고리 선택
+        function selectCategory(element, category) {
+            // 모든 카드에서 selected 클래스 제거
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            // 선택된 카드에 selected 클래스 추가
+            element.classList.add('selected');
+            selectedCategory = category;
+
+            // hidden input에 값 설정
+            document.getElementById('categoryInput').value = category;
+
+            // 다음 버튼 활성화
+            document.getElementById('step1Next').disabled = false;
+        }
+
+        // 다음 단계로
+        function nextStep() {
+            // 현재 단계 유효성 검사
+            const currentSection = document.querySelector(`.step-section[data-step="${currentStep}"]`);
+            const inputs = currentSection.querySelectorAll('input[required], textarea[required]');
+            
+            let isValid = true;
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.style.borderColor = '#E63946';
+                } else {
+                    input.style.borderColor = '#E8E8E8';
+                }
+            });
+
+            if (!isValid) {
+                alert('필수 항목을 모두 입력해주세요.');
+                return;
+            }
+
+            if (currentStep < 4) {
+                currentStep++;
+                updateStep();
+            }
+        }
+
+        // 이전 단계로
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStep();
+            }
+        }
+
+        // 단계 업데이트
+        function updateStep() {
+            // 모든 섹션 숨기기
+            document.querySelectorAll('.step-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // 현재 섹션 표시
+            document.querySelector(`.step-section[data-step="${currentStep}"]`).classList.add('active');
+
+            // 진행 바 업데이트
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                
+                if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                } else if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+
+            // 페이지 상단으로 스크롤
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 폼 제출
+        document.getElementById('consultForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // 사용자 이름 가져오기
+            const userName = document.querySelector('input[name="name"]').value;
+            document.getElementById('userName').textContent = userName;
+
+            // 완료 단계로
+            currentStep = 4;
+            updateStep();
+
+            // 실제로는 서버에 데이터 전송
+            console.log('폼 데이터:', new FormData(this));
+        });
+
+        // 폼 리셋
+        function resetForm() {
+            document.getElementById('consultForm').reset();
+            selectedCategory = null;
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById('step1Next').disabled = true;
+            currentStep = 1;
+            updateStep();
+        }
+
+        // 입력 필드 포커스 시 에러 색상 제거
+        document.querySelectorAll('.form-input, .form-textarea').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.borderColor = '#667eea';
+            });
+        });
+    </script>
+</body>
+</html>

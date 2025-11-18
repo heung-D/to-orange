@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-orange - 마음전하기</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        nav {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #f97316, #fb923c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #6b7280;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: #f97316;
+        }
+
+        nav a.active {
+            color: #f97316;
+            font-weight: 600;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-right a {
+            color: #9ca3af;
+        }
+
+        /* Step Indicator */
+        .step-bar {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 73px;
+            z-index: 40;
+        }
+
+        .step-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .step-indicators {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step-circle {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .step-circle.active {
+            background-color: #f97316;
+            color: white;
+        }
+
+        .step-circle.completed {
+            background-color: #1f2937;
+            color: white;
+        }
+
+        .step-circle.pending {
+            background-color: #e5e7eb;
+            color: #9ca3af;
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+        }
+
+        .step-label.active, .step-label.completed {
+            color: #1f2937;
+        }
+
+        .step-label.pending {
+            color: #9ca3af;
+        }
+
+        .step-description {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .status-badges {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            border: 1px solid;
+        }
+
+        .badge.active {
+            background-color: #ffedd5;
+            border-color: #fed7aa;
+            color: #f97316;
+        }
+
+        .badge.inactive {
+            background-color: #f3f4f6;
+            border-color: #e5e7eb;
+            color: #6b7280;
+        }
+
+        /* Region Selector */
+        .region-selector {
+            background-color: #f9fafb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .region-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .region-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .region-btn, .tag-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            color: #374151;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .region-btn:hover, .tag-btn:hover {
+            border-color: #fed7aa;
+        }
+
+        .region-btn.selected, .tag-btn.selected {
+            background-color: #f97316;
+            color: white;
+            border-color: #f97316;
+            box-shadow: 0 4px 6px rgba(249, 115, 22, 0.2);
+        }
+
+        /* Chat Area */
+        .chat-area {
+            background-color: #f9fafb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            min-height: 300px;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            display: flex;
+            gap: 0.75rem;
+            max-width: 80%;
+        }
+
+        .avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message-bubble {
+            background: white;
+            border-radius: 1rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            white-space: pre-line;
+        }
+
+        .message.bot .message-bubble {
+            border-top-left-radius: 0;
+        }
+
+        .message.user .message-bubble {
+            background-color: #3b82f6;
+            color: white;
+            border-top-right-radius: 0;
+        }
+
+        .message-sender {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+
+        .message.user .message-sender {
+            color: #bfdbfe;
+        }
+
+        /* Tag Selector */
+        .tag-section {
+            margin-top: 1.5rem;
+        }
+
+        .tag-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.75rem;
+        }
+
+        .tag-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* Preview Sidebar */
+        .preview-sidebar {
+            background-color: #f9fafb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            position: sticky;
+            top: 140px;
+            height: fit-content;
+        }
+
+        .preview-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .preview-description {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.75rem;
+        }
+
+        .preview-content {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            min-height: 200px;
+            font-size: 0.875rem;
+            color: #374151;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn {
+            padding: 0.625rem 1.5rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .btn:hover:not(:disabled) {
+            background-color: #f9fafb;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background-color: #1f2937;
+            color: white;
+            border-color: #1f2937;
+        }
+
+        .btn-primary:hover {
+            background-color: #111827;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Letter Papers */
+        .paper-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .paper-card {
+            aspect-ratio: 3/4;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .paper-card.selected {
+            outline: 4px solid #f97316;
+            outline-offset: 2px;
+        }
+
+        .paper-badge {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            font-size: 0.75rem;
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.25rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        .paper-badge.hit {
+            background-color: #3b82f6;
+        }
+
+        .paper-badge.new {
+            background-color: #14b8a6;
+        }
+
+        .paper-name {
+            position: absolute;
+            bottom: 0.5rem;
+            left: 0.5rem;
+            right: 0.5rem;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .paper-blue {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+
+        .paper-green {
+            background: linear-gradient(135deg, #14b8a6, #0d9488);
+        }
+
+        .paper-red {
+            background: linear-gradient(135deg, #f87171, #ef4444);
+        }
+
+        .paper-purple {
+            background: linear-gradient(135deg, #a855f7, #9333ea);
+        }
+
+        .paper-pink {
+            background: linear-gradient(135deg, #ec4899, #db2777);
+        }
+
+        /* Letter Preview */
+        .letter-preview-wrapper {
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+
+        .letter-preview {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            min-height: 500px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .letter-date {
+            text-align: right;
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .letter-recipient {
+            font-size: 1.125rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .letter-body {
+            font-size: 0.875rem;
+            line-height: 1.7;
+            color: #1f2937;
+            white-space: pre-line;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 1024px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">To-orange</div>
+            <ul>
+                <li><a href="#">홈</a></li>
+                <li><a href="#" class="active">마음전하기</a></li>
+                <li><a href="#">법률도우미</a></li>
+                <li><a href="#">커뮤니티</a></li>
+                <li><a href="#">기부·나눔</a></li>
+                <li><a href="#">고객센터</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="#">마이페이지</a>
+                <a href="#">로그인</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Step Indicator -->
+    <div class="step-bar">
+        <div class="step-container">
+            <div class="step-indicators">
+                <div class="step-item">
+                    <div class="step-circle active" id="step1-circle">1</div>
+                    <span class="step-label active" id="step1-label">서론</span>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle pending" id="step2-circle">2</div>
+                    <span class="step-label pending" id="step2-label">본문</span>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle pending" id="step3-circle">3</div>
+                    <span class="step-label pending" id="step3-label">마무리</span>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle pending" id="step4-circle">4</div>
+                    <span class="step-label pending" id="step4-label">미리보기</span>
+                </div>
+            </div>
+            <div class="step-description" id="step-description">
+                STEP 1 · 편지의 시작(서론)을 만들어볼게요
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="card">
+            <!-- Card Header -->
+            <div class="card-header">
+                <div>
+                    <h1 class="card-title">이렇게 이야기 나누면서 편지를 완성해요</h1>
+                    <p class="card-subtitle">
+                        태그를 선택하면 To-orange가 다음 질문을 이어가고, 단락별로 편지를 정리해 드립니다.
+                    </p>
+                </div>
+                <div class="status-badges">
+                    <span class="badge active" id="badge-intro">서론 작성 중</span>
+                    <span class="badge inactive" id="badge-body">본문 대기</span>
+                    <span class="badge inactive" id="badge-outro">마무리 대기</span>
+                </div>
+            </div>
+
+            <!-- Main Layout -->
+            <div class="two-column" id="main-layout">
+                <div>
+                    <!-- Region Selector (Step 1 only) -->
+                    <div class="region-selector" id="region-selector">
+                        <div class="region-title">수감자가 계신 지역을 선택해주세요</div>
+                        <div class="region-buttons" id="region-buttons">
+                            <!-- Regions will be added by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Chat Area -->
+                    <div class="chat-area" id="chat-area">
+                        <!-- Messages will be added by JS -->
+                    </div>
+
+                    <!-- Tag Selector -->
+                    <div class="tag-section">
+                        <div class="tag-title" id="tag-title">시작 톤 태그 선택</div>
+                        <div class="tag-buttons" id="tag-buttons">
+                            <!-- Tags will be added by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preview Sidebar -->
+                <div class="preview-sidebar" id="preview-sidebar">
+                    <div class="preview-title" id="preview-title">서론 초안 미리보기</div>
+                    <div class="preview-description">
+                        선택하신 태그로 바탕으로 편지의 첫 단락을 정리해 드립니다.
+                    </div>
+                    <div class="preview-content" id="preview-content">
+                        아직 서론이 생성되지 않았어요. 태그를 선택해보세요.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions">
+                <button class="btn" id="btn-prev" disabled>이전</button>
+                <div class="btn-group">
+                    <button class="btn">AI로 단락 다듬기</button>
+                    <button class="btn btn-primary" id="btn-next">다음</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // State
+        let currentStep = 1;
+        let selectedRegion = '';
+        let selectedPaper = 'blue';
+        let selectedTags = {
+            intro: [],
+            body: [],
+            outro: []
+        };
+        let messages = {
+            intro: [{
+                type: 'bot',
+                text: '오늘은 어떤 분위기로 편지를 시작하고 싶으신가요?\n아래에서 마음에 가장 가까운 태그를 골라주세요.'
+            }],
+            body: [],
+            outro: []
+        };
+
+        // Data
+        const regions = [
+            '서울', '부산', '대구', '인천', '광주', '대전', '울산', '경기',
+            '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주'
+        ];
+
+        const tagGroups = {
+            intro: [
+                '#따뜻하게 안부 전하기',
+                '#걱정되는 마음 전하기',
+                '#담담하게 상황 이야기',
+                '#오랜만이라 반가운 마음',
+                '#조심스럽게 말을 꺼내고 싶음'
+            ],
+            body: [
+                '#재판 진행 상황',
+                '#변호사 상담 내용',
+                '#가족·일상 소식',
+                '#걱정하지 말라는 마음',
+                '#앞으로의 계획 공유'
+            ],
+            outro: [
+                '#기다리고 있다는 말',
+                '#항상 응원한다는 말',
+                '#건강 잘 챙기라는 부탁',
+                '#사랑과 고마움',
+                '#괜찮을 거라는 확신'
+            ]
+        };
+
+        const stepDescriptions = {
+            1: 'STEP 1 · 편지의 시작(서론)을 만들어볼게요',
+            2: 'STEP 2 · 이번 편지의 핵심 이야기를 정리해볼게요',
+            3: 'STEP 3 · 따뜻한 마무리 문장을 골라볼게요',
+            4: 'STEP 4 · 완성된 편지 초안을 확인해보세요'
+        };
+
+        // Initialize
+        function init() {
+            renderRegions();
+            renderTags();
+            renderMessages();
+            updateStepIndicator();
+        }
+
+        // Render functions
+        function renderRegions() {
+            const container = document.getElementById('region-buttons');
+            container.innerHTML = regions.map(region => 
+                `<button class="region-btn" onclick="selectRegion('${region}')">${region}</button>`
+            ).join('');
+        }
+
+        function renderTags() {
+            const stepKey = getStepKey();
+            const container = document.getElementById('tag-buttons');
+            container.innerHTML = tagGroups[stepKey].map(tag =>
+                `<button class="tag-btn" onclick="selectTag('${tag}')">${tag}</button>`
+            ).join('');
+        }
+
+        function renderMessages() {
+            const stepKey = getStepKey();
+            const container = document.getElementById('chat-area');
+            container.innerHTML = messages[stepKey].map(msg => {
+                if (msg.type === 'bot') {
+                    return `
+                        <div class="message bot">
+                            <div class="message-content">
+                                <div class="avatar">T</div>
+                                <div>
+                                    <div class="message-sender">To-orange</div>
+                                    <div class="message-bubble">${msg.text}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="message user">
+                            <div class="message-content">
+                                <div>
+                                    <div class="message-sender">사용자</div>
+                                    <div class="message-bubble">${msg.text}</div>
+                                </div>
+                                <div style="font-size: 1.5rem;">😊</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+
+        function updateStepIndicator() {
+            // Update circles
+            for (let i = 1; i <= 4; i++) {
+                const circle = document.getElementById(`step${i}-circle`);
+                const label = document.getElementById(`step${i}-label`);
+                
+                if (i === currentStep) {
+                    circle.className = 'step-circle active';
+                    label.className = 'step-label active';
+                } else if (i < currentStep) {
+                    circle.className = 'step-circle completed';
+                    label.className = 'step-label completed';
+                } else {
+                    circle.className = 'step-circle pending';
+                    label.className = 'step-label pending';
+                }
+            }
+
+            // Update description
+            document.getElementById('step-description').textContent = stepDescriptions[currentStep];
+
+            // Update badges
+            const badges = {
+                intro: document.getElementById('badge-intro'),
+                body: document.getElementById('badge-body'),
+                outro: document.getElementById('badge-outro')
+            };
+
+            if (currentStep === 1) {
+                badges.intro.className = 'badge active';
+                badges.intro.textContent = '서론 작성 중';
+            } else if (currentStep > 1) {
+                badges.intro.className = 'badge active';
+                badges.intro.textContent = '서론 완료';
+            }
+
+            if (currentStep === 2) {
+                badges.body.className = 'badge active';
+                badges.body.textContent = '본문 작성 중';
+            } else if (currentStep > 2) {
+                badges.body.className = 'badge active';
+                badges.body.textContent = '본문 완료';
+            } else {
+                badges.body.className = 'badge inactive';
+                badges.body.textContent = '본문 대기';
+            }
+
+            if (currentStep === 3) {
+                badges.outro.className = 'badge active';
+                badges.outro.textContent = '마무리 작성 중';
+            } else if (currentStep > 3) {
+                badges.outro.className = 'badge active';
+                badges.outro.textContent = '마무리 완료';
+            } else {
+                badges.outro.className = 'badge inactive';
+                badges.outro.textContent = '마무리 대기';
+            }
+
+            // Update tag title
+            const tagTitles = {
+                intro: '시작 톤 태그 선택',
+                body: '핵심 내용 태그 선택',
+                outro: '마무리 톤 태그 선택'
+            };
+            document.getElementById('tag-title').textContent = tagTitles[getStepKey()];
+
+            // Update preview title
+            const previewTitles = {
+                intro: '서론 초안 미리보기',
+                body: '본문 초안 미리보기',
+                outro: '마무리 초안 미리보기'
+            };
+            document.getElementById('preview-title').textContent = previewTitles[getStepKey()];
+
+            // Show/hide region selector
+            document.getElementById('region-selector').style.display = currentStep === 1 ? 'block' : 'none';
+
+            // Enable/disable prev button
+            document.getElementById('btn-prev').disabled = currentStep === 1;
+
+            // Show/hide preview sidebar
+            document.getElementById('preview-sidebar').style.display = currentStep <= 3 ? 'block' : 'none';
+            document.getElementById('main-layout').className = currentStep <= 3 ? 'two-column' : '';
+        }
+
+        function getStepKey() {
+            return currentStep === 1 ? 'intro' : currentStep === 2 ? 'body' : 'outro';
+        }
+
+        // Event handlers
+        function selectRegion(region) {
+            selectedRegion = region;
+            document.querySelectorAll('.region-btn').forEach(btn => {
+                btn.classList.toggle('selected', btn.textContent === region);
+            });
+        }
+
+        function selectTag(tag) {
+            const stepKey = getStepKey();
+            const index = selectedTags[stepKey].indexOf(tag);
+            
+            if (index > -1) {
+                selectedTags[stepKey].splice(index, 1);
+            } else {
+                selectedTags[stepKey].push(tag);
+            }
+
+            // Update button style
+            document.querySelectorAll('.tag-btn').forEach(btn => {
+                btn.classList.toggle('selected', selectedTags[stepKey].includes(btn.textContent));
+            });
+
+            // Add user message
+            messages[stepKey].push({
+                type: 'user',
+                text: tag
+            });
+
+            renderMessages();
+        }
+
+        document.getElementById('btn-next').addEventListener('click', function() {
+            if (currentStep < 4) {
+                currentStep++;
+                
+                const stepKey = getStepKey();
+                if (currentStep === 2 && messages.body.length === 0) {
+                    messages.body.push({
+                        type: 'bot',
+                        text: '잘 시작했어요. 이제 이번 편지의 핵심 이야기를 골라볼게요.\n어떤 내용을 중심으로 전하고 싶으신가요?'
+                    });
+                } else if (currentStep === 3 && messages.outro.length === 0) {
+                    messages.outro.push({
+                        type: 'bot',
+                        text: '거의 다 왔어요. 마지막으로 이 편지를 어떤 마음으로 마무리하고 싶으신가요?'
+                    });
+                }
+
+                renderTags();
+                renderMessages();
+                updateStepIndicator();
+            }
+        });
+
+        document.getElementById('btn-prev').addEventListener('click', function() {
+            if (currentStep > 1) {
+                currentStep--;
+                renderTags();
+                renderMessages();
+                updateStepIndicator();
+            }
+        });
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>

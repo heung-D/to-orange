@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기부나눔 - To-orange</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --white: #FFFFFF;
+            --gray-50: #F7F7F7;
+            --gray-100: #E8E8E8;
+            --gray-200: #D1D1D1;
+            --gray-400: #999999;
+            --gray-600: #666666;
+            --orange: #FF6B35;
+            --orange-light: #FF8C61;
+            --yellow: #F7931E;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.8;
+        }
+
+        /* 헤더 */
+        header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-100);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 60px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: var(--black);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .main-nav a:hover {
+            color: var(--orange);
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-right a {
+            text-decoration: none;
+            color: var(--gray-600);
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-right a:hover {
+            color: var(--black);
+        }
+
+        /* 메인 컨텐츠 */
+        .article-container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 100px 40px 120px;
+        }
+
+        .article-header {
+            margin-bottom: 80px;
+            text-align: center;
+        }
+
+        .article-title {
+            font-size: 40px;
+            font-weight: 800;
+            line-height: 1.3;
+            letter-spacing: -1px;
+            margin-bottom: 30px;
+            word-break: keep-all;
+        }
+
+        .article-subtitle {
+            font-size: 20px;
+            color: var(--gray-600);
+            line-height: 1.7;
+            font-weight: 400;
+            word-break: keep-all;
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: var(--black);
+            margin: 60px auto;
+        }
+
+        .text-block {
+            margin-bottom: 50px;
+        }
+
+        .text-block h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.4;
+            letter-spacing: -0.5px;
+        }
+
+        .text-block p {
+            font-size: 17px;
+            line-height: 2;
+            color: var(--gray-600);
+            margin-bottom: 20px;
+            word-break: keep-all;
+        }
+
+        .text-block strong {
+            color: var(--black);
+            font-weight: 600;
+        }
+
+        .stat-inline {
+            display: inline-block;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--black);
+            margin: 0 8px;
+            letter-spacing: -1px;
+        }
+
+        .quote-block {
+            margin: 60px 0;
+            padding: 40px 0;
+            border-top: 1px solid var(--gray-200);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .quote-text {
+            font-size: 20px;
+            line-height: 1.9;
+            color: var(--black);
+            font-style: italic;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        .quote-author {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--gray-400);
+            font-style: normal;
+        }
+
+        .list-block {
+            margin: 40px 0;
+            padding-left: 30px;
+        }
+
+        .list-block li {
+            font-size: 17px;
+            line-height: 2;
+            color: var(--gray-600);
+            margin-bottom: 15px;
+            word-break: keep-all;
+        }
+
+        .emphasis {
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.1) 50%);
+            padding: 0 4px;
+        }
+
+        .section-number {
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gray-400);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        /* CTA */
+        .cta-section {
+            margin-top: 100px;
+            padding: 60px 0;
+            border-top: 2px solid var(--black);
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .cta-description {
+            font-size: 17px;
+            color: var(--gray-600);
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--black);
+            color: var(--white);
+            padding: 18px 50px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            background: var(--gray-600);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--gray-50);
+            padding: 60px;
+            border-top: 1px solid var(--gray-100);
+            margin-top: 100px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px;
+            }
+
+            .main-nav {
+                display: none;
+            }
+
+            .article-container {
+                padding: 60px 20px 80px;
+            }
+
+            .article-title {
+                font-size: 32px;
+            }
+
+            .article-subtitle {
+                font-size: 17px;
+            }
+
+            .text-block h2 {
+                font-size: 24px;
+            }
+
+            .text-block p,
+            .list-block li {
+                font-size: 16px;
+            }
+
+            .quote-text {
+                font-size: 18px;
+            }
+
+            .stat-inline {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">To-orange</a>
+            <ul class="main-nav">
+                <li><a href="index.html">홈</a></li>
+                <li><a href="#">마음전하기</a></li>
+                <li><a href="#">법률도우미</a></li>
+                <li><a href="#">커뮤니티</a></li>
+                <li><a href="#" style="color: var(--orange);">기부나눔</a></li>
+                <li><a href="#">고객센터</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="#">마이페이지</a>
+                <a href="#">로그인</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 메인 아티클 -->
+    <article class="article-container">
+        <header class="article-header">
+            <h1 class="article-title">
+                왜 다시 감옥으로<br>
+                돌아가야 했을까
+            </h1>
+        </header>
+
+        <div class="divider"></div>
+
+        <section class="text-block">
+            <p>
+                교정시설에서 매일 보내지는 편지들이 있습니다. 우리가 알지 못한 이야기, 억울한 사연들이 담긴 편지입니다. 하지만 그 편지에 답장을 받는 경우는 거의 없습니다.
+            </p>
+            <p>
+                <strong>외면받은 그들의 목소리는 여전히 담벼락 안에 갇혀 있습니다.</strong> 그리고 막상 나왔을 때 부딪히는 현실은, 그들을 다시 그 담벼락 안으로 밀어넣습니다.
+            </p>
+        </section>
+
+        <div class="divider"></div>
+
+        <section class="text-block">
+            <span class="section-number">01</span>
+            <h2>출소, 하지만 갈 곳이 없다</h2>
+            <p>
+                출소일 아침. 긴 시간을 기다려온 자유입니다. 하지만 나가는 순간, 현실이 그들을 덮칩니다. 갈 곳이 없습니다. 가족의 연락도 끊긴 지 오래입니다. 손에 쥔 것은 몇만 원의 출소금이 전부입니다.
+            </p>
+            <p>
+                <span class="emphasis">첫날 밤을 어디서 보내야 할지조차 막막합니다.</span> 찜질방이나 PC방을 전전하며 하루하루를 버텨갑니다. 이것이 자유의 시작입니다.
+            </p>
+        </section>
+
+        <section class="text-block">
+            <span class="section-number">02</span>
+            <h2>전과 기록이라는 보이지 않는 벽</h2>
+            <p>
+                일자리를 구하기 위해 이력서를 냅니다. 면접 기회를 얻는 것도 쉽지 않지만, 설령 면접을 보더라도 전과 조회가 나오는 순간 모든 것이 끝납니다.
+            </p>
+            <p>
+                재소자 출소 후 취업률은 <span class="stat-inline">12%</span>에 불과합니다. 10명 중 9명은 정상적인 일자리를 구하지 못합니다. 일용직, 아르바이트조차 전과 기록 때문에 문이 닫힙니다.
+            </p>
+        </section>
+
+        <section class="text-block">
+            <span class="section-number">03</span>
+            <h2>하루 만원의 의미</h2>
+            <p>
+                우리에게 만원은 커피 두 잔 값입니다. 점심 한 끼 값입니다. 하지만 그들에게 하루 만원은 <strong>생존의 문제</strong>입니다.
+            </p>
+            <p>
+                교정시설에서 한 달을 버틸 수 있는 돈. 찜질방 입장료와 끼니 한 끼. 내일을 기약할 수 있는 최소한의 금액. 하지만 그 만원조차 벌 수 없는 현실 앞에서, 그들은 무너집니다.
+            </p>
+        </section>
+
+        <div class="divider"></div>
+
+        <section class="text-block">
+            <h2>끊어지지 않는 악순환</h2>
+            <p>
+                출소 후 2년 내 재범률은 <span class="stat-inline">23%</span>입니다. 5명 중 1명이 다시 담벼락 안으로 돌아갑니다. 왜일까요?
+            </p>
+        </section>
+
+        <ol class="list-block">
+            <li><strong>출소:</strong> 갈 곳도, 돈도 없는 상태로 사회에 내몰립니다.</li>
+            <li><strong>구직 실패:</strong> 전과 기록이라는 벽 앞에서 모든 문이 닫힙니다.</li>
+            <li><strong>생존 위기:</strong> 하루 생활비조차 마련할 수 없는 상황에 놓입니다.</li>
+            <li><strong>재범:</strong> 먹고 살기 위해, 결국 다시 범죄를 저지를 수밖에 없습니다.</li>
+        </ol>
+
+        <section class="text-block">
+            <p>
+                이것은 개인의 문제가 아닙니다. <span class="emphasis">구조의 문제입니다.</span> 사회가 그들에게 기회를 주지 않는 한, 이 악순환은 계속될 것입니다.
+            </p>
+        </section>
+
+        <div class="quote-block">
+            <p class="quote-text">
+                "나왔지만 갈 곳이 없습니다.<br>
+                일자리도 구할 수 없습니다.<br>
+                결국 먹고 살기 위해 다시...<br>
+                이것이 우리의 현실입니다.<br>
+                꼭 회신을 바랍니다."
+            </p>
+            <p class="quote-author">— 교정시설에서 보낸 편지 중에서</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <section class="text-block">
+            <h2>55,000개의 답장 없는 편지</h2>
+            <p>
+                매년 교정시설에서 보내지는 편지는 수만 통에 달합니다. 그중 답장을 받는 편지는 1%도 되지 않습니다. 99%의 편지는 읽히지 않은 채 방치됩니다.
+            </p>
+            <p>
+                그들도 누군가의 가족이었고, 친구였고, 이웃이었습니다. 벽 너머의 사람들을 기억하는 것. 그것이 우리가 할 수 있는 가장 작지만 큰 변화의 시작입니다.
+            </p>
+        </section>
+
+        <div class="divider"></div>
+
+        <section class="cta-section">
+            <h2 class="cta-title">
+                이들에게 필요한 것은<br>
+                동정이 아닙니다
+            </h2>
+            <p class="cta-description">
+                다시 일어설 수 있는 최소한의 기회.<br>
+                당신의 하루 만원이 한 사람의 한 달이 됩니다.
+            </p>
+            <button class="cta-button" onclick="handleDonation()">
+                지금 후원하기
+            </button>
+        </section>
+    </article>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>© 2024 To-orange. All rights reserved.</p>
+            <p style="margin-top: 10px;">따뜻한 마음을 연결하는 편지 서비스</p>
+        </div>
+    </footer>
+
+    <script>
+        function handleDonation() {
+            alert('후원 페이지로 이동합니다.\n\n여러분의 작은 관심이 큰 변화를 만듭니다.');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마음전하기 - To-orange</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --white: #FFFFFF;
+            --gray-50: #F7F7F7;
+            --gray-100: #E8E8E8;
+            --gray-200: #D1D1D1;
+            --gray-400: #999999;
+            --gray-600: #666666;
+            --orange: #FF6B35;
+            --orange-light: #FF8C61;
+            --yellow: #F7931E;
+            --pink: #FFE5E5;
+            --blue: #4A90E2;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            overflow-x: hidden;
+        }
+
+        /* 헤더 */
+        header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-100);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 60px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: var(--black);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .main-nav a:hover {
+            color: var(--orange);
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-right a {
+            text-decoration: none;
+            color: var(--gray-600);
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-right a:hover {
+            color: var(--black);
+        }
+
+        /* 히어로 섹션 - AI 편지쓰기 강조 */
+        .hero {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            padding: 80px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '💌';
+            position: absolute;
+            font-size: 200px;
+            opacity: 0.1;
+            top: 50%;
+            left: 20%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+        }
+
+        .hero::after {
+            content: '✉️';
+            position: absolute;
+            font-size: 180px;
+            opacity: 0.1;
+            top: 50%;
+            right: 10%;
+            transform: translate(-50%, -50%) rotate(15deg);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.3);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 25px;
+            letter-spacing: -1.5px;
+            line-height: 1.3;
+        }
+
+        .hero p {
+            font-size: 20px;
+            font-weight: 500;
+            opacity: 0.95;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-hero-primary {
+            background: white;
+            color: var(--orange);
+            border: none;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        /* AI 특징 카드 */
+        .ai-features {
+            max-width: 1400px;
+            margin: -60px auto 0;
+            padding: 0 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .ai-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .ai-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .ai-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(255, 107, 53, 0.2);
+        }
+
+        .ai-card-icon {
+            font-size: 36px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .ai-card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--black);
+        }
+
+        .ai-card-desc {
+            font-size: 14px;
+            color: var(--gray-600);
+            line-height: 1.5;
+        }
+
+        /* 메인 컨테이너 */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 120px 60px 100px;
+        }
+
+        /* AI 프로세스 섹션 */
+        .process-section {
+            margin-bottom: 100px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        /* 프로세스 단계 */
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .step-card {
+            background: white;
+            border: 3px solid var(--gray-100);
+            border-radius: 25px;
+            padding: 40px 30px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .step-card:hover {
+            border-color: var(--orange);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.15);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .step-icon {
+            font-size: 48px;
+            margin: 10px 0 20px;
+            display: block;
+        }
+
+        .step-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--black);
+        }
+
+        .step-desc {
+            font-size: 15px;
+            color: var(--gray-600);
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .step-tag {
+            background: var(--pink);
+            color: var(--orange);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* 대화 예시 - 태그 선택 UI */
+        .chat-demo {
+            background: var(--gray-50);
+            border-radius: 30px;
+            padding: 50px;
+            margin-top: 60px;
+        }
+
+        .chat-demo-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 40px;
+        }
+
+        .chat-messages {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .chat-message {
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInChat 0.6s ease-out forwards;
+        }
+
+        .chat-message:nth-child(1) { animation-delay: 0.2s; }
+        .chat-message:nth-child(2) { animation-delay: 0.6s; }
+        .chat-message:nth-child(3) { animation-delay: 1.0s; }
+        .chat-message:nth-child(4) { animation-delay: 1.4s; }
+
+        @keyframes fadeInChat {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .ai-avatar {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+        }
+
+        .user-avatar {
+            background: var(--blue);
+        }
+
+        .sender-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--orange);
+        }
+
+        .chat-bubble {
+            background: white;
+            padding: 20px 24px;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            margin-left: 52px;
+        }
+
+        .chat-bubble p {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--black);
+            margin: 0;
+        }
+
+        /* 태그 버튼 */
+        .tag-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .tag-btn {
+            background: white;
+            border: 2px solid var(--gray-200);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tag-btn:hover {
+            border-color: var(--orange);
+            background: var(--pink);
+            color: var(--orange);
+            transform: translateY(-2px);
+        }
+
+        .tag-btn.selected {
+            border-color: var(--orange);
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+        }
+
+        .user-response {
+            background: var(--blue);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-left: 52px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        /* 장점 섹션 */
+        .benefits-section {
+            margin-bottom: 100px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .benefit-card {
+            background: white;
+            border: 2px solid var(--gray-100);
+            border-radius: 20px;
+            padding: 35px 30px;
+            transition: all 0.3s;
+        }
+
+        .benefit-card:hover {
+            border-color: var(--orange);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.1);
+        }
+
+        .benefit-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .benefit-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .benefit-desc {
+            font-size: 15px;
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+
+        .benefit-highlight {
+            background: linear-gradient(135deg, #FFE5E5 0%, #FFF5E5 100%);
+            color: var(--orange);
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 15px;
+            display: inline-block;
+        }
+
+        /* 통계 */
+        .stats-banner {
+            background: var(--white);
+            border: 2px solid var(--gray-100);
+            border-radius: 30px;
+            padding: 80px 60px;
+            margin-bottom: 100px;
+            text-align: center;
+        }
+
+        .stats-banner h3 {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 60px;
+            color: var(--black);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 52px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-600);
+        }
+
+        /* CTA 섹션 */
+        .cta-section {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            border-radius: 30px;
+            padding: 80px 60px;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .btn-cta {
+            background: white;
+            color: var(--orange);
+            border: none;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--gray-50);
+            padding: 60px;
+            border-top: 1px solid var(--gray-100);
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        /* 반응형 */
+        @media (max-width: 1024px) {
+            .main-container,
+            .ai-features {
+                padding-left: 40px;
+                padding-right: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px;
+            }
+
+            .main-nav {
+                display: none;
+            }
+
+            .hero {
+                padding: 60px 20px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            .ai-features {
+                margin-top: -40px;
+                padding: 0 20px;
+            }
+
+            .main-container {
+                padding: 80px 20px 60px;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .process-steps,
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-demo {
+                padding: 30px 20px;
+            }
+
+            .stats-banner,
+            .cta-section {
+                padding: 50px 30px;
+            }
+
+            .cta-section h2 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">To-orange</a>
+            <ul class="main-nav">
+                <li><a href="index.html">홈</a></li>
+                <li><a href="#" style="color: var(--orange);">마음전하기</a></li>
+                <li><a href="#">법률도우미</a></li>
+                <li><a href="#">커뮤니티</a></li>
+                <li><a href="#">기부나눔</a></li>
+                <li><a href="#">고객센터</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="#">마이페이지</a>
+                <a href="#">로그인</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 히어로 섹션 -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">💌 누구나 쉽게 편지 쓰기</div>
+            <h1>마음만 말씀하세요,<br>문장은 저희가 다듬어드려요</h1>
+            <p>서툰 표현도 괜찮아요. 하고 싶은 말만 해주시면<br>편지답게 정리해서 전달해드릴게요</p>
+            <div class="hero-cta">
+                <button class="btn-hero-primary" onclick="alert('편지쓰기를 시작합니다!')">
+                    ✨ 첫 편지 쓰러가기
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 주요 기능 카드 -->
+    <section class="ai-features">
+        <div class="ai-cards">
+            <div class="ai-card">
+                <span class="ai-card-icon">💬</span>
+                <h3 class="ai-card-title">대화하듯 편하게</h3>
+                <p class="ai-card-desc">질문에 답하다 보면 자연스럽게 편지가 완성돼요</p>
+            </div>
+            <div class="ai-card">
+                <span class="ai-card-icon">#️⃣</span>
+                <h3 class="ai-card-title">주제별 가이드</h3>
+                <p class="ai-card-desc">일상, 사건, 응원 등 상황에 맞는 질문을 제시해드려요</p>
+            </div>
+            <div class="ai-card">
+                <span class="ai-card-icon">📝</span>
+                <h3 class="ai-card-title">문장 다듬기</h3>
+                <p class="ai-card-desc">서툰 표현도 편지답게 정리해드려요</p>
+            </div>
+            <div class="ai-card">
+                <span class="ai-card-icon">✅</span>
+                <h3 class="ai-card-title">마지막 한 번 더</h3>
+                <p class="ai-card-desc">맞춤법과 줄바꿈까지 깔끔하게 정돈해요</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 메인 컨테이너 -->
+    <div class="main-container">
+        <!-- AI 프로세스 섹션 -->
+        <section class="process-section">
+            <div class="section-header">
+                <div class="section-badge">⚡ 쉽고 간단하게</div>
+                <h2 class="section-title">편지 쓰는 과정</h2>
+                <p class="section-subtitle">주소만 입력하면 단계별로 친절하게 안내해드려요</p>
+            </div>
+
+            <div class="process-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <span class="step-icon">📍</span>
+                    <h3 class="step-title">주소 & 날씨 확인</h3>
+                    <p class="step-desc">받는 분의 주소를 먼저 입력하면, 해당 지역의 <strong>실시간 날씨 정보</strong>를 자동으로 가져와 편지에 활용합니다.</p>
+                    <div class="step-tags">
+                        <span class="step-tag">오늘 날짜</span>
+                        <span class="step-tag">날씨 정보</span>
+                        <span class="step-tag">지역별 맞춤</span>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <span class="step-icon">🏷️</span>
+                    <h3 class="step-title">#태그로 주제 선택</h3>
+                    <p class="step-desc">어떤 이야기를 쓸지 고민되시나요? <strong>#일상 #사건관련 #응원 #걱정</strong> 등 태그를 선택하면 AI가 적절한 질문을 제시합니다.</p>
+                    <div class="step-tags">
+                        <span class="step-tag">#일상 20%</span>
+                        <span class="step-tag">#사건 80%</span>
+                        <span class="step-tag">#감정표현</span>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <span class="step-icon">💭</span>
+                    <h3 class="step-title">대화하며 편지 완성</h3>
+                    <p class="step-desc">질문하고 답하는 방식으로 진행됩니다. <strong>1단계→2단계→3단계</strong>로 자연스럽게 단락이 구분되며 편지가 완성됩니다.</p>
+                    <div class="step-tags">
+                        <span class="step-tag">질문-답변</span>
+                        <span class="step-tag">자연스러운 흐름</span>
+                        <span class="step-tag">자동 단락구분</span>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <span class="step-icon">🎯</span>
+                    <h3 class="step-title">편지로 완성하기</h3>
+                    <p class="step-desc">받는 분이 읽기 편하도록 <strong>줄바꿈을 정리</strong>하고, 맞춤법을 확인합니다. 서툰 문장도 편지답게 다듬어드려요!</p>
+                    <div class="step-tags">
+                        <span class="step-tag">문장 다듬기</span>
+                        <span class="step-tag">맞춤법 검사</span>
+                        <span class="step-tag">미리보기</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 대화 예시 -->
+            <div class="chat-demo">
+                <h3 class="chat-demo-title">💬 이렇게 대화하며 편지를 완성해요</h3>
+                <div class="chat-messages">
+                    <!-- 첫 번째 메시지 -->
+                    <div class="chat-message">
+                        <div class="message-header">
+                            <div class="chat-avatar ai-avatar">🍊</div>
+                            <span class="sender-name">To-orange</span>
+                        </div>
+                        <div class="chat-bubble">
+                            <p>안녕하세요! 오늘 서울 구치소는 맑은 날씨네요 ☀️ 먼저 어떤 이야기를 나누고 싶으신가요? #일상 #사건관련 #응원 중에서 선택해주세요.</p>
+                            <div class="tag-buttons">
+                                <button class="tag-btn">#일상</button>
+                                <button class="tag-btn selected">#사건관련</button>
+                                <button class="tag-btn">#응원</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 사용자 응답 -->
+                    <div class="chat-message">
+                        <div class="message-header">
+                            <div class="chat-avatar user-avatar">👤</div>
+                            <span class="sender-name" style="color: var(--blue);">사용자</span>
+                        </div>
+                        <div class="user-response">
+                            #사건관련 이야기를 하고 싶어요.
+                        </div>
+                    </div>
+
+                    <!-- 두 번째 메시지 -->
+                    <div class="chat-message">
+                        <div class="message-header">
+                            <div class="chat-avatar ai-avatar">🍊</div>
+                            <span class="sender-name">To-orange</span>
+                        </div>
+                        <div class="chat-bubble">
+                            <p>네, 좋습니다. 최근 재판 진행 상황에 대해 어떻게 전하고 싶으신가요? 변호사님과의 상담 내용이나 궁금한 점이 있으신가요?</p>
+                        </div>
+                    </div>
+
+                    <!-- 사용자 응답2 -->
+                    <div class="chat-message">
+                        <div class="message-header">
+                            <div class="chat-avatar user-avatar">👤</div>
+                            <span class="sender-name" style="color: var(--blue);">사용자</span>
+                        </div>
+                        <div class="user-response">
+                            변호사님이 다음 주에 결과가 나온다고 하셨어요. 많이 걱정되지만 긍정적인 소식을 기다리고 있다고 전하고 싶어요.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 장점 섹션 -->
+        <section class="benefits-section">
+            <div class="section-header">
+                <div class="section-badge">💡 왜 To-orange인가</div>
+                <h2 class="section-title">처음 편지 쓰는 분들을 위한 배려</h2>
+                <p class="section-subtitle">편지쓰기가 처음이어도 걱정하지 마세요</p>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <span class="benefit-icon">🎯</span>
+                    <h3 class="benefit-title">한 번에 모든 걸 쓸 필요 없어요</h3>
+                    <p class="benefit-desc">대화하듯 단계별로 작성하기 때문에 부담 없이 천천히 마음을 전할 수 있습니다.</p>
+                    <span class="benefit-highlight">질문에 답하다 보면 자연스럽게 완성</span>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-icon">📚</span>
+                    <h3 class="benefit-title">무슨 말을 해야 할지 막막할 때</h3>
+                    <p class="benefit-desc">#태그를 선택하면 상황에 맞는 질문을 제시하여, 어떤 주제로 이야기할지 안내해드립니다.</p>
+                    <span class="benefit-highlight">일상 20% + 사건관련 80% 균형</span>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-icon">✨</span>
+                    <h3 class="benefit-title">자연스러운 대화의 흐름</h3>
+                    <p class="benefit-desc">이전 대화 내용을 기억하여 자연스러운 질문을 이어가므로, 끊김 없이 진심을 표현할 수 있습니다.</p>
+                    <span class="benefit-highlight">1~3단계 자동 단락 구분</span>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-icon">🔍</span>
+                    <h3 class="benefit-title">마음만 말씀하세요, 문장은 저희가</h3>
+                    <p class="benefit-desc">마지막 단계에서 줄바꿈을 정돈하고 맞춤법을 확인하여 깔끔한 편지를 만들어드립니다.</p>
+                    <span class="benefit-highlight">자동 문장 다듬기 & 맞춤법 검사</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 통계 배너 -->
+        <div class="stats-banner">
+            <h3>이미 많은 분들이 따뜻한 마음을 전하고 있습니다</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="28473">0</div>
+                    <div class="stat-label">함께 작성한 편지</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="95">0</div>
+                    <div class="stat-label">사용자 만족도 (%)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="4.8">0</div>
+                    <div class="stat-label">평균 평점 (5점 만점)</div>
+                </div>
+                <div class="stat-item">
+                    <div style="font-size: 18px; color: var(--gray-400); margin-bottom: 10px;">혼자 쓰면 <span style="text-decoration: line-through;">45분</span></div>
+                    <div class="stat-number" data-count="12">0</div>
+                    <div class="stat-label">함께하면 12분</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA 섹션 -->
+        <div class="cta-section">
+            <h2>마음만 말씀하세요<br>문장은 저희가 다듬어드릴게요</h2>
+            <p>서툰 표현도 괜찮아요. 주소만 입력하면<br>단계별로 친절하게 안내해드립니다</p>
+            <button class="btn-cta" onclick="alert('편지쓰기를 시작합니다!')">
+                💌 첫 편지 쓰러가기
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>© 2024 To-orange. All rights reserved.</p>
+            <p style="margin-top: 10px;">따뜻한 마음을 연결하는 편지 서비스</p>
+        </div>
+    </footer>
+
+    <script>
+        // 페이지 로드 시 실행
+        window.addEventListener('load', () => {
+            animateStats();
+            observeElements();
+        });
+
+        // 통계 숫자 애니메이션
+        function animateStats() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const stat = entry.target;
+                        const finalNumber = parseFloat(stat.dataset.count);
+                        const isDecimal = finalNumber % 1 !== 0;
+                        let currentNumber = 0;
+                        const increment = isDecimal ? finalNumber / 50 : Math.ceil(finalNumber / 50);
+                        
+                        const timer = setInterval(() => {
+                            currentNumber += increment;
+                            if (currentNumber >= finalNumber) {
+                                stat.textContent = isDecimal ? finalNumber.toFixed(1) : finalNumber.toLocaleString();
+                                clearInterval(timer);
+                            } else {
+                                stat.textContent = isDecimal ? currentNumber.toFixed(1) : Math.floor(currentNumber).toLocaleString();
+                            }
+                        }, 30);
+                        
+                        observer.unobserve(stat);
+                    }
+                });
+            });
+
+            statNumbers.forEach(stat => observer.observe(stat));
+        }
+
+        // 스크롤 애니메이션
+        function observeElements() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            const elements = document.querySelectorAll('.step-card, .benefit-card, .ai-card');
+            elements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.6s ease-out';
+                observer.observe(el);
+            });
+        }
+    </script>
+</body>
+</html>

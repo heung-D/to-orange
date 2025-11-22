@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Orbit 캘린더 - 절차형 궤도 관리</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes ping {
+            75%, 100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .animate-ping {
+            animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <!-- Main Container -->
+    <div id="app" class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="border-b border-slate-700 bg-slate-900/50 backdrop-blur-sm z-10">
+            <div class="container mx-auto px-6 py-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-3xl font-bold text-white flex items-center gap-3">
+                            <span class="text-4xl">🌍</span>
+                            Life Orbit 캘린더
+                        </h1>
+                        <p class="text-sm text-slate-400 mt-2">
+                            절차형 궤도 캘린더 - 수사부터 재사회화까지 한눈에
+                        </p>
+                    </div>
+                    <button onclick="openAddModal()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all hover:shadow-blue-500/40">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        일정 추가
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex overflow-hidden">
+            <!-- Calendar/Timeline Area -->
+            <div id="viewArea" class="flex-1 flex items-center justify-center p-8 overflow-auto">
+                <!-- Orbit View will be rendered here -->
+            </div>
+
+            <!-- Detail Panel -->
+            <div id="detailPanel" class="w-96 border-l border-slate-700 bg-slate-900/50 backdrop-blur-sm p-8 flex items-center justify-center">
+                <div class="text-center text-gray-400">
+                    <div class="text-4xl mb-4">📅</div>
+                    <p class="text-sm">일정을 선택하면</p>
+                    <p class="text-sm">상세 정보가 표시됩니다</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Control Bar -->
+        <div class="border-t border-slate-700 bg-slate-900/50 backdrop-blur-sm">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex items-center justify-center gap-4">
+                    <button id="viewToggleBtn" onclick="toggleView()" class="px-6 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-full flex items-center gap-2 transition-all">
+                        <i data-lucide="list" class="w-4 h-4"></i>
+                        타임라인 보기
+                    </button>
+                    <button class="px-6 py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-full flex items-center gap-2 shadow-lg shadow-orange-500/20 transition-all hover:shadow-orange-500/40">
+                        <i data-lucide="users" class="w-4 h-4"></i>
+                        SOs 상담 요청
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Event Modal -->
+    <div id="addModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
+                <h2 class="text-2xl font-bold text-gray-800">일정 추가하기</h2>
+                <button onclick="closeAddModal()" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <!-- Stage Selection -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">단계 선택</label>
+                    <div class="grid grid-cols-2 gap-3" id="stageButtons">
+                        <!-- Generated by JS -->
+                    </div>
+                </div>
+
+                <!-- Basic Info -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i data-lucide="calendar" class="w-4 h-4 inline mr-1"></i>
+                            일정 제목
+                        </label>
+                        <input id="eventTitle" type="text" placeholder="예: 1차 조사, 입소일" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">날짜</label>
+                            <input id="eventDate" type="date" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i data-lucide="building-2" class="w-4 h-4 inline mr-1"></i>
+                                관련 기관
+                            </label>
+                            <input id="eventAgency" type="text" placeholder="예: 검찰청, 교정시설" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tasks -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">
+                        <i data-lucide="check-square" class="w-4 h-4 inline mr-1"></i>
+                        해야 할 일
+                    </label>
+                    <div id="tasksList" class="space-y-2">
+                        <input type="text" placeholder="할 일 1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent task-input">
+                    </div>
+                    <button onclick="addTaskInput()" class="text-sm text-blue-600 hover:text-blue-700 font-medium mt-2">
+                        + 할 일 추가
+                    </button>
+                </div>
+
+                <!-- Documents -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">
+                        <i data-lucide="file-text" class="w-4 h-4 inline mr-1"></i>
+                        필요한 서류/준비물
+                    </label>
+                    <div id="documentsList" class="space-y-2">
+                        <input type="text" placeholder="서류/준비물 1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent doc-input">
+                    </div>
+                    <button onclick="addDocumentInput()" class="text-sm text-blue-600 hover:text-blue-700 font-medium mt-2">
+                        + 서류/준비물 추가
+                    </button>
+                </div>
+            </div>
+
+            <div class="sticky bottom-0 bg-gray-50 border-t px-6 py-4 flex gap-3 justify-end">
+                <button onclick="closeAddModal()" class="px-6 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-100 font-medium transition-colors">
+                    취소
+                </button>
+                <button id="saveBtn" onclick="saveEvent()" class="px-6 py-2.5 rounded-lg text-white font-medium transition-all shadow-lg">
+                    저장하기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Stage Configuration
+        const STAGE_CONFIG = {
+            investigation: {
+                label: "형사조사",
+                color: "#ef4444",
+                lightColor: "#fecaca",
+                radius: 140,
+            },
+            preparation: {
+                label: "수감 전 준비",
+                color: "#f59e0b",
+                lightColor: "#fed7aa",
+                radius: 200,
+            },
+            incarceration: {
+                label: "수감 중",
+                color: "#3b82f6",
+                lightColor: "#bfdbfe",
+                radius: 260,
+            },
+            reintegration: {
+                label: "재사회화",
+                color: "#10b981",
+                lightColor: "#a7f3d0",
+                radius: 320,
+            },
+        };
+
+        // State
+        let state = {
+            viewMode: 'orbit',
+            selectedEventId: null,
+            selectedStage: 'investigation',
+            events: [
+                {
+                    id: "inv-1",
+                    title: "1차 조사",
+                    date: "2025-01-15",
+                    stage: "investigation",
+                    angle: 45,
+                    tasks: ["출석 통지서 확인하기", "변호사 상담 예약", "조사 준비물 확인"],
+                    documents: ["신분증", "인감증명서"],
+                    agency: "검찰청",
+                },
+                {
+                    id: "inv-2",
+                    title: "2차 조사",
+                    date: "2025-01-22",
+                    stage: "investigation",
+                    angle: 100,
+                    tasks: ["증거자료 준비", "진술 내용 정리"],
+                    documents: ["증거자료", "진술서"],
+                    agency: "검찰청",
+                },
+                {
+                    id: "prep-1",
+                    title: "입소 준비",
+                    date: "2025-03-01",
+                    stage: "preparation",
+                    angle: 150,
+                    tasks: ["준비물 리스트 확인", "가족 지원 안내 받기", "입소 서류 준비"],
+                    documents: ["세면도구", "속옷 3벌", "운동화", "신분증 사본"],
+                    agency: "교정시설",
+                },
+                {
+                    id: "prep-2",
+                    title: "서류 제출",
+                    date: "2025-02-25",
+                    stage: "preparation",
+                    angle: 190,
+                    tasks: ["신분증 사본 제출", "주민등록등본 제출"],
+                    documents: ["신분증 사본", "주민등록등본"],
+                    agency: "교정시설",
+                },
+                {
+                    id: "incar-1",
+                    title: "첫 면회일",
+                    date: "2025-03-15",
+                    stage: "incarceration",
+                    angle: 230,
+                    tasks: ["면회 신청 확인", "면회 준비물 안내"],
+                    agency: "교정시설",
+                },
+                {
+                    id: "incar-2",
+                    title: "교육 프로그램",
+                    date: "2025-05-01",
+                    stage: "incarceration",
+                    angle: 270,
+                    tasks: ["교육 프로그램 신청", "수료증 준비"],
+                    agency: "교정시설",
+                },
+                {
+                    id: "rein-1",
+                    title: "출소일",
+                    date: "2025-09-01",
+                    stage: "reintegration",
+                    angle: 310,
+                    tasks: ["출소 절차 안내 받기", "소지품 확인"],
+                    agency: "교정시설",
+                },
+                {
+                    id: "rein-2",
+                    title: "직업훈련",
+                    date: "2025-09-15",
+                    stage: "reintegration",
+                    angle: 350,
+                    tasks: ["취업지원 프로그램 신청", "기술교육 과정 등록"],
+                    agency: "고용센터",
+                },
+            ]
+        };
+
+        // Format date for display
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+        }
+
+        // Render Orbit Calendar
+        function renderOrbitView() {
+            const svgSize = 800;
+            const center = svgSize / 2;
+
+            let svg = `<svg width="${svgSize}" height="${svgSize}" class="drop-shadow-2xl">`;
+            
+            // Defs
+            svg += `<defs>
+                <radialGradient id="bgGradient" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#1e293b" stop-opacity="0.3" />
+                    <stop offset="100%" stop-color="#0f172a" stop-opacity="0.1" />
+                </radialGradient>`;
+            
+            Object.entries(STAGE_CONFIG).forEach(([key, config]) => {
+                svg += `<radialGradient id="glow-${key}">
+                    <stop offset="0%" stop-color="${config.color}" stop-opacity="0.4" />
+                    <stop offset="100%" stop-color="${config.color}" stop-opacity="0" />
+                </radialGradient>`;
+            });
+            
+            svg += `</defs>`;
+
+            // Background
+            svg += `<circle cx="${center}" cy="${center}" r="380" fill="url(#bgGradient)" />`;
+
+            // Orbit rings
+            Object.entries(STAGE_CONFIG).forEach(([key, config], index) => {
+                svg += `<circle cx="${center}" cy="${center}" r="${config.radius}" fill="none" stroke="${config.color}" stroke-width="1.5" stroke-opacity="0.3" stroke-dasharray="4 4" />`;
+                svg += `<circle cx="${center}" cy="${center}" r="${config.radius}" fill="none" stroke="url(#glow-${key})" stroke-width="20" opacity="0.2" />`;
+                svg += `<text x="${center + config.radius + 15}" y="${center + (index * 8) - 5}" fill="${config.color}" font-size="13" font-weight="600">${config.label}</text>`;
+            });
+
+            // Event points
+            state.events.forEach(event => {
+                const config = STAGE_CONFIG[event.stage];
+                const angleRad = (event.angle * Math.PI) / 180;
+                const x = center + config.radius * Math.cos(angleRad);
+                const y = center + config.radius * Math.sin(angleRad);
+                const isSelected = state.selectedEventId === event.id;
+
+                if (isSelected) {
+                    svg += `<circle cx="${x}" cy="${y}" r="16" fill="${config.color}" opacity="0.2" class="animate-ping" />`;
+                }
+
+                svg += `<circle cx="${x}" cy="${y}" r="${isSelected ? 8 : 6}" fill="${config.color}" stroke="#ffffff" stroke-width="2" style="cursor:pointer" onclick="selectEvent('${event.id}')" />`;
+                svg += `<circle cx="${x}" cy="${y}" r="12" fill="transparent" style="cursor:pointer" onclick="selectEvent('${event.id}')" />`;
+
+                if (isSelected) {
+                    let cardX = x + 15;
+                    let cardY = y + 15;
+                    
+                    if (event.angle > 90 && event.angle < 270) {
+                        cardX = x - 155;
+                    }
+                    if (event.angle > 180) {
+                        cardY = y - 75;
+                    }
+
+                    svg += `<foreignObject x="${cardX}" y="${cardY}" width="140" height="60">
+                        <div xmlns="http://www.w3.org/1999/xhtml" class="bg-white rounded-lg shadow-lg p-2 border-2 animate-fade-in" style="border-color: ${config.color}">
+                            <div class="text-xs font-bold text-gray-800 truncate">${event.title}</div>
+                            <div class="text-xs text-gray-500 mt-0.5">${formatDate(event.date)}</div>
+                            <div class="text-xs text-gray-400 mt-1">클릭하여 자세히 보기 →</div>
+                        </div>
+                    </foreignObject>`;
+                }
+            });
+
+            // Center core
+            svg += `<circle cx="${center}" cy="${center}" r="90" fill="#0f172a" opacity="0.9" />`;
+            svg += `<circle cx="${center}" cy="${center}" r="90" fill="none" stroke="#64748b" stroke-width="2" stroke-opacity="0.3" />`;
+            svg += `<text x="${center}" y="${center - 20}" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="500">지금 단계</text>`;
+            svg += `<text x="${center}" y="${center + 5}" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="700">형사조사</text>`;
+            svg += `<text x="${center}" y="${center + 25}" text-anchor="middle" fill="#64748b" font-size="10">일정 등록시 자동 안내</text>`;
+
+            svg += `</svg>`;
+
+            document.getElementById('viewArea').innerHTML = svg;
+        }
+
+        // Render Timeline View
+        function renderTimelineView() {
+            const sortedEvents = [...state.events].sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            const grouped = {
+                investigation: [],
+                preparation: [],
+                incarceration: [],
+                reintegration: [],
+            };
+            
+            sortedEvents.forEach(event => grouped[event.stage].push(event));
+
+            let html = '<div class="w-full max-w-4xl mx-auto px-6 py-8 space-y-8">';
+
+            Object.entries(STAGE_CONFIG).forEach(([stageKey, config]) => {
+                const stageEvents = grouped[stageKey];
+                if (stageEvents.length === 0) return;
+
+                html += `<div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-3 h-3 rounded-full" style="background-color: ${config.color}"></div>
+                        <h3 class="text-xl font-bold text-white">${config.label}</h3>
+                        <div class="flex-1 h-px bg-gray-700"></div>
+                    </div>
+                    <div class="space-y-3">`;
+
+                stageEvents.forEach(event => {
+                    const isSelected = state.selectedEventId === event.id;
+                    html += `<div onclick="selectEvent('${event.id}')" 
+                        class="bg-slate-800/50 backdrop-blur-sm rounded-xl p-4 border-2 cursor-pointer transition-all hover:bg-slate-800 ${isSelected ? 'shadow-lg' : 'border-slate-700 hover:border-slate-600'}"
+                        style="${isSelected ? `border-color: ${config.color}` : ''}">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <h4 class="text-lg font-semibold text-white mb-1">${event.title}</h4>
+                                <p class="text-sm text-gray-400">📅 ${formatDate(event.date)} ${event.agency ? `<span class="ml-3">🏢 ${event.agency}</span>` : ''}</p>`;
+                    
+                    if (event.tasks && event.tasks.length > 0) {
+                        html += '<div class="mt-3 space-y-1">';
+                        event.tasks.slice(0, 2).forEach(task => {
+                            html += `<div class="text-sm text-gray-300 flex items-start gap-2">
+                                <span class="text-gray-500">•</span>
+                                <span>${task}</span>
+                            </div>`;
+                        });
+                        if (event.tasks.length > 2) {
+                            html += `<div class="text-xs text-gray-500">+${event.tasks.length - 2}개 더보기</div>`;
+                        }
+                        html += '</div>';
+                    }
+
+                    html += `</div>
+                        <div class="px-3 py-1 rounded-full text-xs font-semibold text-white" style="background-color: ${config.color}">
+                            ${config.label}
+                        </div>
+                    </div>
+                </div>`;
+                });
+
+                html += '</div></div>';
+            });
+
+            html += '</div>';
+            document.getElementById('viewArea').innerHTML = html;
+        }
+
+        // Render Detail Panel
+        function renderDetailPanel() {
+            const event = state.events.find(e => e.id === state.selectedEventId);
+            
+            if (!event) {
+                document.getElementById('detailPanel').innerHTML = `
+                    <div class="text-center text-gray-400">
+                        <div class="text-4xl mb-4">📅</div>
+                        <p class="text-sm">일정을 선택하면</p>
+                        <p class="text-sm">상세 정보가 표시됩니다</p>
+                    </div>`;
+                return;
+            }
+
+            const config = STAGE_CONFIG[event.stage];
+            let html = `
+                <div class="w-96 border-l border-slate-700 bg-white overflow-y-auto">
+                    <div class="p-6 border-b" style="background-color: ${config.lightColor}">
+                        <div class="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3" style="background-color: ${config.color}; color: white">
+                            ${config.label}
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">${event.title}</h2>
+                        <p class="text-gray-600 text-sm flex items-center gap-2">
+                            <span class="font-semibold">📅 ${formatDate(event.date)}</span>
+                            ${event.agency ? `<span class="text-gray-400">• ${event.agency}</span>` : ''}
+                        </p>
+                    </div>`;
+
+            if (event.tasks && event.tasks.length > 0) {
+                html += `<div class="p-6 border-b">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i data-lucide="check-square" class="w-5 h-5" style="color: ${config.color}"></i>
+                        <h3 class="font-bold text-gray-800">이 일정 전까지 해야 할 일</h3>
+                    </div>
+                    <div class="space-y-3">`;
+                
+                event.tasks.forEach(task => {
+                    html += `<div class="flex items-start gap-3 group hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                        <div class="w-5 h-5 rounded border-2 border-gray-300 flex-shrink-0 mt-0.5 group-hover:border-gray-400 transition-colors"></div>
+                        <span class="text-sm text-gray-700">${task}</span>
+                    </div>`;
+                });
+                
+                html += `</div></div>`;
+            }
+
+            if (event.documents && event.documents.length > 0) {
+                html += `<div class="p-6 border-b">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i data-lucide="file-text" class="w-5 h-5" style="color: ${config.color}"></i>
+                        <h3 class="font-bold text-gray-800">필요한 서류 / 준비물</h3>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">`;
+                
+                event.documents.forEach(doc => {
+                    html += `<div class="px-3 py-2 bg-gray-50 rounded-lg text-sm text-gray-700 text-center border border-gray-200 hover:border-gray-300 transition-colors">
+                        ${doc}
+                    </div>`;
+                });
+                
+                html += `</div></div>`;
+            }
+
+            const supportText = {
+                investigation: "조사 과정을 함께 준비하고, 필요한 서류를 미리 챙겨둘 수 있습니다.",
+                preparation: "입소에 필요한 준비물을 함께 확인하고, 정서적 지지를 제공할 수 있습니다.",
+                incarceration: "정기적인 면회와 편지를 통해 지속적인 소통을 유지할 수 있습니다.",
+                reintegration: "사회 복귀 과정에서 취업이나 주거 문제를 함께 해결할 수 있습니다."
+            };
+
+            html += `<div class="p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <i data-lucide="users" class="w-5 h-5" style="color: ${config.color}"></i>
+                    <h3 class="font-bold text-gray-800">가족이 도울 수 있는 것</h3>
+                </div>
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p class="text-sm text-gray-700 leading-relaxed">${supportText[event.stage]}</p>
+                </div>
+            </div></div>`;
+
+            document.getElementById('detailPanel').innerHTML = html;
+            lucide.createIcons();
+        }
+
+        // Event Selection
+        function selectEvent(eventId) {
+            state.selectedEventId = eventId;
+            render();
+        }
+
+        // Toggle View
+        function toggleView() {
+            state.viewMode = state.viewMode === 'orbit' ? 'timeline' : 'orbit';
+            const btn = document.getElementById('viewToggleBtn');
+            if (state.viewMode === 'orbit') {
+                btn.innerHTML = '<i data-lucide="list" class="w-4 h-4"></i> 타임라인 보기';
+            } else {
+                btn.innerHTML = '<i data-lucide="orbit" class="w-4 h-4"></i> 원형 보기';
+            }
+            lucide.createIcons();
+            render();
+        }
+
+        // Modal Functions
+        function openAddModal() {
+            document.getElementById('addModal').classList.remove('hidden');
+            renderStageButtons();
+            updateSaveButtonColor();
+            lucide.createIcons();
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').classList.add('hidden');
+            // Reset form
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('eventAgency').value = '';
+            document.getElementById('tasksList').innerHTML = '<input type="text" placeholder="할 일 1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent task-input">';
+            document.getElementById('documentsList').innerHTML = '<input type="text" placeholder="서류/준비물 1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent doc-input">';
+            state.selectedStage = 'investigation';
+        }
+
+        function renderStageButtons() {
+            const container = document.getElementById('stageButtons');
+            container.innerHTML = '';
+            
+            Object.entries(STAGE_CONFIG).forEach(([key, config]) => {
+                const isSelected = state.selectedStage === key;
+                const btn = document.createElement('button');
+                btn.onclick = () => selectStage(key);
+                btn.className = `p-4 rounded-xl border-2 transition-all ${isSelected ? 'shadow-lg' : 'border-gray-200 hover:border-gray-300'}`;
+                if (isSelected) {
+                    btn.style.borderColor = config.color;
+                    btn.style.backgroundColor = config.lightColor;
+                }
+                btn.innerHTML = `<div class="font-semibold text-gray-800">${config.label}</div>`;
+                container.appendChild(btn);
+            });
+        }
+
+        function selectStage(stage) {
+            state.selectedStage = stage;
+            renderStageButtons();
+            updateSaveButtonColor();
+        }
+
+        function updateSaveButtonColor() {
+            const config = STAGE_CONFIG[state.selectedStage];
+            document.getElementById('saveBtn').style.backgroundColor = config.color;
+        }
+
+        function addTaskInput() {
+            const container = document.getElementById('tasksList');
+            const count = container.querySelectorAll('.task-input').length + 1;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = `할 일 ${count}`;
+            input.className = 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent task-input';
+            container.appendChild(input);
+        }
+
+        function addDocumentInput() {
+            const container = document.getElementById('documentsList');
+            const count = container.querySelectorAll('.doc-input').length + 1;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = `서류/준비물 ${count}`;
+            input.className = 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent doc-input';
+            container.appendChild(input);
+        }
+
+        function saveEvent() {
+            const title = document.getElementById('eventTitle').value;
+            const date = document.getElementById('eventDate').value;
+            const agency = document.getElementById('eventAgency').value;
+            
+            const tasks = Array.from(document.querySelectorAll('.task-input'))
+                .map(input => input.value)
+                .filter(val => val.trim());
+            
+            const documents = Array.from(document.querySelectorAll('.doc-input'))
+                .map(input => input.value)
+                .filter(val => val.trim());
+
+            if (!title || !date) {
+                alert('제목과 날짜는 필수입니다.');
+                return;
+            }
+
+            const newEvent = {
+                id: 'event-' + Date.now(),
+                title,
+                date,
+                agency,
+                stage: state.selectedStage,
+                angle: Math.random() * 360,
+                tasks,
+                documents
+            };
+
+            state.events.push(newEvent);
+            closeAddModal();
+            render();
+        }
+
+        // Main render function
+        function render() {
+            if (state.viewMode === 'orbit') {
+                renderOrbitView();
+            } else {
+                renderTimelineView();
+            }
+            renderDetailPanel();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            render();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

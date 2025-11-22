@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>변호사 선임하기 - To-orange</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        .submenu {
+            display: none;
+        }
+        .menu-item:hover .submenu {
+            display: block;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-white flex flex-col">
+    
+    <!-- Navigation (Same as lifecenter) -->
+    <nav class="bg-white border-b border-gray-100 relative z-50">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-2xl font-bold text-orange-500 hover:text-orange-600 transition-colors cursor-pointer">
+                        To-orange
+                    </a>
+                </div>
+                <div class="flex items-center space-x-12">
+                    <div class="relative menu-item">
+                        <a href="/heart" class="text-base font-medium transition-colors relative block py-5 text-gray-700 hover:text-orange-500">
+                            마음전하기
+                        </a>
+                    </div>
+                    <div class="relative menu-item">
+                        <a href="/legal" class="text-base font-medium transition-colors relative block py-5 text-gray-700 hover:text-orange-500">
+                            법률도우미
+                        </a>
+                    </div>
+                    <div class="relative menu-item">
+                        <a href="/community" class="text-base font-medium transition-colors relative block py-5 text-gray-700 hover:text-orange-500">
+                            커뮤니티
+                        </a>
+                    </div>
+                    <div class="relative menu-item">
+                        <a href="/donation" class="text-base font-medium transition-colors relative block py-5 text-gray-700 hover:text-orange-500">
+                            기부나눔
+                        </a>
+                    </div>
+                    <div class="relative menu-item">
+                        <a href="/lifecenter" class="text-base font-medium transition-colors relative block py-5 text-orange-500">
+                            라이프센터
+                            <div class="absolute -bottom-0 left-0 right-0 h-0.5 bg-orange-500"></div>
+                        </a>
+                    </div>
+                    <div class="relative menu-item">
+                        <a href="/support" class="text-base font-medium transition-colors relative block py-5 text-gray-700 hover:text-orange-500">
+                            고객센터
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/mypage" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                        마이페이지
+                    </a>
+                    <span class="text-gray-300">|</span>
+                    <a href="/login" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                        로그인
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 fade-in">
+        
+        <!-- Breadcrumb -->
+        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-6">
+            <a href="/lifecenter" class="hover:text-gray-900">라이프센터</a>
+            <span>›</span>
+            <a href="/lifecenter?situation=investigation" class="hover:text-gray-900">경찰 조사를 받았어요</a>
+            <span>›</span>
+            <span class="text-gray-900 font-medium">변호사 선임하기</span>
+        </div>
+
+        <!-- Urgent Notice -->
+        <div class="bg-red-50 border-l-4 border-red-500 rounded-lg p-6 mb-8">
+            <div class="flex items-start space-x-3">
+                <div class="flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-red-900 mb-1">시간이 중요합니다</h3>
+                    <p class="text-red-800 text-sm leading-relaxed">
+                        조사를 받기 전 변호사를 선임하면 더 좋은 결과를 얻을 수 있습니다. 첫 조사가 가장 중요하며, 한 번 한 진술은 나중에 바꾸기 어렵습니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="mb-10">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4" style="font-size: 34px;">변호사 선임하기</h1>
+            <p class="text-xl text-gray-600">혼자 고민하지 마세요. 전문가가 함께 합니다.</p>
+        </div>
+
+        <!-- Why You Need a Lawyer -->
+        <div class="bg-white border-2 border-gray-200 rounded-2xl p-8 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">왜 변호사가 필요한가요?</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <div class="text-3xl mb-3">⚖️</div>
+                    <h3 class="font-bold text-gray-900 mb-2">법적 권리를 지킵니다</h3>
+                    <p class="text-gray-600 text-sm">
+                        조사 과정에서 불리한 진술을 하지 않도록 옆에서 도와줍니다. 법으로 보장된 권리를 제대로 행사할 수 있습니다.
+                    </p>
+                </div>
+
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <div class="text-3xl mb-3">🛡️</div>
+                    <h3 class="font-bold text-gray-900 mb-2">최선의 결과를 만듭니다</h3>
+                    <p class="text-gray-600 text-sm">
+                        전문 지식으로 사건을 분석하고 가장 유리한 방향으로 대응합니다. 혼자서는 놓칠 수 있는 기회를 찾아냅니다.
+                    </p>
+                </div>
+
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <div class="text-3xl mb-3">💬</div>
+                    <h3 class="font-bold text-gray-900 mb-2">소통을 대신합니다</h3>
+                    <p class="text-gray-600 text-sm">
+                        경찰, 검찰과의 어려운 대화를 변호사가 대신합니다. 법률 용어나 절차를 쉽게 설명해드립니다.
+                    </p>
+                </div>
+
+                <div class="bg-gray-50 rounded-xl p-6">
+                    <div class="text-3xl mb-3">🤝</div>
+                    <h3 class="font-bold text-gray-900 mb-2">심리적 안정감을 줍니다</h3>
+                    <p class="text-gray-600 text-sm">
+                        두렵고 불안한 상황에서 옆에 있어줍니다. 무엇을 어떻게 해야 할지 단계별로 안내합니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cost Comparison Section -->
+        <div class="bg-gradient-to-br from-orange-50 to-white border-2 border-orange-200 rounded-2xl p-8 mb-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-3">비용이 걱정되시나요?</h2>
+                <p class="text-lg text-gray-600">To-orange를 통하면 합리적인 비용으로 가능합니다</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white rounded-xl p-6 border-2 border-gray-200">
+                    <div class="text-center mb-4">
+                        <span class="text-gray-600 font-medium">일반 변호사 사무실</span>
+                    </div>
+                    <div class="flex items-baseline justify-center mb-4">
+                        <span class="text-5xl font-bold text-gray-900">800</span>
+                        <span class="text-2xl text-gray-600 ml-2">만원~</span>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li>• 상담비부터 비용 발생</li>
+                        <li>• 추가 비용 계속 증가</li>
+                        <li>• 전체 비용 예측 어려움</li>
+                    </ul>
+                </div>
+
+                <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white relative">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-white text-orange-600 px-4 py-1 rounded-full text-xs font-bold">
+                            최대 70% 절약
+                        </span>
+                    </div>
+                    <div class="text-center mb-4">
+                        <span class="font-medium">To-orange 플랫폼</span>
+                    </div>
+                    <div class="flex items-baseline justify-center mb-4">
+                        <span class="text-5xl font-bold">200</span>
+                        <span class="text-2xl ml-2">만원대~</span>
+                    </div>
+                    <ul class="space-y-2 text-sm">
+                        <li>✓ 첫 상담 무료</li>
+                        <li>✓ 투명한 비용 안내</li>
+                        <li>✓ 할부 결제 가능</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 border border-orange-200">
+                <div class="flex items-start space-x-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-500 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                        <h4 class="font-bold text-gray-900 mb-1">생활이 어려우신가요?</h4>
+                        <p class="text-gray-600 text-sm">
+                            국선 변호사나 법률 구조를 통해 무료로 도움을 받을 수 있습니다. 소득 조건을 확인해보세요.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="bg-white border-2 border-gray-200 rounded-2xl p-8 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">To-orange 변호사 선임 과정</h2>
+            
+            <div class="space-y-6">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+                        1
+                    </div>
+                    <div class="flex-1 pt-2">
+                        <h3 class="font-bold text-gray-900 mb-1">무료 상담 신청</h3>
+                        <p class="text-gray-600 text-sm">간단한 정보만 입력하면 됩니다. 5분이면 완료됩니다.</p>
+                    </div>
+                    <span class="text-sm bg-orange-100 text-orange-700 px-3 py-1 rounded-full font-medium whitespace-nowrap">무료</span>
+                </div>
+
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+                        2
+                    </div>
+                    <div class="flex-1 pt-2">
+                        <h3 class="font-bold text-gray-900 mb-1">전문 변호사 매칭</h3>
+                        <p class="text-gray-600 text-sm">사건에 맞는 경험 많은 변호사 3명을 추천해드립니다.</p>
+                    </div>
+                    <span class="text-sm text-gray-500 whitespace-nowrap">30분 내</span>
+                </div>
+
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+                        3
+                    </div>
+                    <div class="flex-1 pt-2">
+                        <h3 class="font-bold text-gray-900 mb-1">상담 및 비용 확인</h3>
+                        <p class="text-gray-600 text-sm">전화나 방문으로 상담하고 정확한 비용을 안내받습니다.</p>
+                    </div>
+                    <span class="text-sm bg-orange-100 text-orange-700 px-3 py-1 rounded-full font-medium whitespace-nowrap">무료</span>
+                </div>
+
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+                        4
+                    </div>
+                    <div class="flex-1 pt-2">
+                        <h3 class="font-bold text-gray-900 mb-1">계약 및 업무 시작</h3>
+                        <p class="text-gray-600 text-sm">마음에 드는 변호사와 계약하고 바로 법률 지원을 받습니다.</p>
+                    </div>
+                    <span class="text-sm text-gray-500 whitespace-nowrap">1일 내</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Consultation Form -->
+        <div class="bg-gray-900 text-white rounded-2xl p-8 mb-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-3">지금 바로 시작하세요</h2>
+                <p class="text-gray-300">첫 상담은 무료입니다. 부담 없이 문의하세요.</p>
+            </div>
+
+            <div class="max-w-2xl mx-auto space-y-4">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">이름 *</label>
+                        <input type="text" class="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-orange-500 focus:outline-none" placeholder="홍길동">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">연락처 *</label>
+                        <input type="tel" class="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-orange-500 focus:outline-none" placeholder="010-0000-0000">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-2">현재 상황 *</label>
+                    <select class="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-orange-500 focus:outline-none">
+                        <option>경찰 조사를 받았거나 받을 예정</option>
+                        <option>구속 전 상황</option>
+                        <option>이미 구속됨</option>
+                        <option>재판 진행 중</option>
+                        <option>기타</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-2">간단한 상황 설명</label>
+                    <textarea class="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-orange-500 focus:outline-none h-32" placeholder="어떤 일이 있었는지 간단히 알려주세요. (선택사항)"></textarea>
+                </div>
+
+                <div class="flex items-start space-x-2">
+                    <input type="checkbox" id="privacy" class="mt-1">
+                    <label for="privacy" class="text-sm text-gray-300">
+                        개인정보 수집 및 이용에 동의합니다. (필수)
+                    </label>
+                </div>
+
+                <button class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 rounded-xl transition-all text-lg shadow-lg hover:shadow-xl">
+                    무료 상담 신청하기
+                </button>
+
+                <p class="text-center text-sm text-gray-400">
+                    급하신가요? 📞 <span class="text-white font-medium">1588-0000</span> (24시간 상담 가능)
+                </p>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="bg-white border-2 border-gray-200 rounded-2xl p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">자주 묻는 질문</h2>
+            
+            <div class="space-y-4">
+                <details class="bg-gray-50 rounded-lg">
+                    <summary class="px-6 py-4 cursor-pointer font-medium text-gray-900 hover:text-orange-500">
+                        변호사를 선임하지 않고 혼자 조사받으면 안 되나요?
+                    </summary>
+                    <div class="px-6 pb-4 text-gray-600 text-sm leading-relaxed">
+                        가능은 하지만 권장하지 않습니다. 조사 과정에서 불리한 진술을 할 수 있고, 한 번 한 진술은 나중에 바꾸기 매우 어렵습니다. 특히 첫 조사가 가장 중요하며, 전문가의 도움 없이는 법적 권리를 제대로 행사하기 어렵습니다.
+                    </div>
+                </details>
+
+                <details class="bg-gray-50 rounded-lg">
+                    <summary class="px-6 py-4 cursor-pointer font-medium text-gray-900 hover:text-orange-500">
+                        비용을 한 번에 낼 수 없는데 어떻게 하나요?
+                    </summary>
+                    <div class="px-6 pb-4 text-gray-600 text-sm leading-relaxed">
+                        To-orange는 할부 결제를 지원합니다. 또한 소득이 적거나 생활이 어려운 경우 무료 법률 지원(국선 변호, 법률 구조)을 받을 수 있습니다. 상담 시 자세히 안내해드립니다.
+                    </div>
+                </details>
+
+                <details class="bg-gray-50 rounded-lg">
+                    <summary class="px-6 py-4 cursor-pointer font-medium text-gray-900 hover:text-orange-500">
+                        얼마나 빨리 변호사를 만날 수 있나요?
+                    </summary>
+                    <div class="px-6 pb-4 text-gray-600 text-sm leading-relaxed">
+                        신청 후 30분 내로 적합한 변호사를 매칭해드립니다. 긴급한 경우 당일 상담도 가능하며, 24시간 긴급 연락처를 통해 언제든 도움을 받으실 수 있습니다.
+                    </div>
+                </details>
+
+                <details class="bg-gray-50 rounded-lg">
+                    <summary class="px-6 py-4 cursor-pointer font-medium text-gray-900 hover:text-orange-500">
+                        변호사를 바꿀 수 있나요?
+                    </summary>
+                    <div class="px-6 pb-4 text-gray-600 text-sm leading-relaxed">
+                        첫 상담 후 마음에 들지 않으면 다른 변호사를 추천해드립니다. 계약 전까지는 자유롭게 선택하실 수 있으며, 상담 비용은 전혀 발생하지 않습니다.
+                    </div>
+                </details>
+            </div>
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="mt-12 text-center bg-orange-50 rounded-2xl p-10">
+            <h3 class="text-2xl font-bold text-gray-900 mb-3">혼자 고민하지 마세요</h3>
+            <p class="text-gray-600 mb-6">지금 바로 전문가의 도움을 받으세요. 첫 상담은 무료입니다.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-xl font-medium transition-all shadow-lg hover:shadow-xl">
+                    무료 상담 신청
+                </button>
+                <button class="bg-white border-2 border-gray-300 hover:border-gray-400 text-gray-700 px-8 py-4 rounded-xl font-medium transition-all">
+                    전화로 문의하기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="w-5 h-5 bg-orange-500 rounded flex items-center justify-center">
+                            <span class="text-white font-bold text-xs">T</span>
+                        </div>
+                        <span class="font-bold text-gray-900 text-sm">To-orange</span>
+                    </div>
+                    <p class="text-gray-500 text-xs">따뜻한 연결, 새로운 시작</p>
+                </div>
+                <div class="text-right text-sm text-gray-600">
+                    <p class="font-medium mb-1 text-xs">24시간 긴급 지원</p>
+                    <p class="text-xl font-bold text-gray-900">1588-0000</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

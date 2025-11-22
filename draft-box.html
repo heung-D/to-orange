@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>임시보관함 - To-orange</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: #F7F7F7;
+            color: #000;
+        }
+
+        /* 네비게이션 바 */
+        .nav-bar {
+            background: #fff;
+            border-bottom: 1px solid #E8E8E8;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .menu-item {
+            position: relative;
+        }
+
+        .menu-link {
+            font-size: 15px;
+            font-weight: 500;
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s;
+            padding: 20px 0;
+            display: block;
+        }
+
+        .menu-link:hover {
+            color: #FF6B35;
+        }
+
+        .menu-link.active {
+            color: #FF6B35;
+            font-weight: 600;
+        }
+
+        .menu-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #FF6B35;
+        }
+
+        .submenu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            border: 1px solid #E8E8E8;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 8px 0;
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .menu-item:hover .submenu {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .submenu-link {
+            display: block;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .submenu-link:hover {
+            background: #FFF5F0;
+            color: #FF6B35;
+        }
+
+        .nav-utils {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .nav-link {
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #000;
+        }
+
+        /* 메인 컨테이너 */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 60px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .btn-write {
+            padding: 12px 24px;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-write:hover {
+            background: #333;
+        }
+
+        /* 필터 및 검색 */
+        .filter-bar {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid #E8E8E8;
+        }
+
+        .filter-left {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #E8E8E8;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fff;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 1px solid #E8E8E8;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 250px;
+            color: #333;
+        }
+
+        .search-input::placeholder {
+            color: #999;
+        }
+
+        .btn-search {
+            padding: 10px 20px;
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-search:hover {
+            background: #333;
+        }
+
+        /* 편지 리스트 */
+        .letter-list {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #E8E8E8;
+        }
+
+        .letter-item {
+            display: grid;
+            grid-template-columns: 60px 1fr 150px 120px 150px;
+            align-items: center;
+            padding: 25px 30px;
+            border-bottom: 1px solid #E8E8E8;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .letter-item:hover {
+            background: #F7F9FC;
+        }
+
+        .letter-item:last-child {
+            border-bottom: none;
+        }
+
+        .letter-checkbox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .letter-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #FF6B35;
+        }
+
+        .letter-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .letter-recipient {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .letter-preview {
+            font-size: 14px;
+            color: #666;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .letter-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-draft {
+            background: #FFF9E6;
+            color: #F57C00;
+        }
+
+        .letter-date {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+
+        .letter-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-action {
+            padding: 8px 12px;
+            border: 1px solid #E8E8E8;
+            background: #fff;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .btn-action:hover {
+            border-color: #000;
+            background: #F7F7F7;
+            color: #000;
+        }
+
+        .btn-action.primary {
+            background: #FF6B35;
+            color: #fff;
+            border-color: #FF6B35;
+        }
+
+        .btn-action.primary:hover {
+            background: #FF5722;
+            border-color: #FF5722;
+        }
+
+        /* 페이지네이션 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 30px;
+        }
+
+        .page-btn {
+            padding: 10px 15px;
+            border: 1px solid #E8E8E8;
+            background: #fff;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .page-btn:hover {
+            border-color: #000;
+            color: #000;
+        }
+
+        .page-btn.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        /* 빈 상태 */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .empty-text {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* 반응형 */
+        @media (max-width: 1024px) {
+            .nav-content,
+            .container {
+                padding: 0 40px;
+            }
+
+            .nav-menu {
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-content,
+            .container {
+                padding: 0 20px;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-left {
+                flex-direction: column;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .letter-item {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .letter-status,
+            .letter-date,
+            .letter-actions {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 바 -->
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <div class="logo">To-orange</div>
+
+            <div class="nav-menu">
+                <div class="menu-item">
+                    <a href="/heart" class="menu-link active">마음전하기</a>
+                    <div class="submenu">
+                        <a href="/heart/write" class="submenu-link">편지쓰기</a>
+                        <a href="/heart/sent" class="submenu-link">보낸편지함</a>
+                        <a href="/heart/inbox" class="submenu-link">받은편지함</a>
+                        <a href="/heart/draft" class="submenu-link">임시보관함</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <a href="/legal" class="menu-link">법률도우미</a>
+                    <div class="submenu">
+                        <a href="/legal/consultation" class="submenu-link">무료법률상담</a>
+                        <a href="/legal/history" class="submenu-link">나의 상담내역</a>
+                        <a href="/legal/lawyers" class="submenu-link">변호사 목록</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <a href="/community" class="menu-link">커뮤니티</a>
+                    <div class="submenu">
+                        <a href="/community/free" class="submenu-link">자유게시판</a>
+                        <a href="/community/legal-info" class="submenu-link">법률지식on</a>
+                        <a href="/community/qna" class="submenu-link">Q&A게시판</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <a href="/donation" class="menu-link">기부나눔</a>
+                    <div class="submenu">
+                        <a href="/donation/campaign" class="submenu-link">기부나눔캠페인</a>
+                        <a href="/donation/story" class="submenu-link">기부나눔 스토리</a>
+                        <a href="/donation/support" class="submenu-link">후원하기</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <a href="/lifecenter" class="menu-link">라이프센터</a>
+                    <div class="submenu">
+                        <a href="/lifecenter/guide" class="submenu-link">상황별안내</a>
+                        <a href="/lifecenter/checklist" class="submenu-link">준비물체크리스트</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <a href="/support" class="menu-link">고객센터</a>
+                    <div class="submenu">
+                        <a href="/support/guide" class="submenu-link">이용가이드</a>
+                        <a href="/support/notice" class="submenu-link">공지사항</a>
+                        <a href="/support/inquiry" class="submenu-link">1:1문의</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-utils">
+                <a href="/mypage" class="nav-link">마이페이지</a>
+                <a href="/logout" class="nav-link">로그아웃</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">임시보관함</h1>
+            <button class="btn-write" onclick="location.href='/heart/write'">새 편지 쓰기</button>
+        </div>
+
+        <!-- 필터 및 검색 -->
+        <div class="filter-bar">
+            <div class="filter-left">
+                <select class="filter-select">
+                    <option>최신순</option>
+                    <option>오래된순</option>
+                </select>
+            </div>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="내용 검색">
+                <button class="btn-search">검색</button>
+            </div>
+        </div>
+
+        <!-- 편지 리스트 -->
+        <div class="letter-list" id="letterList">
+            <!-- 편지 아이템 1 -->
+            <div class="letter-item">
+                <div class="letter-checkbox">
+                    <input type="checkbox">
+                </div>
+                <div class="letter-info">
+                    <div class="letter-recipient">홍길동님께</div>
+                    <div class="letter-preview">최근 항소 관련해서 추가로 말씀드릴 내용이 있어서 편지를 작성하고 있습니다...</div>
+                </div>
+                <div class="letter-status">
+                    <span class="status-badge status-draft">임시저장</span>
+                </div>
+                <div class="letter-date">2025.11.21</div>
+                <div class="letter-actions">
+                    <button class="btn-action primary">계속 작성</button>
+                    <button class="btn-action">삭제</button>
+                </div>
+            </div>
+
+            <!-- 편지 아이템 2 -->
+            <div class="letter-item">
+                <div class="letter-checkbox">
+                    <input type="checkbox">
+                </div>
+                <div class="letter-info">
+                    <div class="letter-recipient">홍길동님께</div>
+                    <div class="letter-preview">오랜만에 연락드립니다. 그동안 어떻게 지내셨는지 궁금하네요...</div>
+                </div>
+                <div class="letter-status">
+                    <span class="status-badge status-draft">임시저장</span>
+                </div>
+                <div class="letter-date">2025.11.20</div>
+                <div class="letter-actions">
+                    <button class="btn-action primary">계속 작성</button>
+                    <button class="btn-action">삭제</button>
+                </div>
+            </div>
+
+            <!-- 편지 아이템 3 -->
+            <div class="letter-item">
+                <div class="letter-checkbox">
+                    <input type="checkbox">
+                </div>
+                <div class="letter-info">
+                    <div class="letter-recipient">홍길동님께</div>
+                    <div class="letter-preview">가족들이 보내는 사진과 함께 안부 편지를 준비하고 있어요. 아이들이...</div>
+                </div>
+                <div class="letter-status">
+                    <span class="status-badge status-draft">임시저장</span>
+                </div>
+                <div class="letter-date">2025.11.19</div>
+                <div class="letter-actions">
+                    <button class="btn-action primary">계속 작성</button>
+                    <button class="btn-action">삭제</button>
+                </div>
+            </div>
+
+            <!-- 편지 아이템 4 -->
+            <div class="letter-item">
+                <div class="letter-checkbox">
+                    <input type="checkbox">
+                </div>
+                <div class="letter-info">
+                    <div class="letter-recipient">홍길동님께</div>
+                    <div class="letter-preview">변호사님께서 전달해 달라고 하신 서류 내용을 정리해서 보내드리려고...</div>
+                </div>
+                <div class="letter-status">
+                    <span class="status-badge status-draft">임시저장</span>
+                </div>
+                <div class="letter-date">2025.11.18</div>
+                <div class="letter-actions">
+                    <button class="btn-action primary">계속 작성</button>
+                    <button class="btn-action">삭제</button>
+                </div>
+            </div>
+
+            <!-- 편지 아이템 5 -->
+            <div class="letter-item">
+                <div class="letter-checkbox">
+                    <input type="checkbox">
+                </div>
+                <div class="letter-info">
+                    <div class="letter-recipient">홍길동님께</div>
+                    <div class="letter-preview">새해 인사 편지를 미리 준비하려고 합니다. 올 한 해도 수고 많으셨습니다...</div>
+                </div>
+                <div class="letter-status">
+                    <span class="status-badge status-draft">임시저장</span>
+                </div>
+                <div class="letter-date">2025.11.15</div>
+                <div class="letter-actions">
+                    <button class="btn-action primary">계속 작성</button>
+                    <button class="btn-action">삭제</button>
+                </div>
+            </div>
+
+            <!-- 편지 아이템 6 -->
+            <div class="letter-item">
+                <div class="letter-checkbox">
+                    <input type="checkbox">
+                </div>
+                <div class="letter-info">
+                    <div class="letter-recipient">홍길동님께</div>
+                    <div class="letter-preview">감사의 마음을 전하고 싶어서 편지를 쓰기 시작했는데...</div>
+                </div>
+                <div class="letter-status">
+                    <span class="status-badge status-draft">임시저장</span>
+                </div>
+                <div class="letter-date">2025.11.12</div>
+                <div class="letter-actions">
+                    <button class="btn-action primary">계속 작성</button>
+                    <button class="btn-action">삭제</button>
+                </div>
+            </div>
+
+            <!-- 편지 아이템 7 -->
+            <div class="letter-item">
+                <div class="letter-checkbox">
+                    <input type="checkbox">
+                </div>
+                <div class="letter-info">
+                    <div class="letter-recipient">홍길동님께</div>
+                    <div class="letter-preview">면회 일정이 변경된 내용을 알려드리려고 작성했던 편지입니다...</div>
+                </div>
+                <div class="letter-status">
+                    <span class="status-badge status-draft">임시저장</span>
+                </div>
+                <div class="letter-date">2025.11.08</div>
+                <div class="letter-actions">
+                    <button class="btn-action primary">계속 작성</button>
+                    <button class="btn-action">삭제</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div class="pagination">
+            <button class="page-btn">‹</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">›</button>
+        </div>
+
+        <!-- 빈 상태 (편지가 없을 때) -->
+        <div class="empty-state" style="display: none;">
+            <div class="empty-icon">📝</div>
+            <h2 class="empty-title">임시 보관된 편지가 없습니다</h2>
+            <p class="empty-text">작성 중인 편지가 자동으로 여기에 저장됩니다.</p>
+            <button class="btn-write" onclick="location.href='/heart/write'">새 편지 쓰기</button>
+        </div>
+    </div>
+
+    <script>
+        // 편지 아이템 클릭 이벤트
+        document.querySelectorAll('.letter-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (e.target.type === 'checkbox' || e.target.closest('.btn-action')) {
+                    return;
+                }
+                alert('편지 작성 페이지로 이동합니다.');
+            });
+        });
+
+        // 액션 버튼
+        document.querySelectorAll('.btn-action').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const action = this.textContent.trim();
+                
+                if (action.includes('계속 작성')) {
+                    alert('편지 작성 페이지로 이동합니다.');
+                } else if (action.includes('삭제')) {
+                    if (confirm('이 임시 편지를 삭제하시겠습니까?')) {
+                        this.closest('.letter-item').remove();
+                        checkEmptyState();
+                    }
+                }
+            });
+        });
+
+        // 빈 상태 확인
+        function checkEmptyState() {
+            const letterList = document.getElementById('letterList');
+            const emptyState = document.querySelector('.empty-state');
+            
+            if (letterList.children.length === 0) {
+                letterList.style.display = 'none';
+                emptyState.style.display = 'block';
+            }
+        }
+
+        // 체크박스 클릭 이벤트
+        document.querySelectorAll('.letter-checkbox input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+
+        // 페이지 버튼
+        document.querySelectorAll('.page-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.textContent.includes('‹') || this.textContent.includes('›')) return;
+                document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

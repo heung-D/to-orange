@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>편지 상세보기 - To-orange</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: #F7F7F7;
+            color: #000;
+        }
+
+        /* 네비게이션 바 */
+        .nav-bar {
+            background: #fff;
+            border-bottom: 1px solid #E8E8E8;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .menu-item {
+            position: relative;
+        }
+
+        .menu-link {
+            font-size: 15px;
+            font-weight: 500;
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s;
+            padding: 20px 0;
+            display: block;
+        }
+
+        .menu-link:hover {
+            color: #FF6B35;
+        }
+
+        .menu-link.active {
+            color: #FF6B35;
+            font-weight: 600;
+        }
+
+        .menu-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #FF6B35;
+        }
+
+        .submenu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            border: 1px solid #E8E8E8;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 8px 0;
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .menu-item:hover .submenu {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .submenu-link {
+            display: block;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .submenu-link:hover {
+            background: #FFF5F0;
+            color: #FF6B35;
+        }
+
+        .nav-utils {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .nav-link {
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #000;
+        }
+
+        /* 메인 컨테이너 */
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 60px;
+        }
+
+        /* 상단 네비게이션 */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .btn-back {
+            padding: 10px 20px;
+            border: 1px solid #E8E8E8;
+            border-radius: 8px;
+            background: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            border-color: #000;
+            color: #000;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-action {
+            padding: 10px 20px;
+            border: 1px solid #E8E8E8;
+            border-radius: 8px;
+            background: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-action:hover {
+            border-color: #000;
+            color: #000;
+        }
+
+        /* 편지 컨테이너 */
+        .letter-container {
+            background: #fff;
+            border: 1px solid #E8E8E8;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* 편지 헤더 */
+        .letter-header {
+            padding: 32px;
+            border-bottom: 1px solid #E8E8E8;
+        }
+
+        .letter-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .sender-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sender-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .sender-detail {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .letter-date {
+            font-size: 14px;
+            color: #999;
+            text-align: right;
+        }
+
+        .status-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .status-tag {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-tag.category-legal {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .status-tag.status-read {
+            background: #E8F5E9;
+            color: #388E3C;
+        }
+
+        /* 편지 본문 */
+        .letter-body {
+            padding: 40px 32px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 16px;
+        }
+
+        .letter-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #333;
+            white-space: pre-wrap;
+            padding: 24px;
+            border: 1px solid #E8E8E8;
+            border-radius: 8px;
+            background: #FAFAFA;
+        }
+
+        /* 하단 액션 영역 */
+        .bottom-actions {
+            padding: 32px;
+            border-top: 1px solid #E8E8E8;
+            background: #FAFAFA;
+        }
+
+        .actions-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #666;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .primary-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .btn-large {
+            padding: 20px 24px;
+            border: 1px solid #000;
+            border-radius: 8px;
+            background: #000;
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-large:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+
+        .btn-text {
+            font-size: 15px;
+        }
+
+        .btn-subtext {
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .secondary-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-secondary {
+            padding: 12px 24px;
+            border: 1px solid #E8E8E8;
+            border-radius: 8px;
+            background: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            border-color: #000;
+            color: #000;
+        }
+
+        .btn-delete {
+            color: #DC2626;
+            border-color: #DC2626;
+        }
+
+        .btn-delete:hover {
+            background: #DC2626;
+            color: #fff;
+        }
+
+        /* 반응형 */
+        @media (max-width: 1024px) {
+            .nav-content,
+            .container {
+                padding: 0 40px;
+            }
+
+            .nav-menu {
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-content,
+            .container {
+                padding: 0 20px;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .letter-header {
+                padding: 24px;
+            }
+
+            .letter-body {
+                padding: 24px;
+            }
+
+            .letter-meta {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .letter-date {
+                text-align: left;
+            }
+
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+
+            .primary-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .secondary-actions {
+                flex-direction: column;
+            }
+
+            .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 바 -->
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <div class="logo">To-orange</div>
+
+            <div class="nav-menu">
+                <div class="menu-item">
+                    <a href="/heart" class="menu-link active">마음전하기</a>
+                    <div class="submenu">
+                        <a href="/heart/write" class="submenu-link">편지쓰기</a>
+                        <a href="/heart/sent" class="submenu-link">보낸편지함</a>
+                        <a href="/heart/inbox" class="submenu-link">받은편지함</a>
+                        <a href="/heart/draft" class="submenu-link">임시보관함</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <a href="/legal" class="menu-link">법률도우미</a>
+                    <div class="submenu">
+                        <a href="/legal/consultation" class="submenu-link">무료법률상담</a>
+                        <a href="/legal/history" class="submenu-link">나의 상담내역</a>
+                        <a href="/legal/lawyers" class="submenu-link">변호사 목록</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <a href="/community" class="menu-link">커뮤니티</a>
+                    <div class="submenu">
+                        <a href="/community/free" class="submenu-link">자유게시판</a>
+                        <a href="/community/legal-info" class="submenu-link">법률지식on</a>
+                        <a href="/community/qna" class="submenu-link">Q&A게시판</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <a href="/donation" class="menu-link">기부나눔</a>
+                    <div class="submenu">
+                        <a href="/donation/campaign" class="submenu-link">기부나눔캠페인</a>
+                        <a href="/donation/story" class="submenu-link">기부나눔 스토리</a>
+                        <a href="/donation/support" class="submenu-link">후원하기</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <a href="/lifecenter" class="menu-link">라이프센터</a>
+                    <div class="submenu">
+                        <a href="/lifecenter/guide" class="submenu-link">상황별안내</a>
+                        <a href="/lifecenter/checklist" class="submenu-link">준비물체크리스트</a>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <a href="/support" class="menu-link">고객센터</a>
+                    <div class="submenu">
+                        <a href="/support/guide" class="submenu-link">이용가이드</a>
+                        <a href="/support/notice" class="submenu-link">공지사항</a>
+                        <a href="/support/inquiry" class="submenu-link">1:1문의</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-utils">
+                <a href="/mypage" class="nav-link">마이페이지</a>
+                <a href="/logout" class="nav-link">로그아웃</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <!-- 상단 네비게이션 -->
+        <div class="top-nav">
+            <button class="btn-back" onclick="window.history.back()">
+                ← 목록으로
+            </button>
+            <div class="action-buttons">
+                <button class="btn-action">★ 즐겨찾기</button>
+                <button class="btn-action">인쇄</button>
+                <button class="btn-action">다운로드</button>
+            </div>
+        </div>
+
+        <!-- 편지 컨테이너 -->
+        <div class="letter-container">
+            <!-- 편지 헤더 -->
+            <div class="letter-header">
+                <div class="letter-meta">
+                    <div class="sender-info">
+                        <div class="sender-name">홍길동님께</div>
+                        <div class="sender-detail">발신: 서울구치소</div>
+                    </div>
+                    <div>
+                        <div class="letter-date">수신일: 2025.11.20</div>
+                        <div class="letter-date">발신일: 2025.11.18</div>
+                    </div>
+                </div>
+                <div class="status-tags">
+                    <span class="status-tag category-legal">법률/변호사</span>
+                    <span class="status-tag status-read">읽음</span>
+                </div>
+            </div>
+
+            <!-- 편지 본문 -->
+            <div class="letter-body">
+                <div class="section-title">편지 내용</div>
+                <div class="letter-content">안녕하세요. 변호사님과의 상담 일정이 다음 주 화요일로 확정되었습니다.
+
+상담 시간: 2025년 11월 26일 화요일 오후 2시
+장소: 법무법인 정의 상담실 (3층)
+
+준비해야 할 서류 목록:
+1. 사건 관련 증거 자료
+2. 진술서 초안
+3. 신분증 사본
+4. 위임장 (사무실에서 작성 가능)
+
+상담 전에 궁금하신 사항이 있으시면 미리 정리해 오시면 더 효율적인 상담이 가능합니다.
+
+추운 날씨에 건강 조심하시고, 좋은 결과가 있기를 기원합니다.
+
+김민지 드림</div>
+            </div>
+
+            <!-- 하단 액션 영역 -->
+            <div class="bottom-actions">
+                <div class="actions-title">이 편지에 대해 무엇을 하시겠습니까?</div>
+                
+                <!-- 주요 액션 버튼 -->
+                <div class="primary-actions">
+                    <button class="btn-large" id="btnReply">
+                        <span class="btn-text">답장하기</span>
+                        <span class="btn-subtext">발신자에게 편지 보내기</span>
+                    </button>
+                    <button class="btn-large" id="btnLawyer">
+                        <span class="btn-text">변호사에게 문의</span>
+                        <span class="btn-subtext">법률 상담 요청하기</span>
+                    </button>
+                </div>
+
+                <!-- 보조 액션 버튼 -->
+                <div class="secondary-actions">
+                    <button class="btn-secondary" id="btnSupport">
+                        To-orange 고객센터
+                    </button>
+                    <button class="btn-secondary" id="btnForward">
+                        전달하기
+                    </button>
+                    <button class="btn-secondary btn-delete" id="btnDelete">
+                        삭제하기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 뒤로가기
+        document.querySelector('.btn-back').addEventListener('click', function() {
+            window.close();
+        });
+
+        // 상단 액션 버튼
+        document.querySelectorAll('.action-buttons .btn-action').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const text = this.textContent.trim();
+                if (text.includes('즐겨찾기')) {
+                    alert('즐겨찾기에 추가/제거합니다.');
+                } else if (text.includes('인쇄')) {
+                    window.print();
+                } else if (text.includes('다운로드')) {
+                    alert('편지를 PDF로 다운로드합니다.');
+                }
+            });
+        });
+
+        // 답장하기
+        document.getElementById('btnReply').addEventListener('click', function() {
+            alert('답장 작성 페이지로 이동합니다.\n발신자: 홍길동님');
+        });
+
+        // 변호사에게 문의
+        document.getElementById('btnLawyer').addEventListener('click', function() {
+            alert('변호사 법률 상담 요청 페이지로 이동합니다.\n\n이 편지 내용과 관련된 법률 상담을 신청할 수 있습니다.');
+        });
+
+        // To-orange 고객센터
+        document.getElementById('btnSupport').addEventListener('click', function() {
+            alert('To-orange 고객센터 문의 페이지로 이동합니다.\n\n서비스 이용, 편지 전달, 요금 등에 대해 문의할 수 있습니다.');
+        });
+
+        // 전달하기
+        document.getElementById('btnForward').addEventListener('click', function() {
+            alert('이 편지를 다른 사람에게 전달합니다.');
+        });
+
+        // 삭제
+        document.getElementById('btnDelete').addEventListener('click', function() {
+            if (confirm('이 편지를 삭제하시겠습니까?\n삭제된 편지는 복구할 수 없습니다.')) {
+                alert('편지가 삭제되었습니다.');
+                window.close();
+            }
+        });
+    </script>
+</body>
+</html>

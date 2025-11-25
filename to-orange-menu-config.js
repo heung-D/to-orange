@@ -6,7 +6,7 @@ const MENU_CONFIG = {
       id: 'heart',
       title: '마음전하기',
       icon: '💌',
-      mainUrl: 'heart-main.html', // 마음전하기 메인 홈
+      mainUrl: 'heart-main.html',
       submenu: [
         {
           title: '편지쓰기',
@@ -21,7 +21,7 @@ const MENU_CONFIG = {
         {
           title: '받은편지함',
           url: 'inbox.html',
-          action: 'modal',
+          action: 'navigate',
           loginRequired: true
         },
         {
@@ -35,26 +35,21 @@ const MENU_CONFIG = {
       id: 'legal',
       title: '법률도우미',
       icon: '⚖️',
-      mainUrl: 'legal-main.html', // 법률도우미 메인 홈
+      mainUrl: 'legal-main.html',
       submenu: [
         {
-          title: '무료상담신청',
-          url: 'legal-consult-form.html',
+          title: '무료법률상담',
+          url: 'legal-consult.html',
+          action: 'navigate'
+        },
+        {
+          title: '상황진단받기',
+          url: 'legal-diagnosis.html',
           action: 'navigate'
         },
         {
           title: '나의상담내역',
           url: 'my-consult.html',
-          action: 'navigate'
-        },
-        {
-          title: '법률도우미 찾기',
-          url: 'find-lawyer.html',
-          action: 'navigate'
-        },
-        {
-          title: '정보나눔',
-          url: 'legal-info.html',
           action: 'navigate'
         }
       ]
@@ -63,7 +58,7 @@ const MENU_CONFIG = {
       id: 'community',
       title: '커뮤니티',
       icon: '💬',
-      mainUrl: 'community-main.html', // 커뮤니티 메인 홈
+      mainUrl: 'community-main.html',
       submenu: [
         {
           title: '자유게시판',
@@ -81,7 +76,7 @@ const MENU_CONFIG = {
       id: 'donation',
       title: '기부나눔',
       icon: '🎁',
-      mainUrl: 'donation-main.html', // 기부나눔 메인 홈
+      mainUrl: 'donation-main.html',
       submenu: [
         {
           title: '기부나눔캠페인',
@@ -89,30 +84,40 @@ const MENU_CONFIG = {
           action: 'navigate'
         },
         {
-          title: '스토리',
-          url: 'stories.html',
+          title: '후원소식',
+          url: 'support-news.html',
           action: 'navigate'
         },
         {
-          title: '기부소식',
-          url: 'donation-news.html',
+          title: '후원하기',
+          url: 'support.html',
           action: 'navigate'
         }
       ]
     },
     {
       id: 'life-center',
-      title: '라이프 센터',
+      title: '라이프센터',
       icon: '🏠',
-      url: 'life-center.html',
-      action: 'navigate',
-      submenu: null
+      mainUrl: 'life-center.html',
+      submenu: [
+        {
+          title: '상황별안내',
+          url: 'life-situation.html',
+          action: 'navigate'
+        },
+        {
+          title: '준비물체크리스트',
+          url: 'life-checklist.html',
+          action: 'navigate'
+        }
+      ]
     },
     {
       id: 'support',
       title: '고객센터',
       icon: '📞',
-      mainUrl: 'support-main.html', // 고객센터 메인 홈
+      mainUrl: 'support-main.html',
       submenu: [
         {
           title: '이용가이드',
@@ -162,7 +167,7 @@ const MENU_CONFIG = {
     services: [
       { title: '편지쓰기', url: 'letter-service-flow.html' },
       { title: '받은편지함', url: 'inbox.html', loginRequired: true },
-      { title: '법률상담', url: 'legal-consult-form.html' },
+      { title: '법률상담', url: 'legal-consult.html' },
       { title: '라이프센터', url: 'life-center.html' },
       { title: '기부나눔', url: 'campaign.html' }
     ],
@@ -175,7 +180,7 @@ const MENU_CONFIG = {
   }
 };
 
-// 메뉴 생성 함수 (화살표 제거, 호버 서브메뉴)
+// 메뉴 생성 함수 (호버 서브메뉴)
 function generateMenu() {
   const mainNav = document.querySelector('.main-nav');
   if (!mainNav) return;
@@ -186,17 +191,17 @@ function generateMenu() {
     const li = document.createElement('li');
     li.className = 'nav-item';
 
-    if (menu.submenu) {
-      // 서브메뉴가 있는 경우 - 메인 링크는 카테고리 홈으로 이동
+    if (menu.submenu && menu.submenu.length > 0) {
+      // 서브메뉴가 있는 경우 - 메인 링크는 카테고리 메인으로 이동
       li.innerHTML = `
-        <a href="#" onclick="navigateToPage('${menu.mainUrl}', '페이지 이동 중...'); return false;" class="nav-link">
+        <a href="${menu.mainUrl}" class="nav-link">
           ${menu.title}
         </a>
         <div class="submenu-wrapper">
           <ul class="submenu">
             ${menu.submenu.map(sub => `
               <li>
-                <a href="#" onclick="${getMenuAction(sub)}; return false;">
+                <a href="${sub.url}" ${sub.loginRequired ? 'data-login-required="true"' : ''}>
                   ${sub.title}
                 </a>
               </li>
@@ -207,7 +212,7 @@ function generateMenu() {
     } else {
       // 서브메뉴가 없는 경우
       li.innerHTML = `
-        <a href="#" onclick="${getMenuAction(menu)}; return false;" class="nav-link">
+        <a href="${menu.mainUrl}" class="nav-link">
           ${menu.title}
         </a>
       `;
@@ -218,6 +223,8 @@ function generateMenu() {
 
   // 호버 이벤트 추가
   addHoverEvents();
+  // 로그인 필요 링크 처리
+  addLoginRequiredHandlers();
 }
 
 // 호버 이벤트 추가
@@ -247,21 +254,32 @@ function addHoverEvents() {
   });
 }
 
-// 메뉴 액션 생성
-function getMenuAction(menuItem) {
-  if (menuItem.loginRequired) {
-    return `showLoginModal()`;
-  }
+// 로그인 필요 링크 처리
+function addLoginRequiredHandlers() {
+  const loginRequiredLinks = document.querySelectorAll('[data-login-required="true"]');
   
-  if (menuItem.action === 'navigate') {
-    return `navigateToPage('${menuItem.url}', '페이지 이동 중...')`;
-  }
-  
-  if (menuItem.action === 'modal') {
-    return `showLoginModal()`;
-  }
-  
-  return `alert('준비 중인 페이지입니다')`;
+  loginRequiredLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      // 로그인 상태 체크 (실제 구현시 수정 필요)
+      const isLoggedIn = checkLoginStatus();
+      
+      if (!isLoggedIn) {
+        e.preventDefault();
+        showLoginModal();
+      }
+    });
+  });
+}
+
+// 로그인 상태 체크 (실제 구현시 수정 필요)
+function checkLoginStatus() {
+  return false; // 기본값: 로그아웃 상태
+}
+
+// 로그인 모달 표시
+function showLoginModal() {
+  alert('로그인이 필요한 서비스입니다.');
+  // 실제 로그인 모달 구현
 }
 
 // 마이페이지 메뉴 생성
@@ -271,9 +289,7 @@ function generateMypageMenu() {
 
   mypageSubmenu.innerHTML = MENU_CONFIG.mypage.map(item => `
     <li>
-      <a href="#" onclick="${getMenuAction(item)}; return false;">
-        ${item.title}
-      </a>
+      <a href="${item.url}">${item.title}</a>
     </li>
   `).join('');
 }
@@ -285,7 +301,7 @@ function generateFooterMenu() {
 
   if (servicesSection) {
     const links = MENU_CONFIG.footer.services.map(item => 
-      `<a href="#" onclick="${getMenuAction(item)}; return false;">${item.title}</a>`
+      `<a href="${item.url}" ${item.loginRequired ? 'data-login-required="true"' : ''}>${item.title}</a>`
     ).join('');
     
     servicesSection.innerHTML = `<h4>서비스</h4>${links}`;
@@ -293,25 +309,17 @@ function generateFooterMenu() {
 
   if (supportSection) {
     const links = MENU_CONFIG.footer.support.map(item => 
-      `<a href="#" onclick="${getMenuAction(item)}; return false;">${item.title}</a>`
+      `<a href="${item.url}">${item.title}</a>`
     ).join('');
     
     supportSection.innerHTML = `<h4>고객지원</h4>${links}`;
   }
 }
 
-// 페이지 로드 시 자동 실행
-document.addEventListener('DOMContentLoaded', function() {
-  generateMenu();
-  generateMypageMenu();
-  generateFooterMenu();
-});
-
 // CSS 스타일 자동 주입
 function injectSubmenuStyles() {
   const styleId = 'submenu-hover-styles';
   
-  // 이미 스타일이 주입되어 있다면 중복 방지
   if (document.getElementById(styleId)) return;
   
   const style = document.createElement('style');
@@ -383,17 +391,12 @@ function injectSubmenuStyles() {
       background: linear-gradient(135deg, #FFE5E5 0%, #FFF5E5 100%);
       color: var(--orange, #FF6B35);
     }
-
-    /* 화살표 제거 (혹시 남아있는 경우) */
-    .arrow-down {
-      display: none !important;
-    }
   `;
   
   document.head.appendChild(style);
 }
 
-// 스타일 주입 실행
+// 페이지 로드 시 자동 실행
 document.addEventListener('DOMContentLoaded', function() {
   injectSubmenuStyles();
   generateMenu();

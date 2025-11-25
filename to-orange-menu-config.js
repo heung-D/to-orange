@@ -38,18 +38,18 @@ const MENU_CONFIG = {
       mainUrl: 'legal-main.html',
       submenu: [
         {
-          title: '무료법률상담',
-          url: 'legal-consult.html',
+          title: '내 사연 보내기',
+          url: 'legal-story.html',
           action: 'navigate'
         },
         {
-          title: '상황진단받기',
-          url: 'legal-diagnosis.html',
+          title: '법률도우미 매칭',
+          url: 'legal-matching.html',
           action: 'navigate'
         },
         {
-          title: '나의상담내역',
-          url: 'my-consult.html',
+          title: '진행프로세스',
+          url: 'legal-process.html',
           action: 'navigate'
         }
       ]
@@ -102,13 +102,18 @@ const MENU_CONFIG = {
       mainUrl: 'life-center.html',
       submenu: [
         {
-          title: '상황별안내',
+          title: '상황별 안내',
           url: 'life-situation.html',
           action: 'navigate'
         },
         {
-          title: '준비물체크리스트',
-          url: 'life-checklist.html',
+          title: '라이프 캘린더',
+          url: 'life-calendar.html',
+          action: 'navigate'
+        },
+        {
+          title: '재사회화 지원',
+          url: 'life-resocialization.html',
           action: 'navigate'
         }
       ]

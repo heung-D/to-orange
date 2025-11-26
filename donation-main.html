@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기부나눔 - To-orange</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            pretendard: ['Pretendard Variable', 'sans-serif']
+          },
+          colors: {
+            orange: {
+              50: '#FFF5E5',
+              100: '#FFE5CC',
+              500: '#FF6B35',
+              600: '#E55A2B'
+            },
+            title: '#3E2712',
+            body: '#474747'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Pretendard Variable', sans-serif; }
+    .submenu { opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; }
+    .menu-item:hover .submenu { opacity: 1; visibility: visible; transform: translateY(0); }
+    .nav-active { color: #FF6B35; border-bottom: 2px solid #FF6B35; }
+    .article-title { font-size: 44px; line-height: 140%; font-weight: 800; color: #3E2712; }
+    .article-body { font-size: 17px; line-height: 160%; font-weight: 400; color: #474747; }
+  </style>
+</head>
+<body class="bg-white">
+  <!-- 네비게이션 -->
+  <nav class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="text-2xl font-bold text-orange-500">To-orange</a>
+        <div class="flex items-center space-x-8">
+          <ul class="main-nav flex items-center space-x-6"></ul>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="mypage-home.html" class="text-sm text-gray-600 hover:text-gray-900">마이페이지</a>
+          <span class="text-gray-300">|</span>
+          <a href="login.html" class="text-sm text-gray-600 hover:text-gray-900">로그인</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 메인 아티클 -->
+  <article class="max-w-3xl mx-auto px-8 py-20">
+    <header class="text-center mb-16">
+      <h1 class="article-title mb-6">
+        왜 다시 감옥으로<br>돌아가야 했을까
+      </h1>
+    </header>
+
+    <div class="w-16 h-px bg-gray-900 mx-auto my-12"></div>
+
+    <section class="mb-12">
+      <p class="article-body mb-5">
+        교정시설에서 매일 보내지는 편지들이 있습니다. 우리가 알지 못한 이야기, 억울한 사연들이 담긴 편지입니다. 하지만 그 편지에 답장을 받는 경우는 거의 없습니다.
+      </p>
+      <p class="article-body">
+        <strong class="text-title font-semibold">외면받은 그들의 목소리는 여전히 담벼락 안에 갇혀 있습니다.</strong> 그리고 막상 나왔을 때 부딪히는 현실은, 그들을 다시 그 담벼락 안으로 밀어넣습니다.
+      </p>
+    </section>
+
+    <div class="w-16 h-px bg-title mx-auto my-12"></div>
+
+    <section class="mb-12">
+      <span class="text-sm font-bold text-gray-400 tracking-widest mb-4 block">01</span>
+      <h2 class="text-2xl md:text-3xl font-bold text-title mb-6">출소, 하지만 갈 곳이 없다</h2>
+      <p class="article-body mb-5">
+        출소일 아침. 긴 시간을 기다려온 자유입니다. 하지만 나가는 순간, 현실이 그들을 덮칩니다. 갈 곳이 없습니다. 가족의 연락도 끊긴 지 오래입니다. 손에 쥔 것은 몇만 원의 출소금이 전부입니다.
+      </p>
+      <p class="article-body">
+        <span class="bg-gradient-to-b from-transparent from-50% to-orange-100 to-50% px-1">첫날 밤을 어디서 보내야 할지조차 막막합니다.</span> 찜질방이나 PC방을 전전하며 하루하루를 버텨갑니다. 이것이 자유의 시작입니다.
+      </p>
+    </section>
+
+    <section class="mb-12">
+      <span class="text-sm font-bold text-gray-400 tracking-widest mb-4 block">02</span>
+      <h2 class="text-2xl md:text-3xl font-bold text-title mb-6">전과 기록이라는 보이지 않는 벽</h2>
+      <p class="article-body mb-5">
+        일자리를 구하기 위해 이력서를 냅니다. 면접 기회를 얻는 것도 쉽지 않지만, 설령 면접을 보더라도 전과 조회가 나오는 순간 모든 것이 끝납니다.
+      </p>
+      <p class="article-body">
+        재소자 출소 후 취업률은 <span class="text-3xl md:text-4xl font-extrabold text-title mx-2">12%</span>에 불과합니다. 10명 중 9명은 정상적인 일자리를 구하지 못합니다. 일용직, 아르바이트조차 전과 기록 때문에 문이 닫힙니다.
+      </p>
+    </section>
+
+    <section class="mb-12">
+      <span class="text-sm font-bold text-gray-400 tracking-widest mb-4 block">03</span>
+      <h2 class="text-2xl md:text-3xl font-bold text-title mb-6">하루 만원의 의미</h2>
+      <p class="article-body mb-5">
+        우리에게 만원은 커피 두 잔 값입니다. 점심 한 끼 값입니다. 하지만 그들에게 하루 만원은 <strong class="text-title font-semibold">생존의 문제</strong>입니다.
+      </p>
+      <p class="article-body">
+        교정시설에서 한 달을 버틸 수 있는 돈. 찜질방 입장료와 라면 한 끼. 내일을 기약할 수 있는 최소한의 금액. 하지만 그 만원조차 벌 수 없는 현실 앞에서, 그들은 무너집니다.
+      </p>
+    </section>
+
+    <div class="w-16 h-px bg-title mx-auto my-12"></div>
+
+    <section class="mb-12">
+      <h2 class="text-2xl md:text-3xl font-bold text-title mb-6">끊어지지 않는 악순환</h2>
+      <p class="article-body">
+        출소 후 2년 내 재범률은 <span class="text-3xl md:text-4xl font-extrabold text-title mx-2">23%</span>입니다. 5명 중 1명이 다시 담벼락 안으로 돌아갑니다. 왜일까요?
+      </p>
+    </section>
+
+    <ol class="list-decimal list-inside space-y-4 mb-12 pl-4">
+      <li class="article-body"><strong class="text-title font-semibold">출소:</strong> 갈 곳도, 돈도 없는 상태로 사회에 내몰립니다.</li>
+      <li class="article-body"><strong class="text-title font-semibold">구직 실패:</strong> 전과 기록이라는 벽 앞에서 모든 문이 닫힙니다.</li>
+      <li class="article-body"><strong class="text-title font-semibold">생존 위기:</strong> 하루 생활비조차 마련할 수 없는 상황에 놓입니다.</li>
+      <li class="article-body"><strong class="text-title font-semibold">재범:</strong> 먹고 살기 위해, 결국 다시 범죄를 저지를 수밖에 없습니다.</li>
+    </ol>
+
+    <section class="mb-12">
+      <p class="article-body">
+        이것은 개인의 문제가 아닙니다. <span class="bg-gradient-to-b from-transparent from-50% to-orange-100 to-50% px-1">구조의 문제입니다.</span> 사회가 그들에게 기회를 주지 않는 한, 이 악순환은 계속될 것입니다.
+      </p>
+    </section>
+
+    <div class="border-t border-b border-gray-200 py-10 my-12">
+      <p class="text-xl md:text-2xl text-title italic text-center leading-relaxed">
+        "나왔지만 갈 곳이 없습니다.<br>
+        일자리도 구할 수 없습니다.<br>
+        결국 먹고 살기 위해 다시...<br>
+        이것이 우리의 현실입니다.<br>
+        꼭 회신을 바랍니다."
+      </p>
+      <p class="text-center mt-5 text-sm text-gray-400">— 교정시설에서 보낸 편지 중에서</p>
+    </div>
+
+    <div class="w-16 h-px bg-title mx-auto my-12"></div>
+
+    <section class="mb-12">
+      <h2 class="text-2xl md:text-3xl font-bold text-title mb-6">55,000개의 답장 없는 편지</h2>
+      <p class="article-body mb-5">
+        매년 교정시설에서 보내지는 편지는 수만 통에 달합니다. 그중 답장을 받는 편지는 1%도 되지 않습니다. 99%의 편지는 읽히지 않은 채 방치됩니다.
+      </p>
+      <p class="article-body">
+        그들도 누군가의 가족이었고, 친구였고, 이웃이었습니다. 벽 너머의 사람들을 기억하는 것. 그것이 우리가 할 수 있는 가장 작지만 큰 변화의 시작입니다.
+      </p>
+    </section>
+
+    <div class="w-16 h-px bg-title mx-auto my-12"></div>
+
+    <section class="border-t-2 border-title pt-12 text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-title mb-6 leading-tight">
+        이들에게 필요한 것은<br>동정이 아닙니다
+      </h2>
+      <p class="article-body mb-10 text-center">
+        다시 일어설 수 있는 최소한의 기회.<br>
+        당신의 하루 만원이 한 사람의 한 달이 됩니다.
+      </p>
+      <a href="support.html" class="inline-block bg-gray-900 text-white px-12 py-4 text-base font-semibold hover:bg-gray-700 transition-colors">
+        지금 후원하기
+      </a>
+    </section>
+  </article>
+
+  <!-- 푸터 -->
+  <footer class="bg-gray-900 text-gray-400 py-12 mt-20">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="grid md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <h3 class="text-white text-lg font-bold mb-4">To-orange</h3>
+          <p class="text-sm">수용자 가족과 함께하는<br>따뜻한 연결 플랫폼</p>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">서비스</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="letter-service-flow.html" class="hover:text-white transition-colors">편지쓰기</a></li>
+            <li><a href="inbox.html" class="hover:text-white transition-colors">받은편지함</a></li>
+            <li><a href="legal-main.html" class="hover:text-white transition-colors">법률상담</a></li>
+            <li><a href="life-center.html" class="hover:text-white transition-colors">라이프센터</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">고객지원</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="guide.html" class="hover:text-white transition-colors">이용가이드</a></li>
+            <li><a href="notice.html" class="hover:text-white transition-colors">공지사항</a></li>
+            <li><a href="inquiry.html" class="hover:text-white transition-colors">1:1 문의</a></li>
+            <li><a href="faq.html" class="hover:text-white transition-colors">자주묻는질문</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">연락처</h4>
+          <ul class="space-y-2 text-sm">
+            <li>이메일: help@to-orange.kr</li>
+            <li>전화: 1588-0000</li>
+            <li>평일 09:00 - 18:00</li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+        <p>© 2025 To-orange. All rights reserved.</p>
+        <div class="flex gap-6 mt-4 md:mt-0">
+          <a href="privacy.html" class="hover:text-white transition-colors">개인정보처리방침</a>
+          <a href="terms.html" class="hover:text-white transition-colors">이용약관</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const CURRENT_PAGE = 'donation-main.html';
+    
+    const MENU_CONFIG = {
+      mainNav: [
+        { id: 'heart', title: '마음전하기', mainUrl: 'heart-main.html', submenu: [
+          { title: '편지쓰기', url: 'letter-service-flow.html' },
+          { title: '보낸편지함', url: 'sent-box.html' },
+          { title: '받은편지함', url: 'inbox.html', loginRequired: true },
+          { title: '임시보관함', url: 'draft-box.html' }
+        ]},
+        { id: 'legal', title: '법률도우미', mainUrl: 'legal-main.html', submenu: [
+          { title: '내 사연 보내기', url: 'legal-story.html' },
+          { title: '법률도우미 매칭', url: 'legal-matching.html' },
+          { title: '진행프로세스', url: 'legal-process.html' }
+        ]},
+        { id: 'community', title: '커뮤니티', mainUrl: 'community-main.html', submenu: [
+          { title: '자유게시판', url: 'free-board.html' },
+          { title: '법률지식 on', url: 'legal-knowledge.html' }
+        ]},
+        { id: 'donation', title: '기부나눔', mainUrl: 'donation-main.html', submenu: [
+          { title: '기부나눔캠페인', url: 'campaign.html' },
+          { title: '후원소식', url: 'support-news.html' },
+          { title: '후원하기', url: 'support.html' }
+        ]},
+        { id: 'life-center', title: '라이프센터', mainUrl: 'life-center.html', submenu: [
+          { title: '상황별 안내', url: 'life-situation.html' },
+          { title: '라이프 캘린더', url: 'life-calendar.html' },
+          { title: '재사회화 지원', url: 'life-resocialization.html' }
+        ]},
+        { id: 'support', title: '고객센터', mainUrl: 'support-main.html', submenu: [
+          { title: '이용가이드', url: 'guide.html' },
+          { title: '공지사항', url: 'notice.html' },
+          { title: '1:1문의', url: 'inquiry.html' }
+        ]}
+      ]
+    };
+
+    function generateMenu() {
+      const mainNav = document.querySelector('.main-nav');
+      if (!mainNav) return;
+      mainNav.innerHTML = '';
+
+      MENU_CONFIG.mainNav.forEach(menu => {
+        const li = document.createElement('li');
+        li.className = 'menu-item relative';
+        const isActive = menu.mainUrl === CURRENT_PAGE || (menu.submenu && menu.submenu.some(sub => sub.url === CURRENT_PAGE));
+        
+        let submenuHtml = '';
+        if (menu.submenu && menu.submenu.length > 0) {
+          submenuHtml = `
+            <div class="submenu absolute top-full left-1/2 -translate-x-1/2 pt-2 min-w-[180px]">
+              <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2">
+                ${menu.submenu.map(sub => `
+                  <a href="${sub.url}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 ${sub.url === CURRENT_PAGE ? 'text-orange-500 bg-orange-50' : ''}" ${sub.loginRequired ? 'data-login-required="true"' : ''}>${sub.title}</a>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        li.innerHTML = `
+          <a href="${menu.mainUrl}" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5 block ${isActive ? 'nav-active text-orange-500' : ''}">${menu.title}</a>
+          ${submenuHtml}
+        `;
+        mainNav.appendChild(li);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', generateMenu);
+  </script>
+</body>
+</html>

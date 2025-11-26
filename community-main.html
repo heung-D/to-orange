@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>커뮤니티 - To-orange</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            orange: {
+              50: '#FFF5E5',
+              100: '#FFE5CC',
+              500: '#FF6B35',
+              600: '#E55A2B'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .submenu { opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; }
+    .menu-item:hover .submenu { opacity: 1; visibility: visible; transform: translateY(0); }
+    .nav-active { color: #FF6B35; border-bottom: 2px solid #FF6B35; }
+    .question-item:hover { background: #FFF5E5; }
+    .gradient-bg { background: linear-gradient(135deg, #FFF5E5 0%, #FFFFFF 50%, #FFF0E8 100%); }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- 네비게이션 -->
+  <nav class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="text-2xl font-bold text-orange-500">To-orange</a>
+        <div class="flex items-center space-x-8">
+          <ul class="main-nav flex items-center space-x-6"></ul>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="mypage-home.html" class="text-sm text-gray-600 hover:text-gray-900">마이페이지</a>
+          <span class="text-gray-300">|</span>
+          <a href="login.html" class="text-sm text-gray-600 hover:text-gray-900">로그인</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 1) 히어로 섹션 -->
+  <section class="gradient-bg py-20">
+    <div class="max-w-3xl mx-auto px-8 text-center">
+      <!-- 메인 카피 -->
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-3">처음 듣는 단어, 처음 겪는 상황.</h1>
+      <p class="text-lg text-gray-600 mb-10">여기서 먼저 찾아보세요.</p>
+      
+      <!-- 검색창 (타이핑 효과) -->
+      <div class="relative mb-8">
+        <div class="w-full px-6 py-5 pr-14 bg-white border-2 border-gray-200 rounded-full text-left text-gray-500 text-base md:text-lg shadow-sm">
+          <span id="typing-text"></span><span id="cursor" class="border-r-2 border-orange-500 ml-0.5 animate-pulse">&nbsp;</span>
+        </div>
+        <button class="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center hover:bg-orange-600 transition-colors shadow-md">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- CTA 버튼 -->
+      <div class="flex justify-center gap-4 mb-10">
+        <a href="community-write.html" class="bg-orange-500 text-white px-8 py-3 rounded-lg font-medium hover:bg-orange-600 transition-colors">
+          질문하기
+        </a>
+        <a href="community-guide.html" class="border border-gray-300 bg-white text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+          처음 오신 분 가이드
+        </a>
+      </div>
+
+      <!-- 인기 키워드 칩 -->
+      <p class="text-sm text-gray-500 mb-3">최근 가장 많이 검색된 키워드</p>
+      <div class="flex flex-wrap justify-center gap-2">
+        <a href="#" class="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm text-gray-600 hover:border-orange-400 hover:bg-orange-50 hover:text-orange-600 transition-all">형사사건</a>
+        <a href="#" class="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm text-gray-600 hover:border-orange-400 hover:bg-orange-50 hover:text-orange-600 transition-all">탄원서</a>
+        <a href="#" class="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm text-gray-600 hover:border-orange-400 hover:bg-orange-50 hover:text-orange-600 transition-all">미결</a>
+        <a href="#" class="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm text-gray-600 hover:border-orange-400 hover:bg-orange-50 hover:text-orange-600 transition-all">기결</a>
+        <a href="#" class="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm text-gray-600 hover:border-orange-400 hover:bg-orange-50 hover:text-orange-600 transition-all">가석방심사기준</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const searchQuestions = [
+      '면회는 언제부터 가능한가요?',
+      '탄원서는 어떻게 써야 하나요?',
+      '재판 전에 준비해야 할 게 있나요?',
+      '가석방 심사 기준이 어떻게 되나요?',
+      '국선변호인은 어떻게 신청하나요?'
+    ];
+    
+    let questionIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const typingSpeed = 80;
+    const deletingSpeed = 40;
+    const pauseAfterType = 2000;
+    const pauseAfterDelete = 500;
+
+    function typeInSearchBar() {
+      const el = document.getElementById('typing-text');
+      if (!el) return;
+
+      const currentQuestion = searchQuestions[questionIndex];
+
+      if (!isDeleting) {
+        // 타이핑 중
+        el.textContent = currentQuestion.substring(0, charIndex + 1);
+        charIndex++;
+
+        if (charIndex === currentQuestion.length) {
+          // 타이핑 완료, 잠시 대기 후 삭제 시작
+          setTimeout(() => {
+            isDeleting = true;
+            typeInSearchBar();
+          }, pauseAfterType);
+          return;
+        }
+        setTimeout(typeInSearchBar, typingSpeed);
+      } else {
+        // 삭제 중
+        el.textContent = currentQuestion.substring(0, charIndex - 1);
+        charIndex--;
+
+        if (charIndex === 0) {
+          // 삭제 완료, 다음 질문으로
+          isDeleting = false;
+          questionIndex = (questionIndex + 1) % searchQuestions.length;
+          setTimeout(typeInSearchBar, pauseAfterDelete);
+          return;
+        }
+        setTimeout(typeInSearchBar, deletingSpeed);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(typeInSearchBar, 800);
+    });
+  </script>
+
+  <!-- 4) 탐색(Explore) 섹션들 -->
+
+  <!-- 4-1) 오늘 가장 많이 본 질문 -->
+  <section class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="mb-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">오늘 많은 분들이 찾아본 질문입니다.</h2>
+        <p class="text-gray-500 text-sm">비슷한 고민이 있을 수 있습니다.</p>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <a href="#" class="question-item flex items-center justify-between p-5 border-b border-gray-100 transition-colors">
+          <div class="flex items-center gap-4">
+            <span class="px-3 py-1 bg-orange-50 text-orange-500 text-xs font-medium rounded-full">상담실</span>
+            <span class="text-gray-900 font-medium">첫 재판 출석인데, 어떻게 준비해야 할까요?</span>
+          </div>
+          <div class="flex items-center gap-4 text-sm text-gray-500">
+            <span>조회 324</span>
+            <span>답변 12</span>
+            <span class="text-gray-400">2시간 전</span>
+          </div>
+        </a>
+        <a href="#" class="question-item flex items-center justify-between p-5 border-b border-gray-100 transition-colors">
+          <div class="flex items-center gap-4">
+            <span class="px-3 py-1 bg-orange-50 text-orange-500 text-xs font-medium rounded-full">탄원서</span>
+            <span class="text-gray-900 font-medium">탄원서에 반드시 들어가야 할 내용이 있나요?</span>
+          </div>
+          <div class="flex items-center gap-4 text-sm text-gray-500">
+            <span>조회 256</span>
+            <span>답변 8</span>
+            <span class="text-gray-400">3시간 전</span>
+          </div>
+        </a>
+        <a href="#" class="question-item flex items-center justify-between p-5 border-b border-gray-100 transition-colors">
+          <div class="flex items-center gap-4">
+            <span class="px-3 py-1 bg-orange-50 text-orange-500 text-xs font-medium rounded-full">기결</span>
+            <span class="text-gray-900 font-medium">가석방 심사 기준이 궁금합니다</span>
+          </div>
+          <div class="flex items-center gap-4 text-sm text-gray-500">
+            <span>조회 198</span>
+            <span>답변 6</span>
+            <span class="text-gray-400">5시간 전</span>
+          </div>
+        </a>
+        <a href="#" class="question-item flex items-center justify-between p-5 border-b border-gray-100 transition-colors">
+          <div class="flex items-center gap-4">
+            <span class="px-3 py-1 bg-orange-50 text-orange-500 text-xs font-medium rounded-full">미결</span>
+            <span class="text-gray-900 font-medium">구치소 면회 예약 방법 알려주세요</span>
+          </div>
+          <div class="flex items-center gap-4 text-sm text-gray-500">
+            <span>조회 187</span>
+            <span>답변 5</span>
+            <span class="text-gray-400">6시간 전</span>
+          </div>
+        </a>
+        <a href="#" class="question-item flex items-center justify-between p-5 transition-colors">
+          <div class="flex items-center gap-4">
+            <span class="px-3 py-1 bg-orange-50 text-orange-500 text-xs font-medium rounded-full">상담실</span>
+            <span class="text-gray-900 font-medium">합의서 작성 시 주의할 점이 있을까요?</span>
+          </div>
+          <div class="flex items-center gap-4 text-sm text-gray-500">
+            <span>조회 165</span>
+            <span>답변 7</span>
+            <span class="text-gray-400">8시간 전</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4-2) 새로 올라온 질문 + 4-3) 변호사 답변 모음 -->
+  <section class="py-12 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="grid lg:grid-cols-2 gap-8">
+        <!-- 새로 올라온 질문 -->
+        <div>
+          <h2 class="text-xl font-bold text-gray-900 mb-2">방금 올라온 질문입니다.</h2>
+          <p class="text-gray-500 text-sm mb-6">비슷한 경험이 있다면 조심스럽게 도움이 될 답을 나눠주세요.</p>
+          <div class="space-y-3">
+            <a href="#" class="block bg-white rounded-lg p-4 border border-gray-100 hover:border-orange-300 transition-colors">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">상담실</span>
+                <span class="text-xs text-gray-400">방금 전</span>
+              </div>
+              <p class="text-gray-900 font-medium text-sm">변호사 선임 비용이 얼마나 드나요?</p>
+              <p class="text-xs text-gray-500 mt-1">답변 0개</p>
+            </a>
+            <a href="#" class="block bg-white rounded-lg p-4 border border-gray-100 hover:border-orange-300 transition-colors">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">미결</span>
+                <span class="text-xs text-gray-400">5분 전</span>
+              </div>
+              <p class="text-gray-900 font-medium text-sm">보석 신청 절차가 어떻게 되나요?</p>
+              <p class="text-xs text-gray-500 mt-1">답변 1개</p>
+            </a>
+            <a href="#" class="block bg-white rounded-lg p-4 border border-gray-100 hover:border-orange-300 transition-colors">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">기결</span>
+                <span class="text-xs text-gray-400">12분 전</span>
+              </div>
+              <p class="text-gray-900 font-medium text-sm">분류심사에서 좋은 결과 받으려면 어떻게 해야 할까요?</p>
+              <p class="text-xs text-gray-500 mt-1">답변 2개</p>
+            </a>
+            <a href="#" class="block bg-white rounded-lg p-4 border border-gray-100 hover:border-orange-300 transition-colors">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">탄원서</span>
+                <span class="text-xs text-gray-400">18분 전</span>
+              </div>
+              <p class="text-gray-900 font-medium text-sm">피해자 탄원서와 가족 탄원서 차이가 있나요?</p>
+              <p class="text-xs text-gray-500 mt-1">답변 0개</p>
+            </a>
+            <a href="#" class="block bg-white rounded-lg p-4 border border-gray-100 hover:border-orange-300 transition-colors">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">상담실</span>
+                <span class="text-xs text-gray-400">25분 전</span>
+              </div>
+              <p class="text-gray-900 font-medium text-sm">국선변호인 선정 기준이 어떻게 되나요?</p>
+              <p class="text-xs text-gray-500 mt-1">답변 3개</p>
+            </a>
+          </div>
+          <a href="free-board.html" class="block text-center py-3 border border-gray-200 bg-white rounded-lg text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors mt-4">더 많은 질문 보기</a>
+        </div>
+
+        <!-- 변호사 답변 모음 -->
+        <div>
+          <h2 class="text-xl font-bold text-gray-900 mb-2">전문가가 직접 답변한 글입니다.</h2>
+          <p class="text-gray-500 text-sm mb-6">정확한 정보가 필요할 때 참고해보세요.</p>
+          <div class="space-y-3">
+            <a href="#" class="block bg-white border border-gray-100 rounded-lg p-4 hover:border-orange-300 transition-all">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 bg-orange-500 text-white text-xs font-medium rounded">변호사</span>
+                  <span class="text-sm text-gray-700 font-medium">김정의 변호사</span>
+                </div>
+                <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded">채택됨</span>
+              </div>
+              <p class="text-gray-900 font-medium text-sm">형사 합의 시 합의금 산정 기준에 대해 알려드립니다</p>
+              <p class="text-xs text-gray-500 mt-2">조회 456 · 1시간 전</p>
+            </a>
+            <a href="#" class="block bg-white border border-gray-100 rounded-lg p-4 hover:border-orange-300 transition-all">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 bg-orange-500 text-white text-xs font-medium rounded">변호사</span>
+                  <span class="text-sm text-gray-700 font-medium">박희망 변호사</span>
+                </div>
+              </div>
+              <p class="text-gray-900 font-medium text-sm">가석방 심사위원회 심사 기준 상세 안내</p>
+              <p class="text-xs text-gray-500 mt-2">조회 312 · 3시간 전</p>
+            </a>
+            <a href="#" class="block bg-white border border-gray-100 rounded-lg p-4 hover:border-orange-300 transition-all">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 bg-orange-500 text-white text-xs font-medium rounded">변호사</span>
+                  <span class="text-sm text-gray-700 font-medium">이공정 변호사</span>
+                </div>
+                <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded">채택됨</span>
+              </div>
+              <p class="text-gray-900 font-medium text-sm">탄원서 작성 시 효과적인 문구와 구성 방법</p>
+              <p class="text-xs text-gray-500 mt-2">조회 289 · 5시간 전</p>
+            </a>
+            <a href="#" class="block bg-white border border-gray-100 rounded-lg p-4 hover:border-orange-300 transition-all">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 bg-orange-500 text-white text-xs font-medium rounded">변호사</span>
+                  <span class="text-sm text-gray-700 font-medium">최신뢰 변호사</span>
+                </div>
+              </div>
+              <p class="text-gray-900 font-medium text-sm">보석 청구서 작성법과 실제 인용 사례</p>
+              <p class="text-xs text-gray-500 mt-2">조회 234 · 8시간 전</p>
+            </a>
+            <a href="#" class="block bg-white border border-gray-100 rounded-lg p-4 hover:border-orange-300 transition-all">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 bg-orange-500 text-white text-xs font-medium rounded">변호사</span>
+                  <span class="text-sm text-gray-700 font-medium">정믿음 변호사</span>
+                </div>
+                <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded">채택됨</span>
+              </div>
+              <p class="text-gray-900 font-medium text-sm">미결 수용 중 회사 해고 관련 대응 방법</p>
+              <p class="text-xs text-gray-500 mt-2">조회 198 · 12시간 전</p>
+            </a>
+          </div>
+          <a href="legal-knowledge.html" class="block text-center py-3 border border-gray-200 bg-white rounded-lg text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors mt-4">변호사 답변 더 보기</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4-4) 네이버 지식iN 연동 -->
+  <section class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-8">
+      <h2 class="text-xl font-bold text-gray-900 mb-2">비슷한 고민은 외부에도 있습니다.</h2>
+      <p class="text-gray-500 text-sm mb-8">상황을 이해하는 데 도움이 될 수 있는 외부 질문들을 함께 모았습니다.<br>필요하실 때 참고해보세요.</p>
+      <div class="bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
+        <a href="#" class="flex items-center gap-3 p-4 border-b border-gray-100 hover:bg-white transition-colors">
+          <span class="px-3 py-1 bg-white border border-gray-200 text-gray-600 text-xs font-medium rounded-full shrink-0">형사고소</span>
+          <span class="text-gray-700 text-sm">형사고소 절차와 기간이 궁금해요</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 p-4 border-b border-gray-100 hover:bg-white transition-colors">
+          <span class="px-3 py-1 bg-white border border-gray-200 text-gray-600 text-xs font-medium rounded-full shrink-0">형사고소</span>
+          <span class="text-gray-700 text-sm">고소장 작성 방법 알려주세요</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 p-4 border-b border-gray-100 hover:bg-white transition-colors">
+          <span class="px-3 py-1 bg-white border border-gray-200 text-gray-600 text-xs font-medium rounded-full shrink-0">형사고소</span>
+          <span class="text-gray-700 text-sm">고소 취하서 효력은 언제까지인가요?</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 p-4 border-b border-gray-100 hover:bg-white transition-colors">
+          <span class="px-3 py-1 bg-white border border-gray-200 text-gray-600 text-xs font-medium rounded-full shrink-0">사기고소</span>
+          <span class="text-gray-700 text-sm">사기죄 성립 요건이 뭔가요?</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 p-4 border-b border-gray-100 hover:bg-white transition-colors">
+          <span class="px-3 py-1 bg-white border border-gray-200 text-gray-600 text-xs font-medium rounded-full shrink-0">사기고소</span>
+          <span class="text-gray-700 text-sm">사기 피해 합의금 기준이 어떻게 되나요?</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 p-4 border-b border-gray-100 hover:bg-white transition-colors">
+          <span class="px-3 py-1 bg-white border border-gray-200 text-gray-600 text-xs font-medium rounded-full shrink-0">가석방</span>
+          <span class="text-gray-700 text-sm">가석방 신청 자격 조건이 어떻게 되나요?</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 p-4 border-b border-gray-100 hover:bg-white transition-colors">
+          <span class="px-3 py-1 bg-white border border-gray-200 text-gray-600 text-xs font-medium rounded-full shrink-0">가석방</span>
+          <span class="text-gray-700 text-sm">가석방 심사 통과율이 얼마나 되나요?</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 p-4 border-b border-gray-100 hover:bg-white transition-colors">
+          <span class="px-3 py-1 bg-white border border-gray-200 text-gray-600 text-xs font-medium rounded-full shrink-0">합의</span>
+          <span class="text-gray-700 text-sm">형사 합의서 양식 어디서 받나요?</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 p-4 border-b border-gray-100 hover:bg-white transition-colors">
+          <span class="px-3 py-1 bg-white border border-gray-200 text-gray-600 text-xs font-medium rounded-full shrink-0">합의</span>
+          <span class="text-gray-700 text-sm">합의 후 재고소가 가능한가요?</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 p-4 border-b border-gray-100 hover:bg-white transition-colors">
+          <span class="px-3 py-1 bg-white border border-gray-200 text-gray-600 text-xs font-medium rounded-full shrink-0">탄원서</span>
+          <span class="text-gray-700 text-sm">탄원서 제출 시기가 언제인가요?</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 p-4 hover:bg-white transition-colors">
+          <span class="px-3 py-1 bg-white border border-gray-200 text-gray-600 text-xs font-medium rounded-full shrink-0">탄원서</span>
+          <span class="text-gray-700 text-sm">탄원서 효과가 실제로 있나요?</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 푸터 -->
+  <footer class="bg-gray-900 text-gray-400 py-12">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="grid md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <h3 class="text-white text-lg font-bold mb-4">To-orange</h3>
+          <p class="text-sm">수용자 가족과 함께하는<br>따뜻한 연결 플랫폼</p>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">서비스</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="letter-service-flow.html" class="hover:text-white transition-colors">편지쓰기</a></li>
+            <li><a href="inbox.html" class="hover:text-white transition-colors">받은편지함</a></li>
+            <li><a href="legal-main.html" class="hover:text-white transition-colors">법률상담</a></li>
+            <li><a href="life-center.html" class="hover:text-white transition-colors">라이프센터</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">고객지원</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="guide.html" class="hover:text-white transition-colors">이용가이드</a></li>
+            <li><a href="notice.html" class="hover:text-white transition-colors">공지사항</a></li>
+            <li><a href="inquiry.html" class="hover:text-white transition-colors">1:1 문의</a></li>
+            <li><a href="faq.html" class="hover:text-white transition-colors">자주묻는질문</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">연락처</h4>
+          <ul class="space-y-2 text-sm">
+            <li>이메일: help@to-orange.kr</li>
+            <li>전화: 1588-0000</li>
+            <li>평일 09:00 - 18:00</li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+        <p>© 2025 To-orange. All rights reserved.</p>
+        <div class="flex gap-6 mt-4 md:mt-0">
+          <a href="privacy.html" class="hover:text-white transition-colors">개인정보처리방침</a>
+          <a href="terms.html" class="hover:text-white transition-colors">이용약관</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const CURRENT_PAGE = 'community-main.html';
+    
+    const MENU_CONFIG = {
+      mainNav: [
+        { id: 'heart', title: '마음전하기', mainUrl: 'heart-main.html', submenu: [
+          { title: '편지쓰기', url: 'letter-service-flow.html' },
+          { title: '보낸편지함', url: 'sent-box.html' },
+          { title: '받은편지함', url: 'inbox.html', loginRequired: true },
+          { title: '임시보관함', url: 'draft-box.html' }
+        ]},
+        { id: 'legal', title: '법률도우미', mainUrl: 'legal-main.html', submenu: [
+          { title: '내 사연 보내기', url: 'legal-story.html' },
+          { title: '법률도우미 매칭', url: 'legal-matching.html' },
+          { title: '진행프로세스', url: 'legal-process.html' }
+        ]},
+        { id: 'community', title: '커뮤니티', mainUrl: 'community-main.html', submenu: [
+          { title: '자유게시판', url: 'free-board.html' },
+          { title: '법률지식 on', url: 'legal-knowledge.html' }
+        ]},
+        { id: 'donation', title: '기부나눔', mainUrl: 'donation-main.html', submenu: [
+          { title: '기부나눔캠페인', url: 'campaign.html' },
+          { title: '후원소식', url: 'support-news.html' },
+          { title: '후원하기', url: 'support.html' }
+        ]},
+        { id: 'life-center', title: '라이프센터', mainUrl: 'life-center.html', submenu: [
+          { title: '상황별 안내', url: 'life-situation.html' },
+          { title: '라이프 캘린더', url: 'life-calendar.html' },
+          { title: '재사회화 지원', url: 'life-resocialization.html' }
+        ]},
+        { id: 'support', title: '고객센터', mainUrl: 'support-main.html', submenu: [
+          { title: '이용가이드', url: 'guide.html' },
+          { title: '공지사항', url: 'notice.html' },
+          { title: '1:1문의', url: 'inquiry.html' }
+        ]}
+      ]
+    };
+
+    function generateMenu() {
+      const mainNav = document.querySelector('.main-nav');
+      if (!mainNav) return;
+      mainNav.innerHTML = '';
+
+      MENU_CONFIG.mainNav.forEach(menu => {
+        const li = document.createElement('li');
+        li.className = 'menu-item relative';
+        const isActive = menu.mainUrl === CURRENT_PAGE || (menu.submenu && menu.submenu.some(sub => sub.url === CURRENT_PAGE));
+        
+        let submenuHtml = '';
+        if (menu.submenu && menu.submenu.length > 0) {
+          submenuHtml = `
+            <div class="submenu absolute top-full left-1/2 -translate-x-1/2 pt-2 min-w-[180px]">
+              <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2">
+                ${menu.submenu.map(sub => `
+                  <a href="${sub.url}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 ${sub.url === CURRENT_PAGE ? 'text-orange-500 bg-orange-50' : ''}" ${sub.loginRequired ? 'data-login-required="true"' : ''}>${sub.title}</a>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        li.innerHTML = `
+          <a href="${menu.mainUrl}" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5 block ${isActive ? 'nav-active text-orange-500' : ''}">${menu.title}</a>
+          ${submenuHtml}
+        `;
+        mainNav.appendChild(li);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', generateMenu);
+  </script>
+</body>
+</html>

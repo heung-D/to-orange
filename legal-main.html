@@ -4,568 +4,458 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>법률도우미 - To-orange</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              orange: { 50: '#FFF5E5', 100: '#FFE5CC', 500: '#FF6B35', 600: '#E55A2B' }
+            }
+          }
+        }
+      }
+    </script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --black: #000000;
-            --white: #FFFFFF;
-            --gray-50: #F7F7F7;
-            --gray-100: #E8E8E8;
-            --gray-200: #D1D1D1;
-            --gray-400: #999999;
-            --gray-600: #666666;
-            --orange: #FF6B35;
-            --orange-light: #FF8C61;
-            --yellow: #F7931E;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
-            background: var(--white);
-            color: var(--black);
-            overflow-x: hidden;
-        }
-
-        /* 헤더 - 새로운 네비게이션 */
-        header {
-            background: var(--white);
-            border-bottom: 1px solid var(--gray-100);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        nav {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 60px;
-            height: 70px;
-        }
-        .logo {
-            font-size: 20px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-decoration: none;
-        }
-        .main-nav {
-            display: flex;
-            list-style: none;
-            height: 100%;
-        }
-        .nav-item {
-            position: relative;
-            height: 100%;
-            display: flex;
-            align-items: center;
-        }
-        .nav-link {
-            display: flex;
-            align-items: center;
-            height: 100%;
-            padding: 0 20px;
-            text-decoration: none;
-            color: var(--black);
-            font-size: 15px;
-            font-weight: 500;
-            transition: color 0.3s;
-            border-bottom: 2px solid transparent;
-        }
-        .nav-link:hover { color: var(--orange); }
-        .nav-link.active {
-            color: var(--orange);
-            border-bottom: 2px solid var(--orange);
-        }
-        .submenu-wrapper {
+        .submenu { opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; }
+        .menu-item:hover .submenu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .nav-active { color: #FF6B35; border-bottom: 2px solid #FF6B35; }
+        .gradient-bg { background: linear-gradient(135deg, #FFF5E5 0%, #FFFFFF 50%, #FFF0E8 100%); }
+        .step-line { position: absolute; left: 24px; top: 48px; bottom: 0; width: 2px; background: #E5E7EB; }
+        .step-item:last-child .step-line { display: none; }
+        
+        /* 떠다니는 문서 애니메이션 */
+        .floating-docs { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+        .floating-item {
             position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            padding-top: 10px;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.2s ease;
+            opacity: 0.15;
+            animation: float 20s ease-in-out infinite;
         }
-        .nav-item:hover .submenu-wrapper {
-            opacity: 1;
-            visibility: visible;
-        }
-        .submenu {
-            background: white;
-            border: 1px solid var(--gray-100);
-            border-radius: 12px;
-            padding: 10px 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            list-style: none;
-            min-width: 180px;
-        }
-        .submenu li a {
-            display: block;
-            padding: 12px 20px;
-            color: var(--black);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        .submenu li a:hover {
-            background: linear-gradient(135deg, #FFE5E5 0%, #FFF5E5 100%);
-            color: var(--orange);
-        }
-        .nav-right {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-        .nav-right a {
-            text-decoration: none;
-            color: var(--gray-600);
-            font-size: 14px;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        .nav-right a:hover { color: var(--black); }
-
-        /* 메인 컨테이너 */
-        .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 80px 60px;
-            min-height: calc(100vh - 200px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .content-wrapper { width: 100%; max-width: 720px; }
-        .page-header { text-align: center; margin-bottom: 50px; }
-        .page-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-        .page-title {
-            font-size: 42px;
-            font-weight: 900;
-            margin-bottom: 15px;
-            letter-spacing: -0.5px;
-            line-height: 1.3;
-        }
-        .page-subtitle {
-            font-size: 18px;
-            color: var(--gray-600);
-            line-height: 1.7;
-        }
-
-        /* 입력 섹션 */
-        .input-section {
-            background: white;
-            border: 2px solid var(--gray-100);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 30px;
-            transition: all 0.3s;
-        }
-        .input-section:focus-within {
-            border-color: var(--orange);
-            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
-        }
-        .input-label {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--black);
-            margin-bottom: 15px;
-            display: block;
-        }
-        .input-wrapper {
-            position: relative;
-            background: var(--gray-50);
-            border: 2px solid var(--gray-100);
-            border-radius: 15px;
-            transition: all 0.3s;
-        }
-        .input-wrapper:focus-within {
-            border-color: var(--orange);
-            background: white;
-        }
-        .main-input {
-            width: 100%;
-            border: none;
-            background: transparent;
-            padding: 18px 70px 18px 20px;
-            font-size: 16px;
-            font-family: inherit;
-            outline: none;
-            color: var(--black);
-        }
-        .main-input::placeholder { color: var(--gray-400); }
-        .submit-btn {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            border: none;
-            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
-            color: white;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-        .submit-btn:hover {
-            transform: translateY(-50%) scale(1.05);
-            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.4);
-        }
-        .help-text {
-            font-size: 14px;
-            color: var(--gray-600);
-            margin-top: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .suggestions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
-        .suggestion-chip {
-            background: var(--gray-50);
-            border: 1px solid var(--gray-100);
-            padding: 10px 18px;
-            border-radius: 50px;
-            font-size: 14px;
-            color: var(--gray-600);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-        .suggestion-chip:hover {
-            background: var(--orange);
-            color: white;
-            border-color: var(--orange);
-            transform: translateY(-2px);
-        }
-
-        /* 정보 카드 */
-        .info-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .info-card {
-            background: white;
-            border: 2px solid var(--gray-100);
-            border-radius: 20px;
-            padding: 30px 25px;
-            text-align: center;
-            transition: all 0.3s;
-        }
-        .info-card:hover {
-            border-color: var(--orange);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.1);
-        }
-        .info-card .icon { font-size: 40px; margin-bottom: 15px; }
-        .info-card .title { font-size: 16px; font-weight: 700; color: var(--black); margin-bottom: 8px; }
-        .info-card .desc { font-size: 13px; color: var(--gray-600); line-height: 1.5; }
-
-        /* 채팅 화면 */
-        .chat-screen {
-            background: white;
-            border: 2px solid var(--gray-100);
-            border-radius: 20px;
-            padding: 40px;
-            max-height: 600px;
-            overflow-y: auto;
-        }
-        .message { margin-bottom: 25px; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .message.bot { display: flex; gap: 12px; align-items: flex-start; }
-        .message.user { display: flex; justify-content: flex-end; }
-        .bot-avatar {
-            width: 42px; height: 42px;
-            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; flex-shrink: 0;
-        }
-        .message-bubble {
-            padding: 15px 20px;
-            border-radius: 18px;
-            max-width: 85%;
-            line-height: 1.7;
-            font-size: 15px;
-        }
-        .message.bot .message-bubble { background: var(--gray-50); color: var(--black); }
-        .message.user .message-bubble {
-            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
-            color: white;
-        }
-        .typing-indicator { display: none; align-items: center; gap: 12px; margin-bottom: 25px; }
-        .typing-indicator.active { display: flex; }
-        .typing-dots {
-            display: flex; gap: 5px;
-            background: var(--gray-50);
-            padding: 15px 20px;
-            border-radius: 18px;
-        }
-        .typing-dots span {
-            width: 8px; height: 8px;
-            background: var(--gray-400);
-            border-radius: 50%;
-            animation: typing 1.4s infinite;
-        }
-        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-            30% { transform: translateY(-8px); opacity: 1; }
-        }
-
-        /* CTA 섹션 */
-        .cta-section {
-            background: linear-gradient(135deg, #FFE5E5 0%, #FFF5E5 100%);
-            border-radius: 20px;
-            padding: 40px;
-            margin-top: 30px;
-            text-align: center;
-        }
-        .cta-section h3 { font-size: 24px; color: var(--black); margin-bottom: 12px; font-weight: 700; }
-        .cta-section p { font-size: 15px; color: var(--gray-600); line-height: 1.7; margin-bottom: 25px; }
-        .cta-button {
-            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
-            color: white;
-            border: none;
-            padding: 16px 40px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.3);
-            width: 100%;
-            max-width: 400px;
-        }
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
-        }
-        .safety-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            color: var(--gray-600);
-            margin-top: 15px;
-        }
-        .hidden { display: none !important; }
-
-        /* Footer */
-        footer {
-            background: var(--gray-50);
-            padding: 60px;
-            border-top: 1px solid var(--gray-100);
-            margin-top: 80px;
-        }
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            text-align: center;
-            font-size: 14px;
-            color: var(--gray-600);
-        }
-
-        /* 반응형 */
-        @media (max-width: 768px) {
-            nav { padding: 0 20px; }
-            .main-nav { display: none; }
-            .main-container { padding: 60px 20px; }
-            .page-title { font-size: 32px; }
-            .input-section { padding: 30px 25px; }
-            .info-cards { grid-template-columns: 1fr; }
+        .floating-item:nth-child(1) { left: 5%; top: 20%; animation-delay: 0s; animation-duration: 18s; }
+        .floating-item:nth-child(2) { left: 15%; top: 60%; animation-delay: -3s; animation-duration: 22s; }
+        .floating-item:nth-child(3) { right: 10%; top: 15%; animation-delay: -5s; animation-duration: 20s; }
+        .floating-item:nth-child(4) { right: 20%; top: 55%; animation-delay: -8s; animation-duration: 24s; }
+        .floating-item:nth-child(5) { left: 8%; top: 75%; animation-delay: -2s; animation-duration: 19s; }
+        .floating-item:nth-child(6) { right: 5%; top: 70%; animation-delay: -6s; animation-duration: 21s; }
+        .floating-item:nth-child(7) { left: 25%; top: 10%; animation-delay: -4s; animation-duration: 23s; }
+        .floating-item:nth-child(8) { right: 25%; top: 80%; animation-delay: -7s; animation-duration: 17s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(3deg); }
+            50% { transform: translateY(-8px) rotate(-2deg); }
+            75% { transform: translateY(-20px) rotate(2deg); }
         }
     </style>
 </head>
-<body>
-    <!-- 헤더 -->
-    <header>
-        <nav>
-            <a href="index.html" class="logo">To-orange</a>
-            <ul class="main-nav" id="main-nav"></ul>
-            <div class="nav-right">
-                <a href="mypage-home.html">마이페이지</a>
-                <a href="login.html">로그인</a>
-            </div>
-        </nav>
-    </header>
-
-    <!-- 메인 컨테이너 -->
-    <div class="main-container">
-        <div class="content-wrapper">
-            <!-- 초기 화면 -->
-            <div id="initialScreen">
-                <div class="page-header">
-                    <div class="page-badge">🤝 교정시설 특화 법률 서비스</div>
-                    <h1 class="page-title">혼자 고민하지<br>않으셔도 돼요</h1>
-                    <p class="page-subtitle">
-                        어떤 일이든 편하게 말씀해주세요.<br>
-                        당신의 이야기를 들을 준비가 되어 있습니다.
-                    </p>
+<body class="bg-white font-sans">
+    <!-- 네비게이션 -->
+    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="text-2xl font-bold text-orange-500">To-orange</a>
+                <div class="flex items-center space-x-8">
+                    <ul class="main-nav flex items-center space-x-6"></ul>
                 </div>
-
-                <div class="input-section">
-                    <label class="input-label">무엇이 궁금하신가요?</label>
-                    <div class="input-wrapper">
-                        <input type="text" class="main-input" id="userInput" placeholder="예: 출소 날짜가 언제인지 알고 싶어요" onkeypress="handleKeyPress(event)">
-                        <button class="submit-btn" onclick="submitInput()">→</button>
-                    </div>
-                    <div class="help-text">💡 걱정하지 마세요. 어떤 말이든 괜찮아요</div>
-                    <div class="suggestions">
-                        <div class="suggestion-chip" onclick="fillInput('언제 나갈 수 있을까요')">언제 나갈 수 있을까요</div>
-                        <div class="suggestion-chip" onclick="fillInput('가족에게 연락하고 싶어요')">가족에게 연락하고 싶어요</div>
-                        <div class="suggestion-chip" onclick="fillInput('일자리를 찾고 싶어요')">일자리를 찾고 싶어요</div>
-                        <div class="suggestion-chip" onclick="fillInput('빚이 너무 많아요')">빚이 너무 많아요</div>
-                        <div class="suggestion-chip" onclick="fillInput('이혼하고 싶어요')">이혼하고 싶어요</div>
-                    </div>
+                <div class="flex items-center space-x-4">
+                    <a href="mypage-home.html" class="text-sm text-gray-600 hover:text-gray-900">마이페이지</a>
+                    <span class="text-gray-300">|</span>
+                    <a href="login.html" class="text-sm text-gray-600 hover:text-gray-900">로그인</a>
                 </div>
-
-                <div class="info-cards">
-                    <div class="info-card">
-                        <div class="icon">🔒</div>
-                        <div class="title">비밀 보장</div>
-                        <div class="desc">모든 대화는 안전하게 보호됩니다</div>
-                    </div>
-                    <div class="info-card">
-                        <div class="icon">💯</div>
-                        <div class="title">무료 상담</div>
-                        <div class="desc">모든 상담은 완전 무료입니다</div>
-                    </div>
-                    <div class="info-card">
-                        <div class="icon">⚡</div>
-                        <div class="title">24시간</div>
-                        <div class="desc">언제든 편한 시간에</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 대화 화면 -->
-            <div id="chatScreen" class="hidden">
-                <div class="chat-screen" id="chatMessages"></div>
             </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <p>© 2024 To-orange. All rights reserved.</p>
-            <p style="margin-top: 10px;">따뜻한 마음을 연결하는 편지 서비스</p>
+    <!-- 히어로 섹션 -->
+    <section class="gradient-bg py-20 relative overflow-hidden">
+        <!-- 떠다니는 문서들 -->
+        <div class="floating-docs">
+            <!-- 상담지 1 -->
+            <div class="floating-item">
+                <svg width="60" height="75" viewBox="0 0 60 75" fill="none">
+                    <rect x="0" y="0" width="60" height="75" rx="6" fill="#FFDCC8"/>
+                    <rect x="10" y="16" width="40" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="10" y="26" width="35" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="10" y="36" width="40" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="10" y="46" width="25" height="4" rx="2" fill="#FFC9A8"/>
+                    <circle cx="15" cy="60" r="5" fill="#FFC9A8"/>
+                </svg>
+            </div>
+            <!-- 사건기록 -->
+            <div class="floating-item">
+                <svg width="50" height="65" viewBox="0 0 50 65" fill="none">
+                    <rect x="0" y="0" width="50" height="65" rx="5" fill="#FFDCC8"/>
+                    <rect x="8" y="8" width="22" height="6" rx="3" fill="#FFB899"/>
+                    <rect x="8" y="20" width="34" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="8" y="30" width="30" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="8" y="40" width="34" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="8" y="50" width="22" height="4" rx="2" fill="#FFC9A8"/>
+                </svg>
+            </div>
+            <!-- 편지지 -->
+            <div class="floating-item">
+                <svg width="55" height="70" viewBox="0 0 55 70" fill="none">
+                    <rect x="0" y="0" width="55" height="70" rx="4" fill="#FFDCC8"/>
+                    <path d="M0 8 L27.5 28 L55 8 L55 0 L0 0 Z" fill="#FFB899"/>
+                    <rect x="10" y="38" width="35" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="10" y="48" width="30" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="10" y="58" width="25" height="4" rx="2" fill="#FFC9A8"/>
+                </svg>
+            </div>
+            <!-- 체크리스트 -->
+            <div class="floating-item">
+                <svg width="48" height="60" viewBox="0 0 48 60" fill="none">
+                    <rect x="0" y="0" width="48" height="60" rx="6" fill="#FFDCC8"/>
+                    <rect x="8" y="12" width="10" height="10" rx="3" fill="#FFB899"/>
+                    <rect x="22" y="14" width="18" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="8" y="28" width="10" height="10" rx="3" fill="#FFB899"/>
+                    <rect x="22" y="30" width="16" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="8" y="44" width="10" height="10" rx="3" fill="#FFB899"/>
+                    <rect x="22" y="46" width="18" height="4" rx="2" fill="#FFC9A8"/>
+                </svg>
+            </div>
+            <!-- 폴더 -->
+            <div class="floating-item">
+                <svg width="65" height="55" viewBox="0 0 65 55" fill="none">
+                    <path d="M0 14 Q0 10 4 10 L24 10 L28 4 Q30 0 34 0 L61 0 Q65 0 65 4 L65 51 Q65 55 61 55 L4 55 Q0 55 0 51 Z" fill="#FFDCC8"/>
+                    <rect x="8" y="22" width="49" height="5" rx="2" fill="#FFB899"/>
+                    <rect x="12" y="32" width="41" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="12" y="42" width="35" height="4" rx="2" fill="#FFC9A8"/>
+                </svg>
+            </div>
+            <!-- 클립보드 -->
+            <div class="floating-item">
+                <svg width="50" height="68" viewBox="0 0 50 68" fill="none">
+                    <rect x="2" y="12" width="46" height="54" rx="6" fill="#FFDCC8"/>
+                    <rect x="14" y="4" width="22" height="14" rx="4" fill="#FFB899"/>
+                    <rect x="10" y="28" width="30" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="10" y="38" width="26" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="10" y="48" width="30" height="4" rx="2" fill="#FFC9A8"/>
+                </svg>
+            </div>
+            <!-- 봉투 -->
+            <div class="floating-item">
+                <svg width="60" height="45" viewBox="0 0 60 45" fill="none">
+                    <rect x="0" y="0" width="60" height="45" rx="4" fill="#FFDCC8"/>
+                    <path d="M0 6 L30 28 L60 6 L60 0 L0 0 Z" fill="#FFB899"/>
+                </svg>
+            </div>
+            <!-- 메모지 -->
+            <div class="floating-item">
+                <svg width="45" height="50" viewBox="0 0 45 50" fill="none">
+                    <path d="M0 4 Q0 0 4 0 L41 0 Q45 0 45 4 L45 36 L32 50 L4 50 Q0 50 0 46 Z" fill="#FFDCC8"/>
+                    <path d="M32 50 L32 40 Q32 36 36 36 L45 36 Z" fill="#FFB899"/>
+                    <rect x="8" y="12" width="29" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="8" y="22" width="25" height="4" rx="2" fill="#FFC9A8"/>
+                    <rect x="8" y="32" width="20" height="4" rx="2" fill="#FFC9A8"/>
+                </svg>
+            </div>
+        </div>
+        
+        <div class="max-w-3xl mx-auto px-8 text-center relative z-10">
+            <span class="inline-flex items-center gap-2 bg-orange-50 text-orange-500 px-5 py-2.5 rounded-full text-sm font-semibold mb-6">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+                To-Orange 법률도우미
+            </span>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                좋은 변호사를 만나는 방법
+            </h1>
+            <p class="text-lg text-gray-600 leading-relaxed mb-10">
+                이름이나 광고가 아닌, 내 사건과 닮은 경험을 가진 변호사.<br>
+                To-Orange가 데이터와 기록을 기준으로 찾아드립니다.
+            </p>
+            <div class="flex flex-col items-center">
+                <a href="legal-story.html" class="inline-block bg-orange-500 text-white px-8 py-4 rounded-full font-semibold hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/25">
+                    제 사연을 들려드릴게요
+                </a>
+                <p class="mt-3.5 text-sm">
+                    <span class="text-gray-600">급한 상황이신가요?</span>
+                    <a href="legal-story.html?urgent=true" class="text-orange-500 underline ml-1 hover:text-orange-600">빠른 답변 요청하기</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3단계 서비스 카드 -->
+    <section class="py-16 bg-white">
+        <div class="max-w-5xl mx-auto px-8">
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- 카드 1: 내 사연 보내기 -->
+                <a href="legal-story.html" class="group block bg-white border-2 border-gray-100 rounded-2xl p-8 hover:border-orange-500 hover:shadow-lg transition-all">
+                    <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-orange-500 transition-colors">
+                        <svg class="w-6 h-6 text-orange-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </div>
+                    <span class="text-xs font-semibold text-orange-500 mb-2 block">STEP 1</span>
+                    <h3 class="text-lg font-bold text-gray-900 mb-1">내 사연 보내기</h3>
+                    <span class="text-xs text-gray-400 mb-2 block">(별도비용없음)</span>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">지금 상황을 편하게 들려주세요. 법률용어를 몰라도 괜찮습니다.</p>
+                    <span class="text-sm text-orange-500 font-medium group-hover:underline">시작하기 →</span>
+                </a>
+
+                <!-- 카드 2: 법률도우미 매칭 -->
+                <a href="legal-matching.html" class="group block bg-white border-2 border-gray-100 rounded-2xl p-8 hover:border-orange-500 hover:shadow-lg transition-all">
+                    <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-orange-500 transition-colors">
+                        <svg class="w-6 h-6 text-orange-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    </div>
+                    <span class="text-xs font-semibold text-orange-500 mb-2 block">STEP 2</span>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">법률도우미 매칭</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">내 사건과 닮은 경험을 가진 변호사를 데이터로 찾습니다.</p>
+                    <span class="text-sm text-orange-500 font-medium group-hover:underline">알아보기 →</span>
+                </a>
+
+                <!-- 카드 3: 진행프로세스 -->
+                <a href="legal-process.html" class="group block bg-white border-2 border-gray-100 rounded-2xl p-8 hover:border-orange-500 hover:shadow-lg transition-all">
+                    <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center mb-5 group-hover:bg-orange-500 transition-colors">
+                        <svg class="w-6 h-6 text-orange-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                    </div>
+                    <span class="text-xs font-semibold text-orange-500 mb-2 block">STEP 3</span>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">진행프로세스</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-4">수임부터 재판까지, 내 사건이 어디까지 왔는지 한눈에.</p>
+                    <span class="text-sm text-orange-500 font-medium group-hover:underline">확인하기 →</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 신뢰 메시지 -->
+    <section class="py-12 bg-gray-50">
+        <div class="max-w-3xl mx-auto px-8 text-center">
+            <p class="text-gray-600 leading-relaxed">
+                "서둘러 계약을 권하기보다,<br class="md:hidden"> 먼저 사건을 <strong class="text-gray-900">제대로 이해하는 것</strong>이 중요하다고 믿습니다."
+            </p>
+        </div>
+    </section>
+
+    <!-- 프로세스 타임라인 -->
+    <section class="py-16 bg-white">
+        <div class="max-w-3xl mx-auto px-8">
+            <h2 class="text-2xl font-bold text-gray-900 text-center mb-3">어떻게 진행되나요?</h2>
+            <p class="text-gray-500 text-center mb-12">처음부터 끝까지, 투명하게 안내드립니다.</p>
+
+            <div class="space-y-0">
+                <!-- Step 1 -->
+                <div class="step-item relative flex gap-6 pb-10">
+                    <div class="step-line"></div>
+                    <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 z-10">1</div>
+                    <div class="pt-2">
+                        <h4 class="font-bold text-gray-900 mb-1">내 사연 보내기</h4>
+                        <p class="text-sm text-gray-500">상담을 위한 첫 상담이 아니라, 사건을 이해하기 위한 첫 기록입니다.</p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-item relative flex gap-6 pb-10">
+                    <div class="step-line"></div>
+                    <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 z-10">2</div>
+                    <div class="pt-2">
+                        <h4 class="font-bold text-gray-900 mb-1">법률 검토 & 변호사 매칭</h4>
+                        <p class="text-sm text-gray-500">사건 데이터를 기반으로 '나와 잘 맞는' 변호사 후보 2~3명을 제안합니다.</p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-item relative flex gap-6 pb-10">
+                    <div class="step-line"></div>
+                    <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 z-10">3</div>
+                    <div class="pt-2">
+                        <h4 class="font-bold text-gray-900 mb-1">첫 상담</h4>
+                        <p class="text-sm text-gray-500">변호사를 '고르는' 시간. To-Orange가 질문 리스트와 체크포인트를 준비해드립니다.</p>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step-item relative flex gap-6 pb-10">
+                    <div class="step-line"></div>
+                    <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 z-10">4</div>
+                    <div class="pt-2">
+                        <h4 class="font-bold text-gray-900 mb-1">수임 결정 & 계약</h4>
+                        <p class="text-sm text-gray-500">수임료와 조건은 말로만이 아니라, 문서로 투명하게 남깁니다.</p>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="step-item relative flex gap-6 pb-10">
+                    <div class="step-line"></div>
+                    <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 z-10">5</div>
+                    <div class="pt-2">
+                        <h4 class="font-bold text-gray-900 mb-1">사건 진행 & 타임라인</h4>
+                        <p class="text-sm text-gray-500">오늘 내 사건이 어디까지 왔는지, 가족과 수용자가 함께 볼 수 있습니다.</p>
+                    </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="step-item relative flex gap-6">
+                    <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 z-10">6</div>
+                    <div class="pt-2">
+                        <h4 class="font-bold text-gray-900 mb-1">결과 이후 & 재사회화 지원</h4>
+                        <p class="text-sm text-gray-500">판결이 끝이 아닙니다. 다시 삶을 이어가는 것까지 함께합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 차별점 섹션 -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-8">
+            <h2 class="text-2xl font-bold text-gray-900 text-center mb-3">To-Orange는 다릅니다</h2>
+            <p class="text-gray-500 text-center mb-12">광고비를 받는 소개 플랫폼이 아닙니다.</p>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-14 h-14 bg-white border-2 border-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-7 h-7 text-orange-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+                    </div>
+                    <h4 class="font-bold text-gray-900 mb-2">데이터 기반 매칭</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">이름·광고가 아닌 사건 유형, 수행사례, 결과 데이터로 추천합니다.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-14 h-14 bg-white border-2 border-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-7 h-7 text-orange-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/></svg>
+                    </div>
+                    <h4 class="font-bold text-gray-900 mb-2">소통 스타일 공개</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">설명 방식, 접견 경험, 가족 소통 가능 여부까지 투명하게 안내합니다.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-14 h-14 bg-white border-2 border-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-7 h-7 text-orange-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                    </div>
+                    <h4 class="font-bold text-gray-900 mb-2">계약 전 충분한 검토</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">서두르지 않습니다. 사건을 이해한 뒤, 신중하게 결정하도록 돕습니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA 섹션 -->
+    <section class="py-20 bg-gradient-to-br from-orange-50 to-yellow-50">
+        <div class="max-w-2xl mx-auto px-8 text-center">
+                <h3 class="text-2xl font-bold text-gray-900 mb-3">지금 겪고 있는 일을,<br>편하게 들려주세요.</h3>
+                <p class="text-gray-600 mb-8 leading-relaxed">
+                    법률용어를 몰라도 괜찮습니다.<br>
+                    To-Orange가 당신의 말을 정리해, 딱 맞는 변호사에게 전달합니다.
+                </p>
+                <a href="legal-story.html" class="inline-block bg-orange-500 text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/25">
+                    내 사연 보내기
+                </a>
+                <p class="text-xs text-gray-400 mt-6">
+                    이 단계에서는 아직 변호사가 정해지지 않고, 수임료도 정해지지 않습니다.
+                </p>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="bg-gray-900 text-gray-400 py-12">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">To-orange</h3>
+                    <p class="text-sm">수용자 가족과 함께하는<br>따뜻한 연결 플랫폼</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">서비스</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="letter-service-flow.html" class="hover:text-white transition-colors">편지쓰기</a></li>
+                        <li><a href="inbox.html" class="hover:text-white transition-colors">받은편지함</a></li>
+                        <li><a href="legal-main.html" class="hover:text-white transition-colors">법률상담</a></li>
+                        <li><a href="life-center.html" class="hover:text-white transition-colors">라이프센터</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">고객지원</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="guide.html" class="hover:text-white transition-colors">이용가이드</a></li>
+                        <li><a href="notice.html" class="hover:text-white transition-colors">공지사항</a></li>
+                        <li><a href="inquiry.html" class="hover:text-white transition-colors">1:1 문의</a></li>
+                        <li><a href="faq.html" class="hover:text-white transition-colors">자주묻는질문</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">연락처</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li>이메일: help@to-orange.kr</li>
+                        <li>전화: 1588-0000</li>
+                        <li>평일 09:00 - 18:00</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+                <p>© 2025 To-orange. All rights reserved.</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="privacy.html" class="hover:text-white transition-colors">개인정보처리방침</a>
+                    <a href="terms.html" class="hover:text-white transition-colors">이용약관</a>
+                </div>
+            </div>
         </div>
     </footer>
 
     <script>
         const CURRENT_PAGE = 'legal-main.html';
+        
         const MENU_CONFIG = {
             mainNav: [
-                { id: 'heart', title: '마음전하기', mainUrl: 'heart-main.html', submenu: [{ title: '편지쓰기', url: 'letter-service-flow.html' }, { title: '보낸편지함', url: 'sent-box.html' }, { title: '받은편지함', url: 'inbox.html', loginRequired: true }, { title: '임시보관함', url: 'draft-box.html' }] },
-                { id: 'legal', title: '법률도우미', mainUrl: 'legal-main.html', submenu: [{ title: '내 사연 보내기', url: 'legal-story.html' }, { title: '법률도우미 매칭', url: 'legal-matching.html' }, { title: '진행프로세스', url: 'legal-process.html' }] },
-                { id: 'community', title: '커뮤니티', mainUrl: 'community-main.html', submenu: [{ title: '자유게시판', url: 'free-board.html' }, { title: '법률지식 on', url: 'legal-knowledge.html' }] },
-                { id: 'donation', title: '기부나눔', mainUrl: 'donation-main.html', submenu: [{ title: '기부나눔캠페인', url: 'campaign.html' }, { title: '후원소식', url: 'support-news.html' }, { title: '후원하기', url: 'support.html' }] },
-                { id: 'life-center', title: '라이프센터', mainUrl: 'life-center.html', submenu: [{ title: '상황별 안내', url: 'life-situation.html' }, { title: '라이프 캘린더', url: 'life-calendar.html' }, { title: '재사회화 지원', url: 'life-resocialization.html' }] },
-                { id: 'support', title: '고객센터', mainUrl: 'support-main.html', submenu: [{ title: '이용가이드', url: 'guide.html' }, { title: '공지사항', url: 'notice.html' }, { title: '1:1문의', url: 'inquiry.html' }] }
+                { id: 'heart', title: '마음전하기', mainUrl: 'heart-main.html', submenu: [
+                    { title: '편지쓰기', url: 'letter-service-flow.html' },
+                    { title: '보낸편지함', url: 'sent-box.html' },
+                    { title: '받은편지함', url: 'inbox.html', loginRequired: true },
+                    { title: '임시보관함', url: 'draft-box.html' }
+                ]},
+                { id: 'legal', title: '법률도우미', mainUrl: 'legal-main.html', submenu: [
+                    { title: '내 사연 보내기', url: 'legal-story.html' },
+                    { title: '법률도우미 매칭', url: 'legal-matching.html' },
+                    { title: '진행프로세스', url: 'legal-process.html' }
+                ]},
+                { id: 'community', title: '커뮤니티', mainUrl: 'community-main.html', submenu: [
+                    { title: '자유게시판', url: 'free-board.html' },
+                    { title: '법률지식 on', url: 'legal-knowledge.html' }
+                ]},
+                { id: 'donation', title: '기부나눔', mainUrl: 'donation-main.html', submenu: [
+                    { title: '기부나눔캠페인', url: 'campaign.html' },
+                    { title: '후원소식', url: 'support-news.html' },
+                    { title: '후원하기', url: 'support.html' }
+                ]},
+                { id: 'life-center', title: '라이프센터', mainUrl: 'life-center.html', submenu: [
+                    { title: '상황별 안내', url: 'life-situation.html' },
+                    { title: '라이프 캘린더', url: 'life-calendar.html' },
+                    { title: '재사회화 지원', url: 'life-resocialization.html' }
+                ]},
+                { id: 'support', title: '고객센터', mainUrl: 'support-main.html', submenu: [
+                    { title: '이용가이드', url: 'guide.html' },
+                    { title: '공지사항', url: 'notice.html' },
+                    { title: '1:1문의', url: 'inquiry.html' }
+                ]}
             ]
         };
 
         function generateMenu() {
-            const nav = document.getElementById('main-nav');
+            const mainNav = document.querySelector('.main-nav');
+            if (!mainNav) return;
+            mainNav.innerHTML = '';
+
             MENU_CONFIG.mainNav.forEach(menu => {
-                const isActive = menu.mainUrl === CURRENT_PAGE || menu.submenu?.some(sub => sub.url === CURRENT_PAGE);
                 const li = document.createElement('li');
-                li.className = 'nav-item';
+                li.className = 'menu-item relative';
+                const isActive = menu.mainUrl === CURRENT_PAGE || (menu.submenu && menu.submenu.some(sub => sub.url === CURRENT_PAGE));
+                
+                let submenuHtml = '';
+                if (menu.submenu && menu.submenu.length > 0) {
+                    submenuHtml = `
+                        <div class="submenu absolute top-full left-1/2 -translate-x-1/2 pt-2 min-w-[180px]">
+                            <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2">
+                                ${menu.submenu.map(sub => `
+                                    <a href="${sub.url}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 ${sub.url === CURRENT_PAGE ? 'text-orange-500 bg-orange-50' : ''}">${sub.title}</a>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
                 li.innerHTML = `
-                    <a href="${menu.mainUrl}" class="nav-link ${isActive ? 'active' : ''}">${menu.title}</a>
-                    ${menu.submenu ? `<div class="submenu-wrapper"><ul class="submenu">${menu.submenu.map(sub => `<li><a href="${sub.url}">${sub.title}</a></li>`).join('')}</ul></div>` : ''}
+                    <a href="${menu.mainUrl}" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5 block ${isActive ? 'nav-active text-orange-500' : ''}">${menu.title}</a>
+                    ${submenuHtml}
                 `;
-                nav.appendChild(li);
+                mainNav.appendChild(li);
             });
-        }
-
-        function fillInput(text) {
-            document.getElementById('userInput').value = text;
-            document.getElementById('userInput').focus();
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === 'Enter') submitInput();
-        }
-
-        function submitInput() {
-            const input = document.getElementById('userInput');
-            const userText = input.value.trim();
-            if (!userText) { alert('고민을 편하게 적어주세요'); return; }
-
-            document.getElementById('initialScreen').classList.add('hidden');
-            document.getElementById('chatScreen').classList.remove('hidden');
-            const chatMessages = document.getElementById('chatMessages');
-
-            const userMessage = document.createElement('div');
-            userMessage.className = 'message user';
-            userMessage.innerHTML = `<div class="message-bubble">${userText}</div>`;
-            chatMessages.appendChild(userMessage);
-
-            const typingIndicator = document.createElement('div');
-            typingIndicator.className = 'typing-indicator active';
-            typingIndicator.innerHTML = `<div class="bot-avatar">🤝</div><div class="typing-dots"><span></span><span></span><span></span></div>`;
-            chatMessages.appendChild(typingIndicator);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            setTimeout(() => {
-                typingIndicator.remove();
-                const botMessage = document.createElement('div');
-                botMessage.className = 'message bot';
-                botMessage.innerHTML = `
-                    <div class="bot-avatar">🤝</div>
-                    <div class="message-bubble">
-                        말씀해주셔서 감사합니다.<br><br>
-                        <strong>${getBotResponse(userText)}</strong><br><br>
-                        전문 상담사가 당신의 상황을 자세히 듣고, 함께 해결 방법을 찾아드릴게요.
-                    </div>
-                `;
-                chatMessages.appendChild(botMessage);
-
-                const ctaSection = document.createElement('div');
-                ctaSection.className = 'cta-section';
-                ctaSection.innerHTML = `
-                    <h3>지금 바로 시작해볼까요?</h3>
-                    <p>평균 24시간 이내에 전문 상담사가 연락드립니다.<br>상담은 전화, 문자, 방문 중 편한 방법으로 진행됩니다.</p>
-                    <button class="cta-button" onclick="goToConsult('${userText}')">무료 상담 신청하기</button>
-                    <div class="safety-badge">🔒 모든 정보는 안전하게 보호됩니다</div>
-                `;
-                chatMessages.appendChild(ctaSection);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 2000);
-        }
-
-        function getBotResponse(userText) {
-            const text = userText.toLowerCase();
-            if (text.includes('출소') || text.includes('나가') || text.includes('언제')) return '출소 일정을 알고 싶으시군요. 정확한 날짜와 준비 사항을 안내해드릴게요.';
-            if (text.includes('가족') || text.includes('연락') || text.includes('면회')) return '가족과의 연락이 그리우시겠어요. 면회와 연락 방법을 알려드리겠습니다.';
-            if (text.includes('일') || text.includes('취업') || text.includes('직장')) return '새로운 시작을 준비하시는군요. 취업 지원 프로그램을 소개해드릴게요.';
-            if (text.includes('빚') || text.includes('대출') || text.includes('채무')) return '경제적 어려움이 있으시군요. 채무 해결 방법을 함께 찾아보겠습니다.';
-            if (text.includes('이혼') || text.includes('양육') || text.includes('자녀')) return '가족 문제로 힘드시겠어요. 법률적 조언과 해결책을 드리겠습니다.';
-            return '당신의 상황을 이해했습니다. 최선의 해결책을 찾아보겠습니다.';
-        }
-
-        function goToConsult(userInput) {
-            alert(`"${userInput}"\n\n상담 신청 페이지로 이동합니다.\n입력하신 내용이 자동으로 전달됩니다.`);
         }
 
         document.addEventListener('DOMContentLoaded', generateMenu);

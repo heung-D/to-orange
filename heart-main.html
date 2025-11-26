@@ -10,10 +10,21 @@
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { pretendard: ['Pretendard', 'sans-serif'] },
           colors: {
-            orange: { 50: '#FFF5E5', 100: '#FFE5D0', 200: '#FFDAB9', 500: '#FF6B35', 600: '#E55A2B' },
-            brown: { 800: '#3E2712', 600: '#5D4037' }
+            orange: { 50: '#FFF5E5', 100: '#FFE5D0', 500: '#FF6B35', 600: '#E55A2B' },
+            brown: { 800: '#3E2712' }
+          },
+          animation: {
+            'shake': 'shake 0.9s ease-out 0.5s forwards',
+            'drop': 'drop 1.8s cubic-bezier(0.33,1,0.68,1) 1.5s forwards',
+            'grow': 'grow 0.6s ease-out 1.8s forwards',
+            'bubble': 'bubble 0.5s ease-out 2.1s forwards'
+          },
+          keyframes: {
+            shake: { '0%,100%': { transform: 'rotate(0)' }, '20%': { transform: 'rotate(3deg)' }, '40%': { transform: 'rotate(-2.5deg)' }, '60%': { transform: 'rotate(1.5deg)' }, '80%': { transform: 'rotate(-1deg)' } },
+            drop: { '0%': { transform: 'translateY(0) rotate(0)', opacity: '1' }, '3%': { transform: 'translateY(-5px) rotate(-3deg)' }, '40%': { transform: 'translateY(220px) rotate(10deg)' }, '100%': { transform: 'translateY(220px) rotate(5deg)', opacity: '1' } },
+            grow: { '0%': { transform: 'scale(0) rotate(45deg)', opacity: '0' }, '50%': { transform: 'scale(1.1) rotate(50deg)', opacity: '1' }, '100%': { transform: 'scale(1) rotate(45deg)', opacity: '1' } },
+            bubble: { '0%': { transform: 'scale(0)', opacity: '0' }, '60%': { transform: 'scale(1.1)', opacity: '1' }, '100%': { transform: 'scale(1)', opacity: '1' } }
           }
         }
       }
@@ -23,50 +34,20 @@
     body { font-family: 'Pretendard', sans-serif; }
     .submenu { opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; }
     .menu-item:hover .submenu { opacity: 1; visibility: visible; transform: translateY(0); }
-    .gradient-orange { background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%); }
-    .gradient-warm { background: linear-gradient(135deg, #FFF5E5 0%, #FFE5D0 100%); }
-    .modal-overlay { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
-    .chip-btn.active { background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%); color: white; border-color: transparent; }
-    .input-orange:focus { border-color: #FF6B35; box-shadow: 0 0 0 3px rgba(255,107,53,0.1); }
-    .tab-btn.active { background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%); color: white; }
-    .region-chip.active { background: #FF6B35; color: white; }
-    .prison-item.selected { background: linear-gradient(135deg, #FFF5E5 0%, #FFE5D0 100%); border-color: #FF6B35; }
-    
-    @keyframes shakeTree { 0% { transform: rotate(0deg); } 20% { transform: rotate(3deg); } 40% { transform: rotate(-2.5deg); } 60% { transform: rotate(1.5deg); } 80% { transform: rotate(-1deg); } 100% { transform: rotate(0deg); } }
-    .shake-tree { transform-origin: bottom center; animation: shakeTree 0.9s ease-out forwards; animation-delay: 0.5s; }
-    @keyframes dropOrange { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 3% { transform: translateY(-5px) rotate(-3deg); } 40% { transform: translateY(220px) rotate(10deg); } 55% { transform: translateY(210px) rotate(-5deg); } 70% { transform: translateY(220px) rotate(8deg); } 100% { transform: translateY(220px) rotate(5deg); opacity: 1; } }
-    .drop-orange { animation: dropOrange 0.9s cubic-bezier(0.33, 1, 0.68, 1) forwards; animation-delay: 0.8s; }
-    @keyframes growLeaf { 0% { transform: scale(0) rotate(-10deg); opacity: 0; } 50% { transform: scale(1.1) rotate(3deg); opacity: 1; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
-    .grow-leaf { opacity: 0; animation: growLeaf 0.6s ease-out forwards; animation-delay: 2.5s; }
-    
-    .timeline-line { position: absolute; left: 24px; top: 40px; bottom: 20px; width: 2px; background: linear-gradient(to bottom, #FF6B35, #E5E7EB); }
+    .nav-active { color: #FF6B35; border-bottom: 2px solid #FF6B35; }
+    .shake-tree { transform-origin: bottom center; }
+    .grow-leaf { opacity: 0; }
+    .bubble-comment { opacity: 0; }
   </style>
 </head>
-<body class="font-pretendard bg-white">
+<body class="bg-white">
 
 <!-- 네비게이션 -->
-<nav class="bg-white border-b border-gray-100 relative z-50">
+<nav class="bg-white border-b border-gray-100 sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-8">
     <div class="flex items-center justify-between h-16">
       <a href="index.html" class="text-2xl font-bold text-orange-500">To-orange</a>
-      <div class="flex items-center space-x-10">
-        <div class="menu-item relative">
-          <a href="heart-main.html" class="text-base font-semibold text-orange-500 py-5 block border-b-2 border-orange-500">마음전하기</a>
-          <div class="submenu absolute top-full left-1/2 -translate-x-1/2 pt-2">
-            <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[180px]">
-              <a href="#" onclick="openModal(); return false;" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500">편지쓰기</a>
-              <a href="sent-box.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500">보낸편지함</a>
-              <a href="inbox.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500">받은편지함</a>
-              <a href="draft-box.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500">임시보관함</a>
-            </div>
-          </div>
-        </div>
-        <a href="legal-main.html" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5">법률도우미</a>
-        <a href="community-main.html" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5">커뮤니티</a>
-        <a href="donation-main.html" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5">기부나눔</a>
-        <a href="life-center.html" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5">라이프센터</a>
-        <a href="support-main.html" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5">고객센터</a>
-      </div>
+      <ul class="main-nav flex items-center space-x-6"></ul>
       <div class="flex items-center space-x-4">
         <a href="mypage-home.html" class="text-sm text-gray-600 hover:text-gray-900">마이페이지</a>
         <span class="text-gray-300">|</span>
@@ -76,348 +57,244 @@
   </div>
 </nav>
 
-<!-- 섹션 1: 히어로 -->
-<section class="relative overflow-hidden" style="height: 1080px; background: radial-gradient(circle at 50% 50%, rgba(252, 235, 200, 1) 0%, rgba(252, 239, 217, 0) 45%), #FFFFFF;">
-  <div class="text-center relative z-20" style="padding-top: 40px;">
+<!-- 히어로 -->
+<section class="relative overflow-hidden h-[780px]" style="background: radial-gradient(circle at 50% 50%, rgba(252,235,200,1) 0%, rgba(252,239,217,0) 45%), #FFF;">
+  <div class="text-center relative z-20 pt-10">
     <div class="inline-flex items-center gap-2 px-5 py-2.5 bg-white rounded-full border border-orange-200 mb-8">
-      <span class="text-orange-500">❤️</span>
-      <span class="text-orange-500 font-medium text-sm">누구나 쉽게 편지 쓰기</span>
+      <span class="text-orange-500">❤️</span><span class="text-orange-500 font-medium text-sm">누구나 쉽게 편지 쓰기</span>
     </div>
-    <h1 class="text-[44px] font-bold leading-[140%] mb-6" style="color: #3E2712;">마음만 말씀하세요.<br>문장은 저희가 다듬어드릴게요</h1>
-    <p class="text-[17px] font-normal leading-[170%]" style="color: #474747;">그들이 외부 소식을 알지 못한 채 보내는 하루를<br>당신이 조금 더 이해할 수 있도록<br>오늘의 생활 정보와 편지 소재를 함께 준비해드립니다.</p>
+    <h1 class="text-[44px] font-bold leading-[140%] mb-6 text-brown-800">마음만 말씀하세요.<br>문장은 저희가 다듬어드릴게요</h1>
+    <p class="text-[17px] leading-[170%] text-gray-600">그들이 외부 소식을 알지 못한 채 보내는 하루를<br>당신이 조금 더 이해할 수 있도록<br>오늘의 생활 정보와 편지 소재를 함께 준비해드립니다.</p>
   </div>
-  <div class="absolute left-1/2 -translate-x-1/2 z-10" style="bottom: 140px;">
-    <div class="relative">
-      <img src="https://github.com/heung-D/to-orange/blob/main/heart-tree.png?raw=true" alt="편지 나무" class="shake-tree" style="height: 378px; width: auto;">
-      <img src="https://github.com/heung-D/to-orange/blob/main/heart-orange.png?raw=true" alt="오렌지" class="absolute drop-orange" style="width: 45px; left: -30px; top: 32%;">
-      <img src="https://github.com/heung-D/to-orange/blob/main/heart-leaf.png?raw=true" alt="새잎" class="absolute grow-leaf" style="width: 50px; left: -60px; top: 32%;">
+  <div class="absolute left-1/2 -translate-x-1/2 z-10 bottom-0">
+    <div class="relative shake-tree animate-shake">
+      <img src="https://github.com/heung-D/to-orange/blob/main/heart-tree.png?raw=true" alt="나무" class="h-[378px] w-auto">
+      <img src="https://github.com/heung-D/to-orange/blob/main/heart-orange.png?raw=true" alt="오렌지" class="absolute w-[45px] -left-[10px] top-[28%] animate-drop">
+      <img src="https://github.com/heung-D/to-orange/blob/main/heart-leaf.png?raw=true" alt="새잎" class="absolute w-[50px] left-[10px] top-[32%] rotate-45 grow-leaf animate-grow">
+      <!-- 말풍선: 나무 가운데 기준, 새잎과 함께 등장 -->
+      <!-- 말풍선 + 클릭용 새잎 (클릭 시 편지쓰기 팝업) -->
+      <div class="absolute -left-[100px] top-[14%] cursor-pointer hover:scale-105 transition-transform" onclick="openModal()">
+        <img src="https://github.com/heung-D/to-orange/blob/main/bubble-comment.png?raw=true" alt="말풍선" class="w-[100px] bubble-comment animate-bubble">
+        <img src="https://github.com/heung-D/to-orange/blob/main/heart-leaf-6hover.png?raw=true" alt="클릭새잎" class="w-[65px] absolute -bottom-[30px] left-[55px] bubble-comment animate-bubble">
+      </div>
     </div>
   </div>
-  <div class="absolute left-0 w-full z-0" style="bottom: 0;"><img src="https://github.com/heung-D/to-orange/blob/main/heart-bottom.png?raw=true" alt="풀밭" class="w-full h-auto"></div>
+  <div class="absolute left-0 w-full z-0 bottom-0"><img src="https://github.com/heung-D/to-orange/blob/main/heart-bottom.png?raw=true" alt="풀밭" class="w-full min-h-[130px]"></div>
 </section>
 
-<!-- 섹션 2: 편지가 어려운 이유 -->
-<section class="py-20" style="background-color: #B7E3B9;">
+<!-- 섹션2: 편지가 어려운 이유 -->
+<section class="py-20 bg-[#B7E3B9]">
   <div class="max-w-5xl mx-auto px-8">
-    <div class="text-center mb-14">
-      <h2 class="text-[28px] font-bold leading-[145%]" style="color: #3E2712;">왜 우리는 편지 한 줄<br>시작도 어려울까요?</h2>
-    </div>
+    <h2 class="text-[28px] font-bold leading-[145%] text-center mb-14 text-brown-800">왜 우리는 편지 한 줄<br>시작도 어려울까요?</h2>
     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
       <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-all group">
-        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform"><span class="text-2xl">✏️</span></div>
-        <h3 class="font-bold text-[17px] mb-2" style="color: #3E2712;">첫 문장이 어렵다</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">"뭐라고 시작해야 하지?"</p>
+        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform text-2xl">✏️</div>
+        <h3 class="font-bold text-[17px] mb-2 text-brown-800">첫 문장이 어렵다</h3>
+        <p class="text-gray-500 text-sm">"뭐라고 시작해야 하지?"</p>
       </div>
       <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-all group">
-        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform"><span class="text-2xl">📋</span></div>
-        <h3 class="font-bold text-[17px] mb-2" style="color: #3E2712;">구조가 막막하다</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">서론·본론·결론을<br>어떻게 나눠야 할지 모름</p>
+        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform text-2xl">📋</div>
+        <h3 class="font-bold text-[17px] mb-2 text-brown-800">구조가 막막하다</h3>
+        <p class="text-gray-500 text-sm">서론·본론·결론을<br>어떻게 나눠야 할지 모름</p>
       </div>
       <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-all group">
-        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform"><span class="text-2xl">🤔</span></div>
-        <h3 class="font-bold text-[17px] mb-2" style="color: #3E2712;">할 말이 없다</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">식단, 방송, 교화 일정 같은<br>기본 정보조차 없음</p>
+        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform text-2xl">🤔</div>
+        <h3 class="font-bold text-[17px] mb-2 text-brown-800">할 말이 없다</h3>
+        <p class="text-gray-500 text-sm">식단, 방송, 교화 일정 같은<br>기본 정보조차 없음</p>
       </div>
       <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-all group">
-        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform"><span class="text-2xl">⚖️</span></div>
-        <h3 class="font-bold text-[17px] mb-2" style="color: #3E2712;">사건 편지는 더 어렵다</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">변호사 일정, 상담 내용<br>정리가 안 됨</p>
+        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform text-2xl">⚖️</div>
+        <h3 class="font-bold text-[17px] mb-2 text-brown-800">사건 편지는 더 어렵다</h3>
+        <p class="text-gray-500 text-sm">변호사 일정, 상담 내용<br>정리가 안 됨</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 섹션 3: To-orange가 해결합니다 -->
+<!-- 섹션3: 해결 -->
 <section class="py-20 bg-white">
   <div class="max-w-5xl mx-auto px-8">
     <div class="text-center mb-14">
       <div class="inline-flex items-center gap-2 px-5 py-2 bg-orange-50 rounded-full mb-5"><span class="text-orange-500 font-semibold text-sm">✨ To-orange가 해결합니다</span></div>
-      <h2 class="text-[24px] font-bold leading-[155%]" style="color: #3E2712;">그들이 외부 소식을 알지 못한 채 보내는 하루를<br>당신이 조금 더 이해할 수 있도록</h2>
+      <h2 class="text-2xl font-bold leading-[155%] text-brown-800">그들이 외부 소식을 알지 못한 채 보내는 하루를<br>당신이 조금 더 이해할 수 있도록</h2>
       <p class="text-gray-500 mt-3">오늘의 생활 정보와 편지 소재를 함께 준비해드립니다</p>
     </div>
     <div class="grid md:grid-cols-2 gap-5">
-      <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-all border border-gray-100">
-        <div class="flex items-start gap-4">
-          <div class="w-11 h-11 gradient-orange rounded-xl flex items-center justify-center flex-shrink-0"><span class="text-white text-lg">🤖</span></div>
-          <div>
-            <h3 class="font-bold text-[16px] mb-2" style="color: #3E2712;">편지 구조 자동 생성</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">서론·본론·결론을 자동으로 나눠주는 구조화 AI</p>
-          </div>
-        </div>
+      <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md border border-gray-100 flex items-start gap-4">
+        <div class="w-11 h-11 bg-gradient-to-br from-orange-500 to-orange-400 rounded-xl flex items-center justify-center shrink-0 text-white text-lg">🤖</div>
+        <div><h3 class="font-bold text-brown-800 mb-2">편지 구조 자동 생성</h3><p class="text-gray-500 text-sm">서론·본론·결론을 자동으로 나눠주는 구조화 AI</p></div>
       </div>
-      <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-all border border-gray-100">
-        <div class="flex items-start gap-4">
-          <div class="w-11 h-11 gradient-orange rounded-xl flex items-center justify-center flex-shrink-0"><span class="text-white text-lg">💬</span></div>
-          <div>
-            <h3 class="font-bold text-[16px] mb-2" style="color: #3E2712;">대화형 질문 기반 작성</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">답만 하면 자연스럽게 편지가 완성됩니다</p>
-          </div>
-        </div>
+      <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md border border-gray-100 flex items-start gap-4">
+        <div class="w-11 h-11 bg-gradient-to-br from-orange-500 to-orange-400 rounded-xl flex items-center justify-center shrink-0 text-white text-lg">💬</div>
+        <div><h3 class="font-bold text-brown-800 mb-2">대화형 질문 기반 작성</h3><p class="text-gray-500 text-sm">답만 하면 자연스럽게 편지가 완성됩니다</p></div>
       </div>
-      <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-all border border-gray-100">
-        <div class="flex items-start gap-4">
-          <div class="w-11 h-11 gradient-orange rounded-xl flex items-center justify-center flex-shrink-0"><span class="text-white text-lg">⚖️</span></div>
-          <div>
-            <h3 class="font-bold text-[16px] mb-2" style="color: #3E2712;">사건 상황·변호사 메모 자동 반영</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">법률 내용도 쉽게 정리된 문장으로 완성됩니다</p>
-          </div>
-        </div>
+      <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md border border-gray-100 flex items-start gap-4">
+        <div class="w-11 h-11 bg-gradient-to-br from-orange-500 to-orange-400 rounded-xl flex items-center justify-center shrink-0 text-white text-lg">⚖️</div>
+        <div><h3 class="font-bold text-brown-800 mb-2">사건 상황·변호사 메모 자동 반영</h3><p class="text-gray-500 text-sm">법률 내용도 쉽게 정리된 문장으로 완성됩니다</p></div>
       </div>
-      <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-all border border-gray-100">
-        <div class="flex items-start gap-4">
-          <div class="w-11 h-11 gradient-orange rounded-xl flex items-center justify-center flex-shrink-0"><span class="text-white text-lg">📅</span></div>
-          <div>
-            <h3 class="font-bold text-[16px] mb-2" style="color: #3E2712;">수용자의 하루를 보여주는 생활정보 패널</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">식단·방송·공지·교화 등 대화 소재를 모두 모아드립니다</p>
-          </div>
-        </div>
+      <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md border border-gray-100 flex items-start gap-4">
+        <div class="w-11 h-11 bg-gradient-to-br from-orange-500 to-orange-400 rounded-xl flex items-center justify-center shrink-0 text-white text-lg">📅</div>
+        <div><h3 class="font-bold text-brown-800 mb-2">수용자의 하루를 보여주는 생활정보 패널</h3><p class="text-gray-500 text-sm">식단·방송·공지·교화 등 대화 소재를 모두 모아드립니다</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 섹션 4: 생활정보 패널 -->
-<section class="py-20 bg-gray-50">
+<!-- 섹션4: 생활정보 -->
+<section class="py-20 bg-orange-50">
   <div class="max-w-5xl mx-auto px-8">
     <div class="text-center mb-12">
-      <h2 class="text-[26px] font-bold mb-3" style="color: #3E2712;">수용자의 하루를 이해하면<br>편지가 더 따뜻해집니다</h2>
+      <h2 class="text-[26px] font-bold mb-3 text-brown-800">수용자의 하루를 이해하면<br>편지가 더 따뜻해집니다</h2>
       <p class="text-gray-500">주소만 입력하면 자동으로 보여드려요</p>
     </div>
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md transition-all">
-        <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-xl">🍱</span></div>
-        <h3 class="font-semibold text-[15px]" style="color: #3E2712;">오늘의 식단</h3>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md transition-all">
-        <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-xl">📺</span></div>
-        <h3 class="font-semibold text-[15px]" style="color: #3E2712;">방송편성표</h3>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md transition-all">
-        <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-xl">🙏</span></div>
-        <h3 class="font-semibold text-[15px]" style="color: #3E2712;">종교·교화 프로그램</h3>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md transition-all">
-        <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-xl">📢</span></div>
-        <h3 class="font-semibold text-[15px]" style="color: #3E2712;">공지사항</h3>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md transition-all">
-        <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-xl">🔧</span></div>
-        <h3 class="font-semibold text-[15px]" style="color: #3E2712;">직업훈련 안내</h3>
-      </div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md transition-all">
-        <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-xl">📞</span></div>
-        <h3 class="font-semibold text-[15px]" style="color: #3E2712;">전화·면회 가능시간</h3>
-      </div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md"><div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">🍱</div><h3 class="font-semibold text-[15px] text-brown-800">오늘의 식단</h3></div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md"><div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">📺</div><h3 class="font-semibold text-[15px] text-brown-800">방송편성표</h3></div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md"><div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">🙏</div><h3 class="font-semibold text-[15px] text-brown-800">종교·교화 프로그램</h3></div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md"><div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">📢</div><h3 class="font-semibold text-[15px] text-brown-800">공지사항</h3></div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md"><div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">🔧</div><h3 class="font-semibold text-[15px] text-brown-800">직업훈련 안내</h3></div>
+      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md"><div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">📞</div><h3 class="font-semibold text-[15px] text-brown-800">전화·면회 가능시간</h3></div>
     </div>
-    <div class="text-center">
-      <p class="inline-block bg-white text-orange-500 px-6 py-3 rounded-full text-sm font-medium shadow-sm border border-gray-100">"수용자가 가장 궁금해하는 외부 소식을 편지에 자연스럽게 담을 수 있어요"</p>
-    </div>
+    <p class="text-center"><span class="inline-block bg-white text-orange-500 px-6 py-3 rounded-full text-sm font-medium shadow-sm border border-gray-100">"수용자가 가장 궁금해하는 외부 소식을 편지에 자연스럽게 담을 수 있어요"</span></p>
   </div>
 </section>
 
-<!-- 섹션 5: 사건 편지 엔진 -->
+<!-- 섹션5: 사건편지 -->
 <section class="py-20 bg-white">
-  <div class="max-w-5xl mx-auto px-8">
-    <div class="grid lg:grid-cols-2 gap-12 items-center">
-      <div>
-        <div class="inline-flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-full mb-5"><span class="text-orange-500 font-semibold text-sm">⚖️ 변호사 연동</span></div>
-        <h2 class="text-[26px] font-bold mb-4" style="color: #3E2712;">사건 편지는<br>더 정확하고 부드럽게</h2>
-        <p class="text-gray-500 mb-8 leading-relaxed">변호사님이 남겨주신 사건 진행상황을 반영해<br>문장을 정리해드립니다.</p>
-        <div class="space-y-4">
-          <div class="flex items-start gap-3 bg-gray-50 rounded-xl p-4">
-            <span class="text-lg">💬</span>
-            <p class="text-sm text-gray-700">"변호사님이 이번 주에 서류 검토 중이라고 하셨어요."</p>
-          </div>
-          <div class="flex items-start gap-3 bg-gray-50 rounded-xl p-4">
-            <span class="text-lg">💬</span>
-            <p class="text-sm text-gray-700">"다음 재판 일정이 확정되었다고 들었어."</p>
-          </div>
-          <div class="flex items-start gap-3 bg-gray-50 rounded-xl p-4">
-            <span class="text-lg">💬</span>
-            <p class="text-sm text-gray-700">"걱정하는 마음이 클 것 같아, 꼭 힘내."</p>
-          </div>
-        </div>
-        <p class="text-sm text-gray-500 mt-6 italic">정확한 정보 위에 따뜻한 마음을 더할 수 있도록 돕습니다</p>
+  <div class="max-w-5xl mx-auto px-8 grid lg:grid-cols-2 gap-12 items-center">
+    <div>
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-full mb-5"><span class="text-orange-500 font-semibold text-sm">⚖️ 변호사 연동</span></div>
+      <h2 class="text-[26px] font-bold mb-4 text-brown-800">사건 편지는<br>더 정확하고 부드럽게</h2>
+      <p class="text-gray-500 mb-8">변호사님이 남겨주신 사건 진행상황을 반영해<br>문장을 정리해드립니다.</p>
+      <div class="space-y-4">
+        <div class="flex items-start gap-3 bg-gray-50 rounded-xl p-4"><span class="text-lg">💬</span><p class="text-sm text-gray-700">"변호사님이 이번 주에 서류 검토 중이라고 하셨어요."</p></div>
+        <div class="flex items-start gap-3 bg-gray-50 rounded-xl p-4"><span class="text-lg">💬</span><p class="text-sm text-gray-700">"다음 재판 일정이 확정되었다고 들었어."</p></div>
+        <div class="flex items-start gap-3 bg-gray-50 rounded-xl p-4"><span class="text-lg">💬</span><p class="text-sm text-gray-700">"걱정하는 마음이 클 것 같아, 꼭 힘내."</p></div>
       </div>
-      <div class="bg-white rounded-3xl p-8 shadow-md border border-gray-100 relative">
-        <div class="timeline-line"></div>
-        <div class="space-y-6 relative">
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 gradient-orange rounded-full flex items-center justify-center flex-shrink-0 z-10"><span class="text-white text-sm">1</span></div>
-            <div class="pt-2">
-              <p class="font-semibold text-sm" style="color: #3E2712;">변호사 상담 메모</p>
-              <p class="text-xs text-gray-500 mt-1">2024.01.15 상담 완료</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 gradient-orange rounded-full flex items-center justify-center flex-shrink-0 z-10"><span class="text-white text-sm">2</span></div>
-            <div class="pt-2">
-              <p class="font-semibold text-sm" style="color: #3E2712;">서류 제출 완료</p>
-              <p class="text-xs text-gray-500 mt-1">2024.01.20 제출</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 z-10"><span class="text-orange-600 text-sm">3</span></div>
-            <div class="pt-2">
-              <p class="font-semibold text-sm" style="color: #3E2712;">재판 일정 확정</p>
-              <p class="text-xs text-orange-500 mt-1 font-medium">2024.02.10 예정</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 z-10"><span class="text-gray-400 text-sm">4</span></div>
-            <div class="pt-2">
-              <p class="font-semibold text-sm text-gray-400">선고</p>
-              <p class="text-xs text-gray-400 mt-1">대기중</p>
-            </div>
-          </div>
-        </div>
+    </div>
+    <div class="bg-white rounded-3xl p-8 shadow-md border border-gray-100 relative">
+      <div class="absolute left-6 top-10 bottom-5 w-0.5 bg-gradient-to-b from-orange-500 to-gray-200"></div>
+      <div class="space-y-6 relative">
+        <div class="flex items-start gap-4"><div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center shrink-0 z-10 text-white text-sm">1</div><div class="pt-2"><p class="font-semibold text-sm text-brown-800">변호사 상담 메모</p><p class="text-xs text-gray-500 mt-1">2024.01.15 상담 완료</p></div></div>
+        <div class="flex items-start gap-4"><div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center shrink-0 z-10 text-white text-sm">2</div><div class="pt-2"><p class="font-semibold text-sm text-brown-800">서류 제출 완료</p><p class="text-xs text-gray-500 mt-1">2024.01.20 제출</p></div></div>
+        <div class="flex items-start gap-4"><div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center shrink-0 z-10 text-orange-600 text-sm">3</div><div class="pt-2"><p class="font-semibold text-sm text-brown-800">재판 일정 확정</p><p class="text-xs text-orange-500 mt-1 font-medium">2024.02.10 예정</p></div></div>
+        <div class="flex items-start gap-4"><div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center shrink-0 z-10 text-gray-400 text-sm">4</div><div class="pt-2"><p class="font-semibold text-sm text-gray-400">선고</p><p class="text-xs text-gray-400 mt-1">대기중</p></div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 섹션 6: 프로세스 -->
+<!-- 섹션6: 프로세스 -->
 <section class="py-20 bg-gray-50">
-  <div class="max-w-5xl mx-auto px-8">
-    <div class="text-center mb-14">
-      <h2 class="text-[26px] font-bold mb-3" style="color: #3E2712;">편지는 이렇게 전달됩니다</h2>
+  <div class="max-w-5xl mx-auto px-8 text-center">
+    <h2 class="text-[26px] font-bold mb-14 text-brown-800">편지는 이렇게 전달됩니다</h2>
+    <div class="flex flex-wrap justify-center gap-3 mb-6">
+      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm"><div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center text-white text-sm font-bold">1</div><span class="text-sm font-medium text-brown-800">편지쓰기</span></div>
+      <span class="text-gray-300 flex items-center">→</span>
+      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm"><div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center text-white text-sm font-bold">2</div><span class="text-sm font-medium text-brown-800">편지지 선택</span></div>
+      <span class="text-gray-300 flex items-center">→</span>
+      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm"><div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center text-white text-sm font-bold">3</div><span class="text-sm font-medium text-brown-800">사진 첨부</span></div>
     </div>
     <div class="flex flex-wrap justify-center gap-3 mb-10">
-      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm">
-        <div class="w-8 h-8 gradient-orange rounded-full flex items-center justify-center text-white text-sm font-bold">1</div>
-        <span class="text-sm font-medium" style="color: #3E2712;">편지쓰기</span>
-      </div>
-      <div class="text-gray-300 flex items-center">→</div>
-      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm">
-        <div class="w-8 h-8 gradient-orange rounded-full flex items-center justify-center text-white text-sm font-bold">2</div>
-        <span class="text-sm font-medium" style="color: #3E2712;">편지지 선택</span>
-      </div>
-      <div class="text-gray-300 flex items-center">→</div>
-      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm">
-        <div class="w-8 h-8 gradient-orange rounded-full flex items-center justify-center text-white text-sm font-bold">3</div>
-        <span class="text-sm font-medium" style="color: #3E2712;">사진 첨부</span>
-      </div>
+      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm"><div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center text-white text-sm font-bold">4</div><span class="text-sm font-medium text-brown-800">우편 발송 방식</span></div>
+      <span class="text-gray-300 flex items-center">→</span>
+      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm"><div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center text-white text-sm font-bold">5</div><span class="text-sm font-medium text-brown-800">포인트 결제</span></div>
+      <span class="text-gray-300 flex items-center">→</span>
+      <div class="flex items-center gap-3 bg-gradient-to-r from-orange-500 to-orange-400 rounded-full px-5 py-3 shadow-lg"><div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-orange-500 text-sm font-bold">✓</div><span class="text-sm font-medium text-white">우편 발송 완료</span></div>
     </div>
-    <div class="flex flex-wrap justify-center gap-3 mb-10">
-      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm">
-        <div class="w-8 h-8 gradient-orange rounded-full flex items-center justify-center text-white text-sm font-bold">4</div>
-        <span class="text-sm font-medium" style="color: #3E2712;">우편 발송 방식</span>
-      </div>
-      <div class="text-gray-300 flex items-center">→</div>
-      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm">
-        <div class="w-8 h-8 gradient-orange rounded-full flex items-center justify-center text-white text-sm font-bold">5</div>
-        <span class="text-sm font-medium" style="color: #3E2712;">포인트 결제</span>
-      </div>
-      <div class="text-gray-300 flex items-center">→</div>
-      <div class="flex items-center gap-3 bg-gradient-to-r from-orange-500 to-orange-400 rounded-full px-5 py-3 shadow-lg">
-        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-orange-500 text-sm font-bold">✓</div>
-        <span class="text-sm font-medium text-white">우편 발송 완료</span>
-      </div>
-    </div>
-    <div class="text-center">
-      <p class="text-gray-500 text-sm">"실제 우체국 발송까지 모든 과정을 대신 처리해드립니다"</p>
-    </div>
+    <p class="text-gray-500 text-sm">"실제 우체국 발송까지 모든 과정을 대신 처리해드립니다"</p>
   </div>
 </section>
 
-<!-- 섹션 8: CTA -->
-<section class="py-24 bg-white">
-  <div class="max-w-4xl mx-auto px-8 text-center">
-    <h2 class="text-[30px] font-bold mb-5 leading-[145%]" style="color: #3E2712;">마음만 말씀하세요<br>문장은 저희가 완성해드릴게요</h2>
+<!-- CTA -->
+<section class="py-24 bg-white text-center">
+  <div class="max-w-4xl mx-auto px-8">
+    <h2 class="text-[30px] font-bold mb-5 leading-[145%] text-brown-800">마음만 말씀하세요<br>문장은 저희가 완성해드릴게요</h2>
     <p class="text-gray-500 mb-10">서툰 표현도 괜찮아요. 하고 싶은 말만 해주시면 진심이 닿도록 다듬어드릴게요</p>
-    <button onclick="openModal()" class="gradient-orange text-white px-12 py-4 rounded-full text-lg font-bold shadow-xl hover:-translate-y-1 hover:shadow-2xl transition-all">💌 첫 편지 쓰기</button>
+    <button onclick="openModal()" class="bg-gradient-to-r from-orange-500 to-orange-400 text-white px-12 py-4 rounded-full text-lg font-bold shadow-xl hover:-translate-y-1 hover:shadow-2xl transition-all">💌 첫 편지 쓰기</button>
   </div>
 </section>
 
 <!-- 푸터 -->
-<footer class="bg-gray-900 text-white py-12">
+<footer class="bg-gray-900 text-gray-400 py-12">
   <div class="max-w-7xl mx-auto px-8">
-    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-      <div><span class="text-2xl font-bold text-orange-500">To-orange</span><p class="text-gray-400 text-sm mt-2">따뜻한 마음을 연결하는 편지 서비스</p></div>
-      <p class="text-gray-500 text-sm">© 2024 To-orange. All rights reserved.</p>
+    <div class="grid md:grid-cols-4 gap-8 mb-8">
+      <div><h3 class="text-white text-lg font-bold mb-4">To-orange</h3><p class="text-sm">수용자 가족과 함께하는<br>따뜻한 연결 플랫폼</p></div>
+      <div><h4 class="text-white font-semibold mb-4">서비스</h4><ul class="space-y-2 text-sm"><li><a href="letter-service-flow.html" class="hover:text-white">편지쓰기</a></li><li><a href="inbox.html" class="hover:text-white">받은편지함</a></li><li><a href="legal-main.html" class="hover:text-white">법률상담</a></li><li><a href="life-center.html" class="hover:text-white">라이프센터</a></li></ul></div>
+      <div><h4 class="text-white font-semibold mb-4">고객지원</h4><ul class="space-y-2 text-sm"><li><a href="guide.html" class="hover:text-white">이용가이드</a></li><li><a href="notice.html" class="hover:text-white">공지사항</a></li><li><a href="inquiry.html" class="hover:text-white">1:1 문의</a></li><li><a href="faq.html" class="hover:text-white">자주묻는질문</a></li></ul></div>
+      <div><h4 class="text-white font-semibold mb-4">연락처</h4><ul class="space-y-2 text-sm"><li>이메일: help@to-orange.kr</li><li>전화: 1588-0000</li><li>평일 09:00 - 18:00</li></ul></div>
+    </div>
+    <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+      <p>© 2025 To-orange. All rights reserved.</p>
+      <div class="flex gap-6 mt-4 md:mt-0"><a href="privacy.html" class="hover:text-white">개인정보처리방침</a><a href="terms.html" class="hover:text-white">이용약관</a></div>
     </div>
   </div>
 </footer>
 
 <!-- 플로팅 버튼 -->
 <a href="#" onclick="openModal(); return false;" class="fixed bottom-8 right-8 z-40 hover:scale-110 transition-transform">
-  <img src="https://github.com/heung-D/to-orange/blob/main/heart-letter-floating.png?raw=true" alt="편지쓰기" class="w-28 h-auto drop-shadow-lg">
+  <img src="https://github.com/heung-D/to-orange/blob/main/heart-letter-floating.png?raw=true" alt="편지쓰기" class="w-28 drop-shadow-lg">
 </a>
 
-<!-- 3단계 모달 팝업 -->
+<!-- 모달 -->
 <div id="letterModal" class="fixed inset-0 z-50 hidden">
-  <div class="modal-overlay absolute inset-0" onclick="closeModal()"></div>
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal()"></div>
   <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
     <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl h-[85vh] flex flex-col overflow-hidden">
-      <div class="flex-shrink-0 px-8 py-6 border-b border-gray-100">
-        <div class="flex items-center justify-between">
-          <span class="text-xl font-bold text-orange-500">To-orange</span>
-          <span id="stepIndicator" class="text-sm font-semibold text-gray-500">편지쓰기 준비 1/3</span>
-          <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
-        </div>
-        <p id="stepDescription" class="text-sm text-gray-500 mt-3 text-center">당신의 마음을 안전하게 전달하기 위해 필요한 절차예요.</p>
+      <div class="shrink-0 px-8 py-6 border-b border-gray-100 flex items-center justify-between">
+        <span class="text-xl font-bold text-orange-500">To-orange</span>
+        <span id="stepIndicator" class="text-sm font-semibold text-gray-500">편지쓰기 준비 1/3</span>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
       </div>
-      <div class="flex-1 min-h-0 overflow-y-auto px-8 py-6">
-        <div id="step1" class="step-content">
-          <div class="space-y-6">
-            <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-5 border border-orange-200">
-              <div class="flex items-start gap-3 mb-3">
-                <div class="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"><svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg></div>
-                <div><h3 class="font-bold text-gray-800 mb-1.5">비회원으로 편지 보내기</h3><p class="text-gray-600 text-sm leading-relaxed">휴대폰 인증을 하시면 편지를 보낼 수 있어요. 단, 나중에 받는 사람의 <span class="font-bold text-gray-800">답장을 확인</span>하려면 인증한 번호로 다시 접속하셔야 합니다.</p></div>
-              </div>
-              <div class="border-t border-orange-200 pt-3 mt-3"><button class="w-full gradient-orange text-white py-3 rounded-xl font-semibold text-sm">🏛 1달 무료로 회원가입하고 답장 받기</button><p class="text-center text-xs text-gray-500 mt-2">회원이시면 언제든 답장을 확인하고 편지함을 관리할 수 있어요</p></div>
-            </div>
-            <div><label class="block text-sm font-semibold text-gray-700 mb-2">보내는 사람 이름</label><input type="text" placeholder="이름을 입력해주세요" class="w-full px-4 py-3 border-2 border-orange-200 rounded-xl input-orange focus:outline-none"></div>
-            <div><label class="block text-sm font-semibold text-gray-700 mb-2">휴대폰 번호</label><div class="flex gap-3"><input type="tel" placeholder="010-0000-0000" class="flex-1 px-4 py-3 border-2 border-orange-200 rounded-xl input-orange focus:outline-none"><button onclick="requestVerification()" class="px-6 py-3 gradient-orange text-white rounded-xl font-semibold whitespace-nowrap">인증요청</button></div></div>
-            <div id="verificationSection" class="hidden"><label class="block text-sm font-semibold text-gray-700 mb-2">인증번호 (6자리)</label><input type="text" placeholder="인증번호 6자리 입력" maxlength="6" class="w-full px-4 py-3 border-2 border-orange-200 rounded-xl input-orange focus:outline-none"><p class="text-sm text-orange-500 mt-2 font-medium">⏱️ 남은 시간: <span id="timer">60</span>초</p></div>
-            <div class="flex items-start gap-3 bg-orange-50 p-4 rounded-xl"><input type="checkbox" class="mt-1 w-5 h-5 accent-orange-500"><label class="text-sm text-gray-600">법률 상담을 위해 필요한 경우, 상담 연결을 허용합니다</label></div>
+      <p id="stepDescription" class="text-sm text-gray-500 text-center py-3 border-b border-gray-50">당신의 마음을 안전하게 전달하기 위해 필요한 절차예요.</p>
+      <div class="flex-1 overflow-y-auto px-8 py-6">
+        <div id="step1" class="step-content space-y-6">
+          <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-5 border border-orange-200">
+            <h3 class="font-bold text-gray-800 mb-2">비회원으로 편지 보내기</h3>
+            <p class="text-gray-600 text-sm mb-4">휴대폰 인증을 하시면 편지를 보낼 수 있어요. 단, 답장 확인은 인증한 번호로 다시 접속해야 합니다.</p>
+            <button class="w-full bg-gradient-to-r from-orange-500 to-orange-400 text-white py-3 rounded-xl font-semibold text-sm">🛡 1달 무료로 회원가입하고 답장 받기</button>
           </div>
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">보내는 사람 이름</label><input type="text" placeholder="이름을 입력해주세요" class="w-full px-4 py-3 border-2 border-orange-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none"></div>
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">휴대폰 번호</label><div class="flex gap-3"><input type="tel" placeholder="010-0000-0000" class="flex-1 px-4 py-3 border-2 border-orange-200 rounded-xl focus:border-orange-500 outline-none"><button onclick="requestVerification()" class="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-xl font-semibold">인증요청</button></div></div>
+          <div id="verificationSection" class="hidden"><label class="block text-sm font-semibold text-gray-700 mb-2">인증번호 (6자리)</label><input type="text" placeholder="인증번호 6자리" maxlength="6" class="w-full px-4 py-3 border-2 border-orange-200 rounded-xl outline-none"><p class="text-sm text-orange-500 mt-2 font-medium">⏱️ 남은 시간: <span id="timer">60</span>초</p></div>
         </div>
-        <div id="step2" class="step-content hidden">
-          <div class="space-y-6">
-            <div><label class="block text-sm font-semibold text-gray-700 mb-2">수용자 이름</label><input type="text" placeholder="수용자의 이름을 입력해주세요" class="w-full px-4 py-3 border-2 border-orange-200 rounded-xl input-orange focus:outline-none"></div>
-            <div><label class="block text-sm font-semibold text-gray-700 mb-2">수용자 번호</label><input type="text" placeholder="123-456-789" class="w-full px-4 py-3 border-2 border-orange-200 rounded-xl input-orange focus:outline-none" oninput="formatPrisonerNumber(this)"></div>
-            <div><label class="block text-sm font-semibold text-gray-700 mb-3">수용자와의 관계</label><div class="flex flex-wrap gap-3"><button onclick="selectRelation(this, '가족')" class="chip-btn px-5 py-2.5 border-2 border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-orange-500 transition-all">가족</button><button onclick="selectRelation(this, '친척')" class="chip-btn px-5 py-2.5 border-2 border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-orange-500 transition-all">친척</button><button onclick="selectRelation(this, '친구')" class="chip-btn px-5 py-2.5 border-2 border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-orange-500 transition-all">친구</button><button onclick="selectRelation(this, '지인')" class="chip-btn px-5 py-2.5 border-2 border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-orange-500 transition-all">지인</button><button onclick="selectRelation(this, '법률관계')" class="chip-btn px-5 py-2.5 border-2 border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-orange-500 transition-all">법률관계</button><button onclick="selectRelation(this, '기타')" class="chip-btn px-5 py-2.5 border-2 border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-orange-500 transition-all">기타</button></div></div>
-            <div id="toneCard" class="bg-gradient-to-r from-orange-50 to-yellow-50 p-5 rounded-2xl border border-orange-100 hidden"><div class="flex items-center gap-2 mb-2"><span class="text-lg">✨</span><span class="font-semibold text-gray-700">추천 편지 톤</span></div><p id="toneText" class="text-sm text-gray-600"></p></div>
-          </div>
+        <div id="step2" class="step-content hidden space-y-6">
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">수용자 이름</label><input type="text" placeholder="수용자의 이름을 입력해주세요" class="w-full px-4 py-3 border-2 border-orange-200 rounded-xl outline-none"></div>
+          <div><label class="block text-sm font-semibold text-gray-700 mb-2">수용자 번호</label><input type="text" placeholder="123-456-789" class="w-full px-4 py-3 border-2 border-orange-200 rounded-xl outline-none" oninput="formatNum(this)"></div>
+          <div><label class="block text-sm font-semibold text-gray-700 mb-3">수용자와의 관계</label><div class="flex flex-wrap gap-2" id="relationBtns"><button class="rel-btn px-5 py-2.5 border-2 border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-orange-500" data-rel="가족">가족</button><button class="rel-btn px-5 py-2.5 border-2 border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-orange-500" data-rel="친척">친척</button><button class="rel-btn px-5 py-2.5 border-2 border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-orange-500" data-rel="친구">친구</button><button class="rel-btn px-5 py-2.5 border-2 border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-orange-500" data-rel="지인">지인</button><button class="rel-btn px-5 py-2.5 border-2 border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-orange-500" data-rel="법률관계">법률관계</button><button class="rel-btn px-5 py-2.5 border-2 border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-orange-500" data-rel="기타">기타</button></div></div>
+          <div id="toneCard" class="bg-gradient-to-r from-orange-50 to-yellow-50 p-5 rounded-2xl border border-orange-100 hidden"><div class="flex items-center gap-2 mb-2"><span class="text-lg">✨</span><span class="font-semibold text-gray-700">추천 편지 톤</span></div><p id="toneText" class="text-sm text-gray-600"></p></div>
         </div>
-        <div id="step3" class="step-content hidden">
-          <div class="flex gap-3 mb-6"><button onclick="switchTab('prison')" id="tabPrison" class="tab-btn flex-1 py-3 rounded-xl font-semibold border-2 border-orange-500 text-orange-500 transition-all active">🏢 교도소 검색</button><button onclick="switchTab('address')" id="tabAddress" class="tab-btn flex-1 py-3 rounded-xl font-semibold border-2 border-orange-500 text-orange-500 transition-all">📍 일반 주소 검색</button></div>
-          <div id="prisonTab"><input type="text" id="prisonSearch" placeholder="교도소명을 검색해주세요" class="w-full px-4 py-3 border-2 border-orange-200 rounded-xl input-orange focus:outline-none mb-4" oninput="filterPrisons()"><div class="flex flex-wrap gap-2 mb-4"><button onclick="filterByRegion(this, '')" class="region-chip px-4 py-2 bg-gray-100 rounded-full text-xs font-medium text-gray-600 active">전체</button><button onclick="filterByRegion(this, '서울')" class="region-chip px-4 py-2 bg-gray-100 rounded-full text-xs font-medium text-gray-600">서울</button><button onclick="filterByRegion(this, '경기')" class="region-chip px-4 py-2 bg-gray-100 rounded-full text-xs font-medium text-gray-600">경기</button><button onclick="filterByRegion(this, '충남')" class="region-chip px-4 py-2 bg-gray-100 rounded-full text-xs font-medium text-gray-600">충남</button></div><div id="prisonList" class="space-y-2 max-h-48 overflow-y-auto"><div onclick="selectPrison(this, '서울구치소', '서울특별시 송파구 위례성대로 41')" class="prison-item p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-orange-300 transition-all" data-region="서울"><p class="font-semibold text-gray-800">서울구치소</p><p class="text-sm text-gray-500">서울특별시 송파구 위례성대로 41</p></div><div onclick="selectPrison(this, '서울동부구치소', '서울특별시 송파구 동부구치소길 17')" class="prison-item p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-orange-300 transition-all" data-region="서울"><p class="font-semibold text-gray-800">서울동부구치소</p><p class="text-sm text-gray-500">서울특별시 송파구 동부구치소길 17</p></div><div onclick="selectPrison(this, '수원구치소', '경기도 수원시 영통구 창룡대로265번길 28')" class="prison-item p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-orange-300 transition-all" data-region="경기"><p class="font-semibold text-gray-800">수원구치소</p><p class="text-sm text-gray-500">경기도 수원시 영통구 창룡대로265번길 28</p></div></div></div>
-          <div id="addressTab" class="hidden"><input type="text" placeholder="주소를 검색해주세요" class="w-full px-4 py-3 border-2 border-orange-200 rounded-xl input-orange focus:outline-none mb-4"></div>
-          <div id="envelopePreview" class="mt-6 hidden"><div class="bg-gradient-to-br from-orange-50 to-yellow-50 p-5 rounded-2xl border-2 border-orange-200 relative"><div class="absolute top-3 right-3"><span class="text-2xl">📮</span></div><p class="text-xs text-orange-500 font-semibold mb-2">받는 장소</p><p id="envelopeName" class="font-bold text-gray-800 text-lg mb-1"></p><p id="envelopeAddress" class="text-sm text-gray-600 pr-16 mb-4"></p><div class="flex gap-2"><button onclick="clearSelectedAddress()" class="flex-1 py-2 px-4 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50">선택 취소</button><button onclick="editSelectedAddress()" class="flex-1 py-2 px-4 bg-white border border-orange-300 rounded-lg text-sm font-medium text-orange-500 hover:bg-orange-50">주소 수정</button></div></div></div>
+        <div id="step3" class="step-content hidden space-y-4">
+          <div class="flex gap-3"><button onclick="switchTab('prison')" id="tabPrison" class="flex-1 py-3 rounded-xl font-semibold border-2 border-orange-500 bg-gradient-to-r from-orange-500 to-orange-400 text-white">🏢 교도소 검색</button><button onclick="switchTab('address')" id="tabAddress" class="flex-1 py-3 rounded-xl font-semibold border-2 border-orange-500 text-orange-500">📍 일반 주소</button></div>
+          <div id="prisonTab"><input type="text" id="prisonSearch" placeholder="교도소명을 검색해주세요" class="w-full px-4 py-3 border-2 border-orange-200 rounded-xl outline-none mb-4" oninput="filterPrisons()"><div id="prisonList" class="space-y-2 max-h-48 overflow-y-auto"><div onclick="selectPrison(this,'서울구치소','서울특별시 송파구 위례성대로 41')" class="prison-item p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-orange-300"><p class="font-semibold text-gray-800">서울구치소</p><p class="text-sm text-gray-500">서울특별시 송파구 위례성대로 41</p></div><div onclick="selectPrison(this,'서울동부구치소','서울특별시 송파구 동부구치소길 17')" class="prison-item p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-orange-300"><p class="font-semibold text-gray-800">서울동부구치소</p><p class="text-sm text-gray-500">서울특별시 송파구 동부구치소길 17</p></div><div onclick="selectPrison(this,'수원구치소','경기도 수원시 영통구 창룡대로265번길 28')" class="prison-item p-4 border-2 border-gray-100 rounded-xl cursor-pointer hover:border-orange-300"><p class="font-semibold text-gray-800">수원구치소</p><p class="text-sm text-gray-500">경기도 수원시 영통구 창룡대로265번길 28</p></div></div></div>
+          <div id="addressTab" class="hidden"><input type="text" placeholder="주소를 검색해주세요" class="w-full px-4 py-3 border-2 border-orange-200 rounded-xl outline-none"></div>
+          <div id="envelopePreview" class="hidden bg-gradient-to-br from-orange-50 to-yellow-50 p-5 rounded-2xl border-2 border-orange-200 relative"><div class="absolute top-3 right-3 text-2xl">📮</div><p class="text-xs text-orange-500 font-semibold mb-2">받는 장소</p><p id="envelopeName" class="font-bold text-gray-800 text-lg mb-1"></p><p id="envelopeAddress" class="text-sm text-gray-600 pr-16"></p></div>
         </div>
       </div>
-      <div class="flex-shrink-0 px-8 py-5 border-t border-gray-100 bg-white">
-        <div class="flex justify-between items-center">
-          <button id="prevBtn" onclick="prevStep()" class="flex items-center gap-2 text-gray-300 font-medium cursor-not-allowed" disabled><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>이전 단계</button>
-          <button id="nextBtn" onclick="nextStep()" class="gradient-orange text-white px-8 py-3 rounded-xl font-semibold flex items-center gap-2">다음 단계<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
-        </div>
+      <div class="shrink-0 px-8 py-5 border-t border-gray-100 flex justify-between items-center">
+        <button id="prevBtn" onclick="prevStep()" class="flex items-center gap-2 text-gray-300 cursor-not-allowed" disabled>← 이전</button>
+        <button id="nextBtn" onclick="nextStep()" class="bg-gradient-to-r from-orange-500 to-orange-400 text-white px-8 py-3 rounded-xl font-semibold">다음 단계 →</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-let currentStep = 1, timerInterval = null;
-const stepDescriptions = { 1: '당신의 마음을 안전하게 전달하기 위해 필요한 절차예요.', 2: '정확한 정보가 있어야 마음이 온전히 전달돼요.', 3: '이제 편지를 전달할 곳을 선택해주세요.' };
-const toneTexts = { '가족': '따뜻하고 다정한 톤으로 편지를 도와드릴게요. 💕', '친척': '정중하면서도 친근한 톤으로 도와드릴게요. 🤝', '친구': '편안하고 솔직한 대화체 톤을 추천드려요. 😊', '지인': '예의 바르면서 친근한 톤으로 도와드릴게요. 👋', '법률관계': '정리된 정보 전달 중심의 톤으로 도와드릴게요. 📋', '기타': '상황에 맞는 적절한 톤으로 도와드릴게요. ✨' };
-
-function openModal() { document.getElementById('letterModal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; currentStep = 1; updateStep(); }
-function closeModal() { document.getElementById('letterModal').classList.add('hidden'); document.body.style.overflow = ''; resetModal(); }
-function resetModal() { currentStep = 1; if (timerInterval) clearInterval(timerInterval); document.getElementById('verificationSection').classList.add('hidden'); document.getElementById('toneCard').classList.add('hidden'); document.getElementById('envelopePreview').classList.add('hidden'); document.querySelectorAll('.chip-btn').forEach(btn => btn.classList.remove('active')); document.querySelectorAll('.prison-item').forEach(item => item.classList.remove('selected')); document.getElementById('prevBtn').disabled = true; document.getElementById('prevBtn').className = 'flex items-center gap-2 text-gray-300 font-medium cursor-not-allowed'; document.getElementById('nextBtn').innerHTML = '다음 단계<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>'; }
-function updateStep() { document.getElementById('stepIndicator').textContent = `편지쓰기 준비 ${currentStep}/3`; document.getElementById('stepDescription').textContent = stepDescriptions[currentStep]; document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden')); document.getElementById(`step${currentStep}`).classList.remove('hidden'); const prevBtn = document.getElementById('prevBtn'); const nextBtn = document.getElementById('nextBtn'); if (currentStep === 1) { prevBtn.disabled = true; prevBtn.className = 'flex items-center gap-2 text-gray-300 font-medium cursor-not-allowed'; } else { prevBtn.disabled = false; prevBtn.className = 'flex items-center gap-2 text-gray-600 font-medium hover:text-orange-500 transition-colors'; } if (currentStep === 3) { nextBtn.innerHTML = '💌 이 주소로 편지 쓰기 시작하기'; } else { nextBtn.innerHTML = '다음 단계<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>'; } }
-function nextStep() { if (currentStep < 3) { currentStep++; updateStep(); } else { alert('편지 작성 화면으로 이동합니다!'); closeModal(); } }
-function prevStep() { if (currentStep > 1) { currentStep--; updateStep(); } }
-function requestVerification() { document.getElementById('verificationSection').classList.remove('hidden'); let seconds = 60; const timerEl = document.getElementById('timer'); if (timerInterval) clearInterval(timerInterval); timerInterval = setInterval(() => { seconds--; timerEl.textContent = seconds; if (seconds <= 0) clearInterval(timerInterval); }, 1000); }
-function formatPrisonerNumber(input) { let v = input.value.replace(/[^0-9]/g, ''); if (v.length > 3) v = v.slice(0, 3) + '-' + v.slice(3); if (v.length > 7) v = v.slice(0, 7) + '-' + v.slice(7); if (v.length > 11) v = v.slice(0, 11); input.value = v; }
-function selectRelation(btn, relation) { document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.getElementById('toneCard').classList.remove('hidden'); document.getElementById('toneText').textContent = toneTexts[relation]; }
-function switchTab(tab) { const prisonTab = document.getElementById('prisonTab'); const addressTab = document.getElementById('addressTab'); const tabPrison = document.getElementById('tabPrison'); const tabAddress = document.getElementById('tabAddress'); if (tab === 'prison') { prisonTab.classList.remove('hidden'); addressTab.classList.add('hidden'); tabPrison.classList.add('active'); tabAddress.classList.remove('active'); } else { prisonTab.classList.add('hidden'); addressTab.classList.remove('hidden'); tabPrison.classList.remove('active'); tabAddress.classList.add('active'); } }
-function filterByRegion(btn, region) { document.querySelectorAll('.region-chip').forEach(c => c.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('.prison-item').forEach(item => { item.style.display = (!region || item.dataset.region === region) ? 'block' : 'none'; }); }
-function filterPrisons() { const q = document.getElementById('prisonSearch').value.toLowerCase(); document.querySelectorAll('.prison-item').forEach(item => { item.style.display = item.querySelector('p').textContent.toLowerCase().includes(q) ? 'block' : 'none'; }); }
-function selectPrison(el, name, address) { document.querySelectorAll('.prison-item').forEach(item => item.classList.remove('selected')); el.classList.add('selected'); document.getElementById('envelopeName').textContent = name; document.getElementById('envelopeAddress').textContent = address; document.getElementById('envelopePreview').classList.remove('hidden'); }
-function clearSelectedAddress() { document.querySelectorAll('.prison-item').forEach(item => item.classList.remove('selected')); document.getElementById('envelopePreview').classList.add('hidden'); }
-function editSelectedAddress() { clearSelectedAddress(); document.getElementById('prisonSearch').focus(); }
+const CURRENT_PAGE='heart-main.html',MENU_CONFIG={mainNav:[{id:'heart',title:'마음전하기',mainUrl:'heart-main.html',submenu:[{title:'편지쓰기',url:'letter-service-flow.html'},{title:'보낸편지함',url:'sent-box.html'},{title:'받은편지함',url:'inbox.html',loginRequired:!0},{title:'임시보관함',url:'draft-box.html'}]},{id:'legal',title:'법률도우미',mainUrl:'legal-main.html',submenu:[{title:'내 사연 보내기',url:'legal-story.html'},{title:'법률도우미 매칭',url:'legal-matching.html'},{title:'진행프로세스',url:'legal-process.html'}]},{id:'community',title:'커뮤니티',mainUrl:'community-main.html',submenu:[{title:'자유게시판',url:'free-board.html'},{title:'법률지식 on',url:'legal-knowledge.html'}]},{id:'donation',title:'기부나눔',mainUrl:'donation-main.html',submenu:[{title:'기부나눔캠페인',url:'campaign.html'},{title:'후원소식',url:'support-news.html'},{title:'후원하기',url:'support.html'}]},{id:'life-center',title:'라이프센터',mainUrl:'life-center.html',submenu:[{title:'상황별 안내',url:'life-situation.html'},{title:'라이프 캘린더',url:'life-calendar.html'},{title:'재사회화 지원',url:'life-resocialization.html'}]},{id:'support',title:'고객센터',mainUrl:'support-main.html',submenu:[{title:'이용가이드',url:'guide.html'},{title:'공지사항',url:'notice.html'},{title:'1:1문의',url:'inquiry.html'}]}]};
+function generateMenu(){const n=document.querySelector('.main-nav');if(!n)return;n.innerHTML='';MENU_CONFIG.mainNav.forEach(m=>{const li=document.createElement('li');li.className='menu-item relative';const isActive=m.mainUrl===CURRENT_PAGE||m.submenu?.some(s=>s.url===CURRENT_PAGE);let sub='';if(m.submenu?.length){sub=`<div class="submenu absolute top-full left-1/2 -translate-x-1/2 pt-2 min-w-[180px]"><div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2">${m.submenu.map(s=>`<a href="${s.url}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 ${s.url===CURRENT_PAGE?'text-orange-500 bg-orange-50':''}">${s.title}</a>`).join('')}</div></div>`}li.innerHTML=`<a href="${m.mainUrl}" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5 block ${isActive?'nav-active text-orange-500':''}">${m.title}</a>${sub}`;n.appendChild(li)})}
+let step=1,timer=null;const desc={1:'당신의 마음을 안전하게 전달하기 위해 필요한 절차예요.',2:'정확한 정보가 있어야 마음이 온전히 전달돼요.',3:'이제 편지를 전달할 곳을 선택해주세요.'},tones={가족:'따뜻하고 다정한 톤 💕',친척:'정중하면서 친근한 톤 🤝',친구:'편안하고 솔직한 톤 😊',지인:'예의 바르고 친근한 톤 👋',법률관계:'정리된 정보 전달 중심 📋',기타:'상황에 맞는 적절한 톤 ✨'};
+function openModal(){document.getElementById('letterModal').classList.remove('hidden');document.body.style.overflow='hidden';step=1;updateStep()}
+function closeModal(){document.getElementById('letterModal').classList.add('hidden');document.body.style.overflow='';step=1;if(timer)clearInterval(timer)}
+function updateStep(){document.getElementById('stepIndicator').textContent=`편지쓰기 준비 ${step}/3`;document.getElementById('stepDescription').textContent=desc[step];document.querySelectorAll('.step-content').forEach(e=>e.classList.add('hidden'));document.getElementById(`step${step}`).classList.remove('hidden');const p=document.getElementById('prevBtn'),x=document.getElementById('nextBtn');p.disabled=step===1;p.className=step===1?'flex items-center gap-2 text-gray-300 cursor-not-allowed':'flex items-center gap-2 text-gray-600 hover:text-orange-500';x.textContent=step===3?'💌 이 주소로 편지 쓰기':'다음 단계 →'}
+function nextStep(){if(step<3){step++;updateStep()}else{alert('편지 작성 화면으로 이동합니다!');closeModal()}}
+function prevStep(){if(step>1){step--;updateStep()}}
+function requestVerification(){document.getElementById('verificationSection').classList.remove('hidden');let s=60;const t=document.getElementById('timer');if(timer)clearInterval(timer);timer=setInterval(()=>{s--;t.textContent=s;if(s<=0)clearInterval(timer)},1000)}
+function formatNum(i){let v=i.value.replace(/\D/g,'');if(v.length>3)v=v.slice(0,3)+'-'+v.slice(3);if(v.length>7)v=v.slice(0,7)+'-'+v.slice(7);i.value=v.slice(0,11)}
+document.getElementById('relationBtns')?.addEventListener('click',e=>{if(e.target.classList.contains('rel-btn')){document.querySelectorAll('.rel-btn').forEach(b=>{b.classList.remove('bg-gradient-to-r','from-orange-500','to-orange-400','text-white','border-transparent');b.classList.add('border-gray-200','text-gray-600')});e.target.classList.remove('border-gray-200','text-gray-600');e.target.classList.add('bg-gradient-to-r','from-orange-500','to-orange-400','text-white','border-transparent');document.getElementById('toneCard').classList.remove('hidden');document.getElementById('toneText').textContent=tones[e.target.dataset.rel]}});
+function switchTab(t){const p=document.getElementById('prisonTab'),a=document.getElementById('addressTab'),tp=document.getElementById('tabPrison'),ta=document.getElementById('tabAddress');if(t==='prison'){p.classList.remove('hidden');a.classList.add('hidden');tp.classList.add('bg-gradient-to-r','from-orange-500','to-orange-400','text-white');tp.classList.remove('text-orange-500');ta.classList.remove('bg-gradient-to-r','from-orange-500','to-orange-400','text-white');ta.classList.add('text-orange-500')}else{p.classList.add('hidden');a.classList.remove('hidden');ta.classList.add('bg-gradient-to-r','from-orange-500','to-orange-400','text-white');ta.classList.remove('text-orange-500');tp.classList.remove('bg-gradient-to-r','from-orange-500','to-orange-400','text-white');tp.classList.add('text-orange-500')}}
+function filterPrisons(){const q=document.getElementById('prisonSearch').value.toLowerCase();document.querySelectorAll('.prison-item').forEach(i=>{i.style.display=i.textContent.toLowerCase().includes(q)?'block':'none'})}
+function selectPrison(el,n,addr){document.querySelectorAll('.prison-item').forEach(i=>{i.classList.remove('bg-gradient-to-br','from-orange-50','to-orange-100','border-orange-500');i.classList.add('border-gray-100')});el.classList.remove('border-gray-100');el.classList.add('bg-gradient-to-br','from-orange-50','to-orange-100','border-orange-500');document.getElementById('envelopeName').textContent=n;document.getElementById('envelopeAddress').textContent=addr;document.getElementById('envelopePreview').classList.remove('hidden')}
+document.addEventListener('DOMContentLoaded',generateMenu);
 </script>
 </body>
 </html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>법률도우미 - To-orange</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --black: #000000;
+            --white: #FFFFFF;
+            --gray-50: #F7F7F7;
+            --gray-100: #E8E8E8;
+            --gray-200: #D1D1D1;
+            --gray-400: #999999;
+            --gray-600: #666666;
+            --orange: #FF6B35;
+            --orange-light: #FF8C61;
+            --yellow: #F7931E;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            overflow-x: hidden;
+        }
+
+        /* 헤더 - 새로운 네비게이션 */
+        header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-100);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 60px;
+            height: 70px;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+        .main-nav {
+            display: flex;
+            list-style: none;
+            height: 100%;
+        }
+        .nav-item {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            padding: 0 20px;
+            text-decoration: none;
+            color: var(--black);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover { color: var(--orange); }
+        .nav-link.active {
+            color: var(--orange);
+            border-bottom: 2px solid var(--orange);
+        }
+        .submenu-wrapper {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding-top: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover .submenu-wrapper {
+            opacity: 1;
+            visibility: visible;
+        }
+        .submenu {
+            background: white;
+            border: 1px solid var(--gray-100);
+            border-radius: 12px;
+            padding: 10px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            list-style: none;
+            min-width: 180px;
+        }
+        .submenu li a {
+            display: block;
+            padding: 12px 20px;
+            color: var(--black);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .submenu li a:hover {
+            background: linear-gradient(135deg, #FFE5E5 0%, #FFF5E5 100%);
+            color: var(--orange);
+        }
+        .nav-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav-right a {
+            text-decoration: none;
+            color: var(--gray-600);
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-right a:hover { color: var(--black); }
+
+        /* 메인 컨테이너 */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 80px 60px;
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .content-wrapper { width: 100%; max-width: 720px; }
+        .page-header { text-align: center; margin-bottom: 50px; }
+        .page-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .page-title {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+            line-height: 1.3;
+        }
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+
+        /* 입력 섹션 */
+        .input-section {
+            background: white;
+            border: 2px solid var(--gray-100);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+        .input-section:focus-within {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+        }
+        .input-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--black);
+            margin-bottom: 15px;
+            display: block;
+        }
+        .input-wrapper {
+            position: relative;
+            background: var(--gray-50);
+            border: 2px solid var(--gray-100);
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+        .input-wrapper:focus-within {
+            border-color: var(--orange);
+            background: white;
+        }
+        .main-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 18px 70px 18px 20px;
+            font-size: 16px;
+            font-family: inherit;
+            outline: none;
+            color: var(--black);
+        }
+        .main-input::placeholder { color: var(--gray-400); }
+        .submit-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border: none;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .submit-btn:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.4);
+        }
+        .help-text {
+            font-size: 14px;
+            color: var(--gray-600);
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .suggestions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+        .suggestion-chip {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-100);
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .suggestion-chip:hover {
+            background: var(--orange);
+            color: white;
+            border-color: var(--orange);
+            transform: translateY(-2px);
+        }
+
+        /* 정보 카드 */
+        .info-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .info-card {
+            background: white;
+            border: 2px solid var(--gray-100);
+            border-radius: 20px;
+            padding: 30px 25px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .info-card:hover {
+            border-color: var(--orange);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.1);
+        }
+        .info-card .icon { font-size: 40px; margin-bottom: 15px; }
+        .info-card .title { font-size: 16px; font-weight: 700; color: var(--black); margin-bottom: 8px; }
+        .info-card .desc { font-size: 13px; color: var(--gray-600); line-height: 1.5; }
+
+        /* 채팅 화면 */
+        .chat-screen {
+            background: white;
+            border: 2px solid var(--gray-100);
+            border-radius: 20px;
+            padding: 40px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .message { margin-bottom: 25px; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .message.bot { display: flex; gap: 12px; align-items: flex-start; }
+        .message.user { display: flex; justify-content: flex-end; }
+        .bot-avatar {
+            width: 42px; height: 42px;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; flex-shrink: 0;
+        }
+        .message-bubble {
+            padding: 15px 20px;
+            border-radius: 18px;
+            max-width: 85%;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+        .message.bot .message-bubble { background: var(--gray-50); color: var(--black); }
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+        }
+        .typing-indicator { display: none; align-items: center; gap: 12px; margin-bottom: 25px; }
+        .typing-indicator.active { display: flex; }
+        .typing-dots {
+            display: flex; gap: 5px;
+            background: var(--gray-50);
+            padding: 15px 20px;
+            border-radius: 18px;
+        }
+        .typing-dots span {
+            width: 8px; height: 8px;
+            background: var(--gray-400);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-8px); opacity: 1; }
+        }
+
+        /* CTA 섹션 */
+        .cta-section {
+            background: linear-gradient(135deg, #FFE5E5 0%, #FFF5E5 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .cta-section h3 { font-size: 24px; color: var(--black); margin-bottom: 12px; font-weight: 700; }
+        .cta-section p { font-size: 15px; color: var(--gray-600); line-height: 1.7; margin-bottom: 25px; }
+        .cta-button {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+        .safety-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-top: 15px;
+        }
+        .hidden { display: none !important; }
+
+        /* Footer */
+        footer {
+            background: var(--gray-50);
+            padding: 60px;
+            border-top: 1px solid var(--gray-100);
+            margin-top: 80px;
+        }
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .main-nav { display: none; }
+            .main-container { padding: 60px 20px; }
+            .page-title { font-size: 32px; }
+            .input-section { padding: 30px 25px; }
+            .info-cards { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">To-orange</a>
+            <ul class="main-nav" id="main-nav"></ul>
+            <div class="nav-right">
+                <a href="mypage-home.html">마이페이지</a>
+                <a href="login.html">로그인</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 메인 컨테이너 -->
+    <div class="main-container">
+        <div class="content-wrapper">
+            <!-- 초기 화면 -->
+            <div id="initialScreen">
+                <div class="page-header">
+                    <div class="page-badge">🤝 교정시설 특화 법률 서비스</div>
+                    <h1 class="page-title">혼자 고민하지<br>않으셔도 돼요</h1>
+                    <p class="page-subtitle">
+                        어떤 일이든 편하게 말씀해주세요.<br>
+                        당신의 이야기를 들을 준비가 되어 있습니다.
+                    </p>
+                </div>
+
+                <div class="input-section">
+                    <label class="input-label">무엇이 궁금하신가요?</label>
+                    <div class="input-wrapper">
+                        <input type="text" class="main-input" id="userInput" placeholder="예: 출소 날짜가 언제인지 알고 싶어요" onkeypress="handleKeyPress(event)">
+                        <button class="submit-btn" onclick="submitInput()">→</button>
+                    </div>
+                    <div class="help-text">💡 걱정하지 마세요. 어떤 말이든 괜찮아요</div>
+                    <div class="suggestions">
+                        <div class="suggestion-chip" onclick="fillInput('언제 나갈 수 있을까요')">언제 나갈 수 있을까요</div>
+                        <div class="suggestion-chip" onclick="fillInput('가족에게 연락하고 싶어요')">가족에게 연락하고 싶어요</div>
+                        <div class="suggestion-chip" onclick="fillInput('일자리를 찾고 싶어요')">일자리를 찾고 싶어요</div>
+                        <div class="suggestion-chip" onclick="fillInput('빚이 너무 많아요')">빚이 너무 많아요</div>
+                        <div class="suggestion-chip" onclick="fillInput('이혼하고 싶어요')">이혼하고 싶어요</div>
+                    </div>
+                </div>
+
+                <div class="info-cards">
+                    <div class="info-card">
+                        <div class="icon">🔒</div>
+                        <div class="title">비밀 보장</div>
+                        <div class="desc">모든 대화는 안전하게 보호됩니다</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="icon">💯</div>
+                        <div class="title">무료 상담</div>
+                        <div class="desc">모든 상담은 완전 무료입니다</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="icon">⚡</div>
+                        <div class="title">24시간</div>
+                        <div class="desc">언제든 편한 시간에</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 대화 화면 -->
+            <div id="chatScreen" class="hidden">
+                <div class="chat-screen" id="chatMessages"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>© 2024 To-orange. All rights reserved.</p>
+            <p style="margin-top: 10px;">따뜻한 마음을 연결하는 편지 서비스</p>
+        </div>
+    </footer>
+
+    <script>
+        const CURRENT_PAGE = 'legal-main.html';
+        const MENU_CONFIG = {
+            mainNav: [
+                { id: 'heart', title: '마음전하기', mainUrl: 'heart-main.html', submenu: [{ title: '편지쓰기', url: 'letter-service-flow.html' }, { title: '보낸편지함', url: 'sent-box.html' }, { title: '받은편지함', url: 'inbox.html', loginRequired: true }, { title: '임시보관함', url: 'draft-box.html' }] },
+                { id: 'legal', title: '법률도우미', mainUrl: 'legal-main.html', submenu: [{ title: '내 사연 보내기', url: 'legal-story.html' }, { title: '법률도우미 매칭', url: 'legal-matching.html' }, { title: '진행프로세스', url: 'legal-process.html' }] },
+                { id: 'community', title: '커뮤니티', mainUrl: 'community-main.html', submenu: [{ title: '자유게시판', url: 'free-board.html' }, { title: '법률지식 on', url: 'legal-knowledge.html' }] },
+                { id: 'donation', title: '기부나눔', mainUrl: 'donation-main.html', submenu: [{ title: '기부나눔캠페인', url: 'campaign.html' }, { title: '후원소식', url: 'support-news.html' }, { title: '후원하기', url: 'support.html' }] },
+                { id: 'life-center', title: '라이프센터', mainUrl: 'life-center.html', submenu: [{ title: '상황별 안내', url: 'life-situation.html' }, { title: '라이프 캘린더', url: 'life-calendar.html' }, { title: '재사회화 지원', url: 'life-resocialization.html' }] },
+                { id: 'support', title: '고객센터', mainUrl: 'support-main.html', submenu: [{ title: '이용가이드', url: 'guide.html' }, { title: '공지사항', url: 'notice.html' }, { title: '1:1문의', url: 'inquiry.html' }] }
+            ]
+        };
+
+        function generateMenu() {
+            const nav = document.getElementById('main-nav');
+            MENU_CONFIG.mainNav.forEach(menu => {
+                const isActive = menu.mainUrl === CURRENT_PAGE || menu.submenu?.some(sub => sub.url === CURRENT_PAGE);
+                const li = document.createElement('li');
+                li.className = 'nav-item';
+                li.innerHTML = `
+                    <a href="${menu.mainUrl}" class="nav-link ${isActive ? 'active' : ''}">${menu.title}</a>
+                    ${menu.submenu ? `<div class="submenu-wrapper"><ul class="submenu">${menu.submenu.map(sub => `<li><a href="${sub.url}">${sub.title}</a></li>`).join('')}</ul></div>` : ''}
+                `;
+                nav.appendChild(li);
+            });
+        }
+
+        function fillInput(text) {
+            document.getElementById('userInput').value = text;
+            document.getElementById('userInput').focus();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') submitInput();
+        }
+
+        function submitInput() {
+            const input = document.getElementById('userInput');
+            const userText = input.value.trim();
+            if (!userText) { alert('고민을 편하게 적어주세요'); return; }
+
+            document.getElementById('initialScreen').classList.add('hidden');
+            document.getElementById('chatScreen').classList.remove('hidden');
+            const chatMessages = document.getElementById('chatMessages');
+
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            userMessage.innerHTML = `<div class="message-bubble">${userText}</div>`;
+            chatMessages.appendChild(userMessage);
+
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator active';
+            typingIndicator.innerHTML = `<div class="bot-avatar">🤝</div><div class="typing-dots"><span></span><span></span><span></span></div>`;
+            chatMessages.appendChild(typingIndicator);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            setTimeout(() => {
+                typingIndicator.remove();
+                const botMessage = document.createElement('div');
+                botMessage.className = 'message bot';
+                botMessage.innerHTML = `
+                    <div class="bot-avatar">🤝</div>
+                    <div class="message-bubble">
+                        말씀해주셔서 감사합니다.<br><br>
+                        <strong>${getBotResponse(userText)}</strong><br><br>
+                        전문 상담사가 당신의 상황을 자세히 듣고, 함께 해결 방법을 찾아드릴게요.
+                    </div>
+                `;
+                chatMessages.appendChild(botMessage);
+
+                const ctaSection = document.createElement('div');
+                ctaSection.className = 'cta-section';
+                ctaSection.innerHTML = `
+                    <h3>지금 바로 시작해볼까요?</h3>
+                    <p>평균 24시간 이내에 전문 상담사가 연락드립니다.<br>상담은 전화, 문자, 방문 중 편한 방법으로 진행됩니다.</p>
+                    <button class="cta-button" onclick="goToConsult('${userText}')">무료 상담 신청하기</button>
+                    <div class="safety-badge">🔒 모든 정보는 안전하게 보호됩니다</div>
+                `;
+                chatMessages.appendChild(ctaSection);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 2000);
+        }
+
+        function getBotResponse(userText) {
+            const text = userText.toLowerCase();
+            if (text.includes('출소') || text.includes('나가') || text.includes('언제')) return '출소 일정을 알고 싶으시군요. 정확한 날짜와 준비 사항을 안내해드릴게요.';
+            if (text.includes('가족') || text.includes('연락') || text.includes('면회')) return '가족과의 연락이 그리우시겠어요. 면회와 연락 방법을 알려드리겠습니다.';
+            if (text.includes('일') || text.includes('취업') || text.includes('직장')) return '새로운 시작을 준비하시는군요. 취업 지원 프로그램을 소개해드릴게요.';
+            if (text.includes('빚') || text.includes('대출') || text.includes('채무')) return '경제적 어려움이 있으시군요. 채무 해결 방법을 함께 찾아보겠습니다.';
+            if (text.includes('이혼') || text.includes('양육') || text.includes('자녀')) return '가족 문제로 힘드시겠어요. 법률적 조언과 해결책을 드리겠습니다.';
+            return '당신의 상황을 이해했습니다. 최선의 해결책을 찾아보겠습니다.';
+        }
+
+        function goToConsult(userInput) {
+            alert(`"${userInput}"\n\n상담 신청 페이지로 이동합니다.\n입력하신 내용이 자동으로 전달됩니다.`);
+        }
+
+        document.addEventListener('DOMContentLoaded', generateMenu);
+    </script>
+</body>
+</html>

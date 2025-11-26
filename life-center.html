@@ -1,543 +1,437 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>라이프센터 - To-orange</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>라이프센터 - To-orange</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            pretendard: ['Pretendard Variable', 'sans-serif']
+          },
+          colors: {
+            orange: { 50: '#FFF5E5', 100: '#FFE5CC', 500: '#FF6B35', 600: '#E55A2B' }
+          }
         }
-        .submenu {
-            display: none;
-        }
-        .menu-item:hover .submenu {
-            display: block;
-        }
-        .voice-indicator {
-            display: none;
-        }
-        .voice-indicator.active {
-            display: block;
-        }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Pretendard Variable', sans-serif; }
+    .submenu { opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; }
+    .menu-item:hover .submenu { opacity: 1; visibility: visible; transform: translateY(0); }
+    .nav-active { color: #FF6B35; border-bottom: 2px solid #FF6B35; }
+    .situation-card:hover { background: #FFF5E5; }
+    .sos-float { animation: pulse-ring 2s ease-out infinite; }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+  </style>
 </head>
-<body class="min-h-screen bg-white flex flex-col">
+<body class="bg-white min-h-screen flex flex-col">
+  <!-- 네비게이션 -->
+  <nav class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="text-2xl font-bold text-orange-500">To-orange</a>
+        <div class="flex items-center space-x-8">
+          <ul class="main-nav flex items-center space-x-6"></ul>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="mypage-home.html" class="text-sm text-gray-600 hover:text-gray-900">마이페이지</a>
+          <span class="text-gray-300">|</span>
+          <a href="login.html" class="text-sm text-gray-600 hover:text-gray-900">로그인</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 긴급 도움 요청 플로팅 버튼 -->
+  <a href="tel:1588-0000" class="sos-float fixed bottom-6 right-6 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-2xl flex items-center gap-3 px-5 py-4 z-50 transition-all hover:scale-105">
+    <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+      </svg>
+    </div>
+    <div class="text-left">
+      <p class="font-bold text-sm">긴급 도움 요청</p>
+      <p class="text-red-100 text-xs">24시간 상담 · 즉시 연결</p>
+    </div>
+  </a>
+
+  <!-- 메인 콘텐츠 -->
+  <main class="flex-1 max-w-4xl mx-auto w-full px-4 py-8">
+    <!-- 상황 선택 화면 -->
+    <div id="situationSelection">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">라이프센터</h1>
+        <p class="text-lg text-gray-600">지금 어떤 상황이신가요?</p>
+        <p class="text-sm text-gray-500 mt-1">상황에 맞는 정보와 할 일을 안내해드립니다</p>
+      </div>
+
+      <!-- 상황 카드 -->
+      <div class="space-y-4 mb-8">
+        <!-- 경찰 조사 받기 전 -->
+        <button onclick="showTodos('pre-investigation')" class="situation-card w-full bg-white border border-gray-100 rounded-xl p-6 text-left transition-all shadow-sm hover:shadow-md">
+          <div class="flex items-center space-x-4">
+            <div class="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-900 mb-1">경찰 조사를 받기 전이에요</h3>
+              <p class="text-gray-500">미리 준비해야 할 것들이 있어요</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-400 flex-shrink-0"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </button>
+
+        <!-- 경찰 조사를 받았어요 -->
+        <button onclick="showTodos('investigation')" class="situation-card w-full bg-white border border-gray-100 rounded-xl p-6 text-left transition-all shadow-sm hover:shadow-md">
+          <div class="flex items-center space-x-4">
+            <div class="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-900 mb-1">경찰 조사를 받았어요</h3>
+              <p class="text-gray-500">또는 받을 예정이에요</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-400 flex-shrink-0"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </button>
+
+        <!-- 가족이 곧 수감돼요 -->
+        <button onclick="showTodos('pre-detention')" class="situation-card w-full bg-white border border-gray-100 rounded-xl p-6 text-left transition-all shadow-sm hover:shadow-md">
+          <div class="flex items-center space-x-4">
+            <div class="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-900 mb-1">가족이 곧 수감돼요</h3>
+              <p class="text-gray-500">무엇을 준비해야 할까요</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-400 flex-shrink-0"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </button>
+
+        <!-- 가족이 지금 수감 중이에요 -->
+        <button onclick="showTodos('detained')" class="situation-card w-full bg-white border border-gray-100 rounded-xl p-6 text-left transition-all shadow-sm hover:shadow-md">
+          <div class="flex items-center space-x-4">
+            <div class="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-900 mb-1">가족이 지금 수감 중이에요</h3>
+              <p class="text-gray-500">어떻게 도와줄 수 있을까요</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-400 flex-shrink-0"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </button>
+
+        <!-- 출소를 앞두고 있어요 -->
+        <button onclick="showTodos('post-release')" class="situation-card w-full bg-white border border-gray-100 rounded-xl p-6 text-left transition-all shadow-sm hover:shadow-md">
+          <div class="flex items-center space-x-4">
+            <div class="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                <line x1="9" y1="9" x2="9.01" y2="9"/>
+                <line x1="15" y1="9" x2="15.01" y2="9"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-900 mb-1">출소를 앞두고 있어요</h3>
+              <p class="text-gray-500">사회 복귀를 준비하고 싶어요</p>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-400 flex-shrink-0"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </button>
+      </div>
+
+      <!-- 도움 섹션 -->
+      <div class="bg-gray-50 rounded-xl p-6">
+        <h3 class="text-lg font-bold text-gray-900 mb-2">혼자가 아닙니다</h3>
+        <p class="text-gray-600 text-sm leading-relaxed mb-4">어려운 시간을 겪고 계신 당사자분과 가족분들께 필요한 정보와 따뜻한 지원을 드리고자 합니다.</p>
+        <div class="flex space-x-2">
+          <button class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-all">전화 상담하기</button>
+          <button class="bg-white border border-gray-300 hover:border-gray-400 text-gray-700 px-5 py-2.5 rounded-lg text-sm font-medium transition-all">자주 묻는 질문</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 할 일 목록 화면 -->
+    <div id="todoList" class="hidden"></div>
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="bg-gray-900 text-gray-400 py-12 mt-auto">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="grid md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <h3 class="text-white text-lg font-bold mb-4">To-orange</h3>
+          <p class="text-sm">수용자 가족과 함께하는<br>따뜻한 연결 플랫폼</p>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">서비스</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="letter-service-flow.html" class="hover:text-white transition-colors">편지쓰기</a></li>
+            <li><a href="inbox.html" class="hover:text-white transition-colors">받은편지함</a></li>
+            <li><a href="legal-main.html" class="hover:text-white transition-colors">법률상담</a></li>
+            <li><a href="life-center.html" class="hover:text-white transition-colors">라이프센터</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">고객지원</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="guide.html" class="hover:text-white transition-colors">이용가이드</a></li>
+            <li><a href="notice.html" class="hover:text-white transition-colors">공지사항</a></li>
+            <li><a href="inquiry.html" class="hover:text-white transition-colors">1:1 문의</a></li>
+            <li><a href="faq.html" class="hover:text-white transition-colors">자주묻는질문</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">연락처</h4>
+          <ul class="space-y-2 text-sm">
+            <li>이메일: help@to-orange.kr</li>
+            <li>전화: 1588-0000</li>
+            <li>평일 09:00 - 18:00</li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+        <p>© 2025 To-orange. All rights reserved.</p>
+        <div class="flex gap-6 mt-4 md:mt-0">
+          <a href="privacy.html" class="hover:text-white transition-colors">개인정보처리방침</a>
+          <a href="terms.html" class="hover:text-white transition-colors">이용약관</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // 아이콘 SVG 정의 (오렌지 배경 + 화이트 아이콘)
+    const icons = {
+      'pre-investigation': `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+      'investigation': `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`,
+      'pre-detention': `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`,
+      'detained': `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+      'post-release': `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>`
+    };
+
+    const iconBg = 'bg-orange-500';
+
+    // 할 일 데이터
+    const todosData = {
+      'pre-investigation': {
+        title: '경찰 조사를 받기 전이에요', subtitle: '미리 준비해야 할 것들이 있어요',
+        todos: [
+          { title: '변호사 상담 예약하기', description: '조사 전 법적 조언을 받으세요', urgency: 'high', deadline: '가능한 빨리', timeLeft: '즉시' },
+          { title: '관련 자료 정리하기', description: '사건 관련 문서, 증거 등 정리', urgency: 'high', deadline: '조사 전', timeLeft: '3일 이내' },
+          { title: '진술 준비하기', description: '예상 질문과 답변 미리 정리', urgency: 'medium', deadline: '조사 전', timeLeft: '5일 이내' },
+          { title: '심리적 준비하기', description: '조사 과정에 대한 이해와 마음가짐', urgency: 'low', deadline: '조사 전', timeLeft: '7일 이내' }
+        ]
+      },
+      investigation: {
+        title: '경찰 조사를 받았어요', subtitle: '또는 받을 예정이에요',
+        todos: [
+          { title: '변호사 선임하기', description: '첫 조사 전까지 꼭 준비하세요', urgency: 'high', deadline: '오늘까지', timeLeft: '2시간 남음' },
+          { title: '조사 받을 때 주의사항 확인', description: '진술서 작성 전 꼭 읽어보세요', urgency: 'high', deadline: '오늘', timeLeft: '오늘' },
+          { title: '가족에게 상황 알리기', description: '도움받을 수 있는 사람을 찾으세요', urgency: 'medium', deadline: '이번 주', timeLeft: '3일 남음' },
+          { title: '필요한 서류 준비하기', description: '신분증, 인감증명서 등', urgency: 'low', deadline: '다음 주', timeLeft: '7일 남음' }
+        ]
+      },
+      'pre-detention': {
+        title: '가족이 곧 수감돼요', subtitle: '무엇을 준비해야 할까요',
+        todos: [
+          { title: '입소 준비물 체크리스트 확인', description: '반입 가능한 물품을 확인하세요', urgency: 'high', deadline: '오늘까지', timeLeft: '오늘' },
+          { title: '출소복 구매하기', description: '투오렌지 공식몰에서 구매 가능', urgency: 'high', deadline: '입소 3일 전', timeLeft: '2일 남음' },
+          { title: '접견 절차 알아보기', description: '가족이 면회 오는 방법', urgency: 'medium', deadline: '이번 주', timeLeft: '5일 남음' },
+          { title: '심리적 준비하기', description: '입소 전 마음가짐 안내', urgency: 'low', deadline: '다음 주', timeLeft: '10일 남음' }
+        ]
+      },
+      detained: {
+        title: '가족이 지금 수감 중이에요', subtitle: '어떻게 도와줄 수 있을까요',
+        todos: [
+          { title: '이번 달 접견 예약하기', description: '매월 4회까지 가능합니다', urgency: 'high', deadline: '이번 주', timeLeft: '4일 남음' },
+          { title: '편지 보내기', description: '서신 규정을 확인하세요', urgency: 'medium', deadline: '자유', timeLeft: '언제든지' },
+          { title: '생활비 송금하기', description: '매월 정기 송금 설정 가능', urgency: 'medium', deadline: '이번 주', timeLeft: '6일 남음' },
+          { title: '도서 주문하기', description: '독서로 시간을 보낼 수 있어요', urgency: 'low', deadline: '자유', timeLeft: '언제든지' }
+        ]
+      },
+      'post-release': {
+        title: '출소를 앞두고 있어요', subtitle: '사회 복귀를 준비하고 싶어요',
+        todos: [
+          { title: '취업 지원 프로그램 신청', description: '출소 1개월 전부터 가능', urgency: 'high', deadline: '이번 주', timeLeft: '3일 남음' },
+          { title: '주거 지원 알아보기', description: '임시 거처가 필요하신가요?', urgency: 'high', deadline: '출소 전', timeLeft: '10일 남음' },
+          { title: '사회복귀 교육 참여', description: '실전 면접 준비 등', urgency: 'medium', deadline: '출소 후', timeLeft: '14일 남음' },
+          { title: '지역 지원기관 연결', description: '지속적인 상담과 지원', urgency: 'low', deadline: '출소 후', timeLeft: '20일 남음' }
+        ]
+      }
+    };
+
+    function showTodos(id) {
+      const d = todosData[id];
+      document.getElementById('situationSelection').classList.add('hidden');
+      const todoList = document.getElementById('todoList');
+      todoList.classList.remove('hidden');
+
+      let html = `
+        <button onclick="showSituationSelection()" class="flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-6 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          <span class="font-medium">상황 다시 선택하기</span>
+        </button>
+        <div class="bg-orange-50 border-l-4 border-orange-500 rounded-lg p-6 mb-8">
+          <div class="flex items-start space-x-4">
+            <div class="w-14 h-14 ${iconBg} rounded-xl flex items-center justify-center flex-shrink-0">${icons[id]}</div>
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900 mb-1">${d.title}</h2>
+              <p class="text-gray-600">${d.subtitle}</p>
+            </div>
+          </div>
+        </div>
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-gray-900 mb-2">지금 해야 할 일</h2>
+          <p class="text-gray-600">긴급한 순서대로 정리했습니다</p>
+        </div>
+        <div class="space-y-4">`;
+
+      d.todos.forEach((t, i) => {
+        const bc = t.urgency === 'high' ? 'border-orange-500' : t.urgency === 'medium' ? 'border-gray-300' : 'border-gray-200';
+        const nb = t.urgency === 'high' ? 'bg-orange-500 text-white' : t.urgency === 'medium' ? 'bg-gray-300 text-gray-700' : 'bg-gray-100 text-gray-600';
+        const badge = t.urgency === 'high' ? '<span class="bg-orange-100 text-orange-600 text-xs font-bold px-2 py-1 rounded-full">긴급</span>' : '';
+
+        html += `
+          <div class="bg-white border-2 ${bc} rounded-xl p-6 transition-all hover:shadow-md">
+            <div class="flex items-start justify-between">
+              <div class="flex items-start space-x-4 flex-1">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0 ${nb}">${i + 1}</div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center space-x-2 mb-2">
+                    <h3 class="text-xl font-bold text-gray-900">${t.title}</h3>
+                    ${badge}
+                  </div>
+                  <p class="text-gray-600 mb-3">${t.description}</p>
+                  <div class="flex items-center space-x-4 text-gray-500 text-sm">
+                    <div class="flex items-center space-x-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      <span class="font-medium">${t.timeLeft}</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                      <span>${t.deadline}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="ml-4 bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center space-x-2 whitespace-nowrap">
+                <span>시작하기</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>`;
+      });
+
+      html += '</div>';
+      todoList.innerHTML = html;
+    }
+
+    function showSituationSelection() {
+      document.getElementById('situationSelection').classList.remove('hidden');
+      document.getElementById('todoList').classList.add('hidden');
+    }
+
+    // 메뉴 설정
+    const CURRENT_PAGE = 'life-center.html';
     
-    <!-- Navigation -->
-    <nav class="bg-white border-b border-gray-100 relative z-50">
-        <div class="max-w-7xl mx-auto px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <a href="/" class="text-2xl font-bold text-orange-500 hover:text-orange-600 transition-colors cursor-pointer">
-                        To-orange
-                    </a>
-                </div>
+    const MENU_CONFIG = {
+      mainNav: [
+        { id: 'heart', title: '마음전하기', mainUrl: 'heart-main.html', submenu: [
+          { title: '편지쓰기', url: 'letter-service-flow.html' },
+          { title: '보낸편지함', url: 'sent-box.html' },
+          { title: '받은편지함', url: 'inbox.html', loginRequired: true },
+          { title: '임시보관함', url: 'draft-box.html' }
+        ]},
+        { id: 'legal', title: '법률도우미', mainUrl: 'legal-main.html', submenu: [
+          { title: '내 사연 보내기', url: 'legal-story.html' },
+          { title: '법률도우미 매칭', url: 'legal-matching.html' },
+          { title: '진행프로세스', url: 'legal-process.html' }
+        ]},
+        { id: 'community', title: '커뮤니티', mainUrl: 'community-main.html', submenu: [
+          { title: '자유게시판', url: 'free-board.html' },
+          { title: '법률지식 on', url: 'legal-knowledge.html' }
+        ]},
+        { id: 'donation', title: '기부나눔', mainUrl: 'donation-main.html', submenu: [
+          { title: '기부나눔캠페인', url: 'campaign.html' },
+          { title: '후원소식', url: 'support-news.html' },
+          { title: '후원하기', url: 'support.html' }
+        ]},
+        { id: 'life-center', title: '라이프센터', mainUrl: 'life-center.html', submenu: [
+          { title: '상황별 안내', url: 'life-situation.html' },
+          { title: '라이프 캘린더', url: 'life-calendar.html' },
+          { title: '재사회화 지원', url: 'life-resocialization.html' }
+        ]},
+        { id: 'support', title: '고객센터', mainUrl: 'support-main.html', submenu: [
+          { title: '이용가이드', url: 'guide.html' },
+          { title: '공지사항', url: 'notice.html' },
+          { title: '1:1문의', url: 'inquiry.html' }
+        ]}
+      ]
+    };
 
-                <!-- Menu Items -->
-                <div class="flex items-center space-x-12">
-                    <!-- 마음전하기 -->
-                    <div class="relative menu-item">
-                        <a href="/heart" class="text-base font-medium transition-colors relative block py-5 text-gray-700 hover:text-orange-500">
-                            마음전하기
-                        </a>
-                        <div class="submenu absolute top-full left-1/2 transform -translate-x-1/2 pt-2">
-                            <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[180px]">
-                                <a href="/heart/write" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">편지쓰기</a>
-                                <a href="/heart/sent" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">보낸편지함</a>
-                                <a href="/heart/inbox" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">받은편지함</a>
-                                <a href="/heart/draft" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">임시보관함</a>
-                            </div>
-                        </div>
-                    </div>
+    function generateMenu() {
+      const mainNav = document.querySelector('.main-nav');
+      if (!mainNav) return;
+      mainNav.innerHTML = '';
 
-                    <!-- 법률도우미 -->
-                    <div class="relative menu-item">
-                        <a href="/legal" class="text-base font-medium transition-colors relative block py-5 text-gray-700 hover:text-orange-500">
-                            법률도우미
-                        </a>
-                        <div class="submenu absolute top-full left-1/2 transform -translate-x-1/2 pt-2">
-                            <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[180px]">
-                                <a href="/legal/consultation" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">무료법률상담</a>
-                                <a href="/legal/history" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">나의 상담내역</a>
-                                <a href="/legal/lawyers" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">변호사 목록</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 커뮤니티 -->
-                    <div class="relative menu-item">
-                        <a href="/community" class="text-base font-medium transition-colors relative block py-5 text-gray-700 hover:text-orange-500">
-                            커뮤니티
-                        </a>
-                        <div class="submenu absolute top-full left-1/2 transform -translate-x-1/2 pt-2">
-                            <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[180px]">
-                                <a href="/community/free" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">자유게시판</a>
-                                <a href="/community/legal-info" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">법률지식 on</a>
-                                <a href="/community/qna" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">Q&A게시판</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 기부나눔 -->
-                    <div class="relative menu-item">
-                        <a href="/donation" class="text-base font-medium transition-colors relative block py-5 text-gray-700 hover:text-orange-500">
-                            기부나눔
-                        </a>
-                        <div class="submenu absolute top-full left-1/2 transform -translate-x-1/2 pt-2">
-                            <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[180px]">
-                                <a href="/donation/campaign" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">기부나눔캠페인</a>
-                                <a href="/donation/story" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">기부나눔 스토리</a>
-                                <a href="/donation/support" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">후원하기</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 라이프센터 (Active) -->
-                    <div class="relative menu-item">
-                        <a href="/lifecenter" class="text-base font-medium transition-colors relative block py-5 text-orange-500">
-                            라이프센터
-                            <div class="absolute -bottom-0 left-0 right-0 h-0.5 bg-orange-500"></div>
-                        </a>
-                        <div class="submenu absolute top-full left-1/2 transform -translate-x-1/2 pt-2">
-                            <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[180px]">
-                                <a href="/lifecenter/guide" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">상황별안내</a>
-                                <a href="/lifecenter/checklist" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">준비물체크리스트</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 고객센터 -->
-                    <div class="relative menu-item">
-                        <a href="/support" class="text-base font-medium transition-colors relative block py-5 text-gray-700 hover:text-orange-500">
-                            고객센터
-                        </a>
-                        <div class="submenu absolute top-full left-1/2 transform -translate-x-1/2 pt-2">
-                            <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2 min-w-[180px]">
-                                <a href="/support/guide" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">이용가이드</a>
-                                <a href="/support/notice" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">공지사항</a>
-                                <a href="/support/inquiry" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors whitespace-nowrap">1:1문의</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Side -->
-                <div class="flex items-center space-x-4">
-                    <a href="/mypage" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">
-                        마이페이지
-                    </a>
-                    <span class="text-gray-300">|</span>
-                    <a href="/login" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">
-                        로그인
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Voice Guide Button -->
-    <button id="voiceBtn" class="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center z-50 transition-all bg-gray-800 hover:scale-110">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-        </svg>
-    </button>
-
-    <!-- Main Content -->
-    <div id="mainContent" class="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+      MENU_CONFIG.mainNav.forEach(menu => {
+        const li = document.createElement('li');
+        li.className = 'menu-item relative';
+        const isActive = menu.mainUrl === CURRENT_PAGE || (menu.submenu && menu.submenu.some(sub => sub.url === CURRENT_PAGE));
         
-        <!-- Step 1: Situation Selection -->
-        <div id="situationSelection">
-            <!-- Header -->
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">라이프센터</h1>
-                <p class="text-lg text-gray-600">지금 어떤 상황이신가요?</p>
-                <p class="text-sm text-gray-500 mt-1">상황에 맞는 정보와 할 일을 안내해드립니다</p>
+        let submenuHtml = '';
+        if (menu.submenu && menu.submenu.length > 0) {
+          submenuHtml = `
+            <div class="submenu absolute top-full left-1/2 -translate-x-1/2 pt-2 min-w-[180px]">
+              <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2">
+                ${menu.submenu.map(sub => `
+                  <a href="${sub.url}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 ${sub.url === CURRENT_PAGE ? 'text-orange-500 bg-orange-50' : ''}">${sub.title}</a>
+                `).join('')}
+              </div>
             </div>
-
-            <!-- SOS Button -->
-            <div class="mb-8">
-                <button class="w-full bg-red-500 hover:bg-red-600 text-white rounded-xl p-5 flex items-center justify-between transition-all shadow-lg hover:shadow-xl">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                            </svg>
-                        </div>
-                        <div class="text-left">
-                            <p class="text-xl font-bold">긴급 도움이 필요하세요?</p>
-                            <p class="text-red-100 text-sm">24시간 상담 가능 · 즉시 연결</p>
-                        </div>
-                    </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Situation Cards -->
-            <div class="space-y-4 mb-8">
-                <button onclick="showTodos('investigation')" class="w-full bg-white border-2 border-gray-200 hover:border-orange-500 rounded-xl p-6 text-left transition-all hover:shadow-md">
-                    <div class="flex items-start space-x-4">
-                        <div class="text-3xl">🚨</div>
-                        <div class="flex-1">
-                            <h3 class="text-xl font-bold text-gray-900 mb-1">경찰 조사를 받았어요</h3>
-                            <p class="text-gray-600">또는 받을 예정이에요</p>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </div>
-                </button>
-
-                <button onclick="showTodos('pre-detention')" class="w-full bg-white border-2 border-gray-200 hover:border-orange-500 rounded-xl p-6 text-left transition-all hover:shadow-md">
-                    <div class="flex items-start space-x-4">
-                        <div class="text-3xl">📦</div>
-                        <div class="flex-1">
-                            <h3 class="text-xl font-bold text-gray-900 mb-1">가족이 곧 수감돼요</h3>
-                            <p class="text-gray-600">무엇을 준비해야 할까요</p>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </div>
-                </button>
-
-                <button onclick="showTodos('detained')" class="w-full bg-white border-2 border-gray-200 hover:border-orange-500 rounded-xl p-6 text-left transition-all hover:shadow-md">
-                    <div class="flex items-start space-x-4">
-                        <div class="text-3xl">💌</div>
-                        <div class="flex-1">
-                            <h3 class="text-xl font-bold text-gray-900 mb-1">가족이 지금 수감 중이에요</h3>
-                            <p class="text-gray-600">어떻게 도와줄 수 있을까요</p>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </div>
-                </button>
-
-                <button onclick="showTodos('post-release')" class="w-full bg-white border-2 border-gray-200 hover:border-orange-500 rounded-xl p-6 text-left transition-all hover:shadow-md">
-                    <div class="flex items-start space-x-4">
-                        <div class="text-3xl">🌱</div>
-                        <div class="flex-1">
-                            <h3 class="text-xl font-bold text-gray-900 mb-1">출소를 앞두고 있어요</h3>
-                            <p class="text-gray-600">사회 복귀를 준비하고 싶어요</p>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </div>
-                </button>
-            </div>
-
-            <!-- Help Section -->
-            <div class="bg-gray-50 rounded-xl p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-2">혼자가 아닙니다</h3>
-                <p class="text-gray-600 text-sm leading-relaxed mb-4">
-                    어려운 시간을 겪고 계신 당사자분과 가족분들께 필요한 정보와 따뜻한 지원을 드리고자 합니다.
-                </p>
-                <div class="flex space-x-2">
-                    <button class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-all">
-                        전화 상담하기
-                    </button>
-                    <button class="bg-white border border-gray-300 hover:border-gray-400 text-gray-700 px-5 py-2.5 rounded-lg text-sm font-medium transition-all">
-                        자주 묻는 질문
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Step 2: Todo List (Hidden initially) -->
-        <div id="todoList" style="display: none;">
-            <!-- Content will be dynamically inserted -->
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="border-t border-gray-200 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="flex justify-between items-center">
-                <div>
-                    <div class="flex items-center space-x-2 mb-2">
-                        <div class="w-5 h-5 bg-orange-500 rounded flex items-center justify-center">
-                            <span class="text-white font-bold text-xs">T</span>
-                        </div>
-                        <span class="font-bold text-gray-900 text-sm">To-orange</span>
-                    </div>
-                    <p class="text-gray-500 text-xs">따뜻한 연결, 새로운 시작</p>
-                </div>
-                <div class="text-right text-sm text-gray-600">
-                    <p class="font-medium mb-1 text-xs">24시간 긴급 지원</p>
-                    <p class="text-xl font-bold text-gray-900">1588-0000</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Voice Guide Indicator -->
-    <div id="voiceIndicator" class="voice-indicator fixed bottom-24 right-6 bg-gray-900 text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-lg">
-        음성 안내 켜짐
-    </div>
-
-    <script>
-        // Voice button toggle
-        const voiceBtn = document.getElementById('voiceBtn');
-        const voiceIndicator = document.getElementById('voiceIndicator');
-        let voiceEnabled = false;
-
-        voiceBtn.addEventListener('click', function() {
-            voiceEnabled = !voiceEnabled;
-            if (voiceEnabled) {
-                voiceBtn.classList.remove('bg-gray-800');
-                voiceBtn.classList.add('bg-orange-500');
-                voiceIndicator.classList.add('active');
-            } else {
-                voiceBtn.classList.remove('bg-orange-500');
-                voiceBtn.classList.add('bg-gray-800');
-                voiceIndicator.classList.remove('active');
-            }
-        });
-
-        // Todo data
-        const todosData = {
-            investigation: {
-                icon: '🚨',
-                title: '경찰 조사를 받았어요',
-                subtitle: '또는 받을 예정이에요',
-                todos: [
-                    {
-                        title: '변호사 선임하기',
-                        description: '첫 조사 전까지 꼭 준비하세요',
-                        urgency: 'high',
-                        deadline: '오늘까지',
-                        timeLeft: '2시간 남음'
-                    },
-                    {
-                        title: '조사 받을 때 주의사항 확인',
-                        description: '진술서 작성 전 꼭 읽어보세요',
-                        urgency: 'high',
-                        deadline: '오늘',
-                        timeLeft: '오늘'
-                    },
-                    {
-                        title: '가족에게 상황 알리기',
-                        description: '도움받을 수 있는 사람을 찾으세요',
-                        urgency: 'medium',
-                        deadline: '이번 주',
-                        timeLeft: '3일 남음'
-                    },
-                    {
-                        title: '필요한 서류 준비하기',
-                        description: '신분증, 인감증명서 등',
-                        urgency: 'low',
-                        deadline: '다음 주',
-                        timeLeft: '7일 남음'
-                    }
-                ]
-            },
-            'pre-detention': {
-                icon: '📦',
-                title: '가족이 곧 수감돼요',
-                subtitle: '무엇을 준비해야 할까요',
-                todos: [
-                    {
-                        title: '입소 준비물 체크리스트 확인',
-                        description: '반입 가능한 물품을 확인하세요',
-                        urgency: 'high',
-                        deadline: '오늘까지',
-                        timeLeft: '오늘'
-                    },
-                    {
-                        title: '출소복 구매하기',
-                        description: '투오렌지 공식몰에서 구매 가능',
-                        urgency: 'high',
-                        deadline: '입소 3일 전',
-                        timeLeft: '2일 남음'
-                    },
-                    {
-                        title: '접견 절차 알아보기',
-                        description: '가족이 면회 오는 방법',
-                        urgency: 'medium',
-                        deadline: '이번 주',
-                        timeLeft: '5일 남음'
-                    },
-                    {
-                        title: '심리적 준비하기',
-                        description: '입소 전 마음가짐 안내',
-                        urgency: 'low',
-                        deadline: '다음 주',
-                        timeLeft: '10일 남음'
-                    }
-                ]
-            },
-            detained: {
-                icon: '💌',
-                title: '가족이 지금 수감 중이에요',
-                subtitle: '어떻게 도와줄 수 있을까요',
-                todos: [
-                    {
-                        title: '이번 달 접견 예약하기',
-                        description: '매월 4회까지 가능합니다',
-                        urgency: 'high',
-                        deadline: '이번 주',
-                        timeLeft: '4일 남음'
-                    },
-                    {
-                        title: '편지 보내기',
-                        description: '서신 규정을 확인하세요',
-                        urgency: 'medium',
-                        deadline: '자유',
-                        timeLeft: '언제든지'
-                    },
-                    {
-                        title: '생활비 송금하기',
-                        description: '매월 정기 송금 설정 가능',
-                        urgency: 'medium',
-                        deadline: '이번 주',
-                        timeLeft: '6일 남음'
-                    },
-                    {
-                        title: '도서 주문하기',
-                        description: '독서로 시간을 보낼 수 있어요',
-                        urgency: 'low',
-                        deadline: '자유',
-                        timeLeft: '언제든지'
-                    }
-                ]
-            },
-            'post-release': {
-                icon: '🌱',
-                title: '출소를 앞두고 있어요',
-                subtitle: '사회 복귀를 준비하고 싶어요',
-                todos: [
-                    {
-                        title: '취업 지원 프로그램 신청',
-                        description: '출소 1개월 전부터 가능',
-                        urgency: 'high',
-                        deadline: '이번 주',
-                        timeLeft: '3일 남음'
-                    },
-                    {
-                        title: '주거 지원 알아보기',
-                        description: '임시 거처가 필요하신가요?',
-                        urgency: 'high',
-                        deadline: '출소 전',
-                        timeLeft: '10일 남음'
-                    },
-                    {
-                        title: '사회복귀 교육 참여',
-                        description: '실전 면접 준비 등',
-                        urgency: 'medium',
-                        deadline: '출소 후',
-                        timeLeft: '14일 남음'
-                    },
-                    {
-                        title: '지역 지원기관 연결',
-                        description: '지속적인 상담과 지원',
-                        urgency: 'low',
-                        deadline: '출소 후',
-                        timeLeft: '20일 남음'
-                    }
-                ]
-            }
-        };
-
-        function showTodos(situationId) {
-            const data = todosData[situationId];
-            const situationSelection = document.getElementById('situationSelection');
-            const todoList = document.getElementById('todoList');
-
-            situationSelection.style.display = 'none';
-            todoList.style.display = 'block';
-
-            let todosHtml = `
-                <button onclick="showSituationSelection()" class="flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-6 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="19" y1="12" x2="5" y2="12"></line>
-                        <polyline points="12 19 5 12 12 5"></polyline>
-                    </svg>
-                    <span class="font-medium">상황 다시 선택하기</span>
-                </button>
-
-                <div class="bg-orange-50 border-l-4 border-orange-500 rounded-lg p-6 mb-8">
-                    <div class="flex items-start space-x-3">
-                        <div class="text-3xl">${data.icon}</div>
-                        <div>
-                            <h2 class="text-2xl font-bold text-gray-900 mb-1">${data.title}</h2>
-                            <p class="text-gray-600">${data.subtitle}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">지금 해야 할 일</h2>
-                    <p class="text-gray-600">긴급한 순서대로 정리했습니다</p>
-                </div>
-
-                <div class="space-y-4">
-            `;
-
-            data.todos.forEach((todo, index) => {
-                const borderColor = todo.urgency === 'high' ? 'border-orange-500' : todo.urgency === 'medium' ? 'border-gray-300' : 'border-gray-200';
-                const numberBg = todo.urgency === 'high' ? 'bg-orange-500 text-white' : todo.urgency === 'medium' ? 'bg-gray-300 text-gray-700' : 'bg-gray-100 text-gray-600';
-                const urgentBadge = todo.urgency === 'high' ? '<span class="bg-orange-100 text-orange-600 text-xs font-bold px-2 py-1 rounded-full whitespace-nowrap">긴급</span>' : '';
-
-                todosHtml += `
-                    <div class="bg-white border-2 ${borderColor} rounded-xl p-6 transition-all hover:shadow-md">
-                        <div class="flex items-start justify-between">
-                            <div class="flex items-start space-x-4 flex-1">
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0 ${numberBg}">
-                                    ${index + 1}
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="flex items-center space-x-2 mb-2">
-                                        <h3 class="text-xl font-bold text-gray-900">${todo.title}</h3>
-                                        ${urgentBadge}
-                                    </div>
-                                    <p class="text-gray-600 mb-3">${todo.description}</p>
-                                    <div class="flex items-center space-x-4 text-gray-500 text-sm">
-                                        <div class="flex items-center space-x-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="12" r="10"></circle>
-                                                <polyline points="12 6 12 12 16 14"></polyline>
-                                            </svg>
-                                            <span class="font-medium">${todo.timeLeft}</span>
-                                        </div>
-                                        <div class="flex items-center space-x-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
-                                                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
-                                            </svg>
-                                            <span>${todo.deadline}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="ml-4 bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center space-x-2 whitespace-nowrap">
-                                <span>시작하기</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="9 18 15 12 9 6"></polyline>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            todosHtml += '</div>';
-            todoList.innerHTML = todosHtml;
+          `;
         }
 
-        function showSituationSelection() {
-            document.getElementById('situationSelection').style.display = 'block';
-            document.getElementById('todoList').style.display = 'none';
-        }
-    </script>
+        li.innerHTML = `
+          <a href="${menu.mainUrl}" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5 block ${isActive ? 'nav-active text-orange-500' : ''}">${menu.title}</a>
+          ${submenuHtml}
+        `;
+        mainNav.appendChild(li);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', generateMenu);
+  </script>
 </body>
 </html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지 - To-orange</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --white: #FFFFFF;
+            --gray-50: #F7F7F7;
+            --gray-100: #E8E8E8;
+            --gray-200: #D1D1D1;
+            --gray-400: #999999;
+            --gray-600: #666666;
+            --orange: #FF6B35;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: var(--white);
+            color: var(--black);
+        }
+
+        /* 헤더 */
+        header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-100);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 60px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: var(--black);
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .main-nav a:hover {
+            color: var(--orange);
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-right a {
+            text-decoration: none;
+            color: var(--gray-600);
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-right a:hover {
+            color: var(--black);
+        }
+
+        /* 메인 컨테이너 */
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 40px 100px;
+        }
+
+        /* 페이지 헤더 */
+        .page-header {
+            padding-bottom: 30px;
+            border-bottom: 2px solid var(--black);
+            margin-bottom: 50px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        /* 프로필 섹션 */
+        .profile-section {
+            padding: 30px 0;
+            border-bottom: 1px solid var(--gray-100);
+            margin-bottom: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-info h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .profile-info .email {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+        }
+
+        .profile-info .meta {
+            font-size: 12px;
+            color: var(--gray-400);
+        }
+
+        .edit-link {
+            font-size: 13px;
+            color: var(--gray-600);
+            text-decoration: none;
+            border-bottom: 1px solid var(--gray-400);
+            transition: all 0.3s;
+        }
+
+        .edit-link:hover {
+            color: var(--black);
+            border-color: var(--black);
+        }
+
+        /* 섹션 */
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -0.3px;
+        }
+
+        /* 목록 아이템 */
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--gray-100);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .list-item:hover {
+            padding-left: 10px;
+        }
+
+        .list-item:hover .list-title {
+            color: var(--black);
+        }
+
+        .list-left {
+            flex: 1;
+        }
+
+        .list-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-600);
+            margin-bottom: 4px;
+            transition: color 0.2s;
+        }
+
+        .list-desc {
+            font-size: 12px;
+            color: var(--gray-400);
+        }
+
+        .list-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--black);
+        }
+
+        .list-arrow {
+            font-size: 18px;
+            color: var(--gray-400);
+            margin-left: 20px;
+        }
+
+        /* 포인트 섹션 */
+        .point-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 15px;
+        }
+
+        .point-label {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .point-amount {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .point-unit {
+            font-size: 14px;
+            color: var(--gray-600);
+            margin-left: 4px;
+        }
+
+        /* 통계 그리드 */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .stat-item:not(:last-child) {
+            border-right: 1px solid var(--gray-100);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--black);
+        }
+
+        .stat-desc {
+            font-size: 11px;
+            color: var(--gray-400);
+            margin-top: 4px;
+        }
+
+        /* 활동 리스트 */
+        .activity-item {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .activity-category {
+            font-size: 11px;
+            color: var(--gray-600);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .activity-date {
+            font-size: 12px;
+            color: var(--gray-400);
+        }
+
+        .activity-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .activity-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--gray-400);
+        }
+
+        .activity-status {
+            font-size: 11px;
+            color: var(--gray-600);
+        }
+
+        /* 더보기 버튼 */
+        .view-more {
+            display: block;
+            text-align: center;
+            padding: 15px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--gray-600);
+            text-decoration: none;
+            border: 1px solid var(--gray-200);
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .view-more:hover {
+            border-color: var(--black);
+            color: var(--black);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--gray-50);
+            padding: 60px;
+            border-top: 1px solid var(--gray-100);
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px;
+            }
+
+            .main-nav {
+                display: none;
+            }
+
+            .main-container {
+                padding: 40px 20px;
+            }
+
+            .profile-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-item {
+                text-align: left;
+                border-right: none !important;
+                border-bottom: 1px solid var(--gray-100);
+            }
+
+            .stat-item:last-child {
+                border-bottom: none;
+            }
+
+            .list-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .list-arrow {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">To-orange</a>
+            <ul class="main-nav">
+                <li><a href="index.html">홈</a></li>
+                <li><a href="#">마음전하기</a></li>
+                <li><a href="#">법률도우미</a></li>
+                <li><a href="#">커뮤니티</a></li>
+                <li><a href="#">기부나눔</a></li>
+                <li><a href="#">고객센터</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="#" style="color: var(--orange);">마이페이지</a>
+                <a href="#">로그아웃</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 메인 컨테이너 -->
+    <div class="main-container">
+        <!-- 페이지 헤더 -->
+        <div class="page-header">
+            <h1 class="page-title">마이페이지</h1>
+            <p class="page-subtitle">나의 활동과 연결을 확인하세요</p>
+        </div>
+
+        <!-- 프로필 -->
+        <div class="profile-section">
+            <div class="profile-info">
+                <h2>김민수</h2>
+                <p class="email">minsu.kim@example.com</p>
+                <p class="meta">가입일: 2024.01.15</p>
+            </div>
+            <a href="#" class="edit-link" onclick="editProfile(); return false;">프로필 수정</a>
+        </div>
+
+        <!-- 내 정보 -->
+        <section class="section">
+            <h2 class="section-title">내 정보</h2>
+            
+            <div class="list-item" onclick="goToPersonalInfo()">
+                <div class="list-left">
+                    <div class="list-title">개인정보 관리</div>
+                    <div class="list-desc">이름, 연락처, 주소</div>
+                </div>
+                <span class="list-arrow">→</span>
+            </div>
+
+            <div class="list-item" onclick="goToSecurity()">
+                <div class="list-left">
+                    <div class="list-title">보안 설정</div>
+                    <div class="list-desc">비밀번호 변경, 2단계 인증</div>
+                </div>
+                <span class="list-arrow">→</span>
+            </div>
+
+            <div class="list-item" onclick="goToNotification()">
+                <div class="list-left">
+                    <div class="list-title">알림 설정</div>
+                    <div class="list-desc">이메일, SMS 수신 설정</div>
+                </div>
+                <span class="list-arrow">→</span>
+            </div>
+        </section>
+
+        <!-- 주문 배송 조회 -->
+        <section class="section">
+            <h2 class="section-title">주문 배송 조회</h2>
+            
+            <div class="list-item" onclick="goToOrders()">
+                <div class="list-left">
+                    <div class="list-title">주문 내역</div>
+                    <div class="list-desc">최근 3개월 주문 내역</div>
+                </div>
+                <div class="list-value">12건</div>
+                <span class="list-arrow">→</span>
+            </div>
+
+            <div class="list-item" onclick="goToDelivery()">
+                <div class="list-left">
+                    <div class="list-title">배송 현황</div>
+                    <div class="list-desc">배송 중인 상품</div>
+                </div>
+                <div class="list-value">2건</div>
+                <span class="list-arrow">→</span>
+            </div>
+
+            <div class="list-item" onclick="goToReturn()">
+                <div class="list-left">
+                    <div class="list-title">반품·교환</div>
+                    <div class="list-desc">반품/교환 신청 내역</div>
+                </div>
+                <div class="list-value">0건</div>
+                <span class="list-arrow">→</span>
+            </div>
+        </section>
+
+        <!-- 포인트 & 결제 -->
+        <section class="section">
+            <h2 class="section-title">포인트 & 결제</h2>
+            
+            <div class="point-header">
+                <span class="point-label">보유 포인트</span>
+                <div>
+                    <span class="point-amount">15,000</span>
+                    <span class="point-unit">P</span>
+                </div>
+            </div>
+
+            <div class="list-item" onclick="chargePoint()">
+                <div class="list-left">
+                    <div class="list-title">포인트 충전</div>
+                    <div class="list-desc">1만원 단위 충전</div>
+                </div>
+                <span class="list-arrow">→</span>
+            </div>
+
+            <div class="list-item" onclick="viewPointHistory()">
+                <div class="list-left">
+                    <div class="list-title">적립·사용 내역</div>
+                    <div class="list-desc">포인트 적립/사용 전체 내역</div>
+                </div>
+                <span class="list-arrow">→</span>
+            </div>
+
+            <div class="list-item" onclick="viewPaymentHistory()">
+                <div class="list-left">
+                    <div class="list-title">결제 내역</div>
+                    <div class="list-desc">전체 결제 내역 및 영수증</div>
+                </div>
+                <span class="list-arrow">→</span>
+            </div>
+
+            <div class="list-item" onclick="viewOrderDetail()">
+                <div class="list-left">
+                    <div class="list-title">주문 상세·취소·환불</div>
+                    <div class="list-desc">주문 취소 및 환불 신청</div>
+                </div>
+                <span class="list-arrow">→</span>
+            </div>
+        </section>
+
+        <!-- 편지 활동 -->
+        <section class="section">
+            <h2 class="section-title">편지 활동</h2>
+
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-label">보낸 편지</div>
+                    <div class="stat-value">8</div>
+                    <div class="stat-desc">답장 대기 3건</div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-label">받은 답장</div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-desc">새로운 답장 1건</div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-label">총 연결</div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-desc">누적 연결 수</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 최근 활동 -->
+        <section class="section">
+            <h2 class="section-title">최근 활동</h2>
+
+            <div class="activity-item">
+                <div class="activity-header">
+                    <span class="activity-category">보낸 편지</span>
+                    <span class="activity-date">2일 전</span>
+                </div>
+                <h3 class="activity-title">응원의 메시지를 보냈습니다</h3>
+                <div class="activity-meta">
+                    <span>익명 발송</span>
+                    <span class="activity-status">답장 대기</span>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-header">
+                    <span class="activity-category">받은 답장</span>
+                    <span class="activity-date">5일 전</span>
+                </div>
+                <h3 class="activity-title">답장이 도착했습니다</h3>
+                <div class="activity-meta">
+                    <span>새로운 답장</span>
+                    <span class="activity-status">읽음</span>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-header">
+                    <span class="activity-category">후원</span>
+                    <span class="activity-date">1주일 전</span>
+                </div>
+                <h3 class="activity-title">정기 후원을 시작했습니다</h3>
+                <div class="activity-meta">
+                    <span>월 10,000원</span>
+                    <span class="activity-status">진행중</span>
+                </div>
+            </div>
+
+            <a href="#" class="view-more">전체 활동 보기</a>
+        </section>
+
+        <!-- 커뮤니티 활동 -->
+        <section class="section">
+            <h2 class="section-title">커뮤니티 활동</h2>
+
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-label">작성한 글</div>
+                    <div class="stat-value">15</div>
+                    <div class="stat-desc">전체 게시물</div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-label">작성한 댓글</div>
+                    <div class="stat-value">42</div>
+                    <div class="stat-desc">전체 댓글</div>
+                </div>
+
+                <div class="stat-item">
+                    <div class="stat-label">받은 공감</div>
+                    <div class="stat-value">128</div>
+                    <div class="stat-desc">누적 공감수</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>© 2024 To-orange. All rights reserved.</p>
+            <p style="margin-top: 10px;">따뜻한 마음을 연결하는 편지 서비스</p>
+        </div>
+    </footer>
+
+    <script>
+        function editProfile() {
+            alert('프로필 수정 페이지로 이동합니다.');
+        }
+
+        function goToPersonalInfo() {
+            alert('개인정보 관리 페이지로 이동합니다.');
+        }
+
+        function goToSecurity() {
+            alert('보안 설정 페이지로 이동합니다.');
+        }
+
+        function goToNotification() {
+            alert('알림 설정 페이지로 이동합니다.');
+        }
+
+        function goToOrders() {
+            alert('주문 내역 페이지로 이동합니다.');
+        }
+
+        function goToDelivery() {
+            alert('배송 현황 페이지로 이동합니다.');
+        }
+
+        function goToReturn() {
+            alert('반품·교환 페이지로 이동합니다.');
+        }
+
+        function chargePoint() {
+            alert('포인트 충전\n\n충전 단위:\n- 10,000원\n- 30,000원\n- 50,000원\n- 100,000원');
+        }
+
+        function viewPointHistory() {
+            alert('적립·사용 내역 페이지로 이동합니다.');
+        }
+
+        function viewPaymentHistory() {
+            alert('결제 내역 페이지로 이동합니다.');
+        }
+
+        function viewOrderDetail() {
+            alert('주문 상세·취소·환불 페이지로 이동합니다.');
+        }
+    </script>
+</body>
+</html>

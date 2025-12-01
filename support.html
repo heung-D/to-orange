@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>후원하기 - To-orange</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { pretendard: ['Pretendard Variable', 'sans-serif'] },
+          colors: {
+            orange: { 50: '#FFF5E5', 100: '#FFE5CC', 500: '#FF6B35', 600: '#E55A2B' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Pretendard Variable', sans-serif; }
+    .submenu { opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; }
+    .menu-item:hover .submenu { opacity: 1; visibility: visible; transform: translateY(0); }
+    .nav-active { color: #FF6B35; border-bottom: 2px solid #FF6B35; }
+    .btn-select { transition: all 0.2s ease; }
+    .btn-select.active { background-color: #FF6B35; color: white; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- 네비게이션 -->
+  <nav class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="text-2xl font-bold text-orange-500">To-orange</a>
+        <div class="flex items-center space-x-8">
+          <ul class="main-nav flex items-center space-x-6"></ul>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="mypage-home.html" class="text-sm text-gray-600 hover:text-gray-900">마이페이지</a>
+          <span class="text-gray-300">|</span>
+          <a href="login.html" class="text-sm text-gray-600 hover:text-gray-900">로그인</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 메인 콘텐츠 -->
+  <main class="max-w-3xl mx-auto px-8 py-12">
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold text-gray-900 mb-3">후원하기</h1>
+      <p class="text-gray-500">작은 나눔이 큰 변화를 만듭니다</p>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <!-- 기부분야 -->
+      <div class="p-6 border-b border-gray-100">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">기부분야</h2>
+        <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 flex items-center gap-3">
+          <span class="text-2xl">🧡</span>
+          <span class="font-medium text-orange-700">투 오렌지 후원하기</span>
+        </div>
+      </div>
+
+      <!-- 기부방식 -->
+      <div class="p-6 border-b border-gray-100">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">기부방식</h2>
+        <div class="flex gap-4">
+          <button class="btn-select flex-1 py-4 rounded-lg font-medium bg-orange-500 text-white" onclick="selectDonationType(this, 'regular')">정기기부</button>
+          <button class="btn-select flex-1 py-4 rounded-lg font-medium bg-gray-100 text-gray-600 hover:bg-gray-200" onclick="selectDonationType(this, 'once')">일시기부</button>
+        </div>
+      </div>
+
+      <!-- 기부금액 -->
+      <div class="p-6 border-b border-gray-100">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">기부금액</h2>
+        <div class="grid grid-cols-4 gap-3" id="amountButtons">
+          <button class="btn-select py-3 rounded-lg font-medium border border-gray-200 text-gray-700 hover:border-orange-500" onclick="selectAmount(this, '10000')">10,000원</button>
+          <button class="btn-select py-3 rounded-lg font-medium bg-orange-500 text-white" onclick="selectAmount(this, '20000')">20,000원</button>
+          <button class="btn-select py-3 rounded-lg font-medium border border-gray-200 text-gray-700 hover:border-orange-500" onclick="selectAmount(this, '30000')">30,000원</button>
+          <button class="btn-select py-3 rounded-lg font-medium border border-gray-200 text-gray-700 hover:border-orange-500" onclick="selectAmount(this, 'custom')">직접입력</button>
+        </div>
+        <div class="mt-4 relative hidden" id="customAmountWrapper">
+          <input type="text" id="customAmount" placeholder="금액을 입력하세요" class="w-full px-4 py-3 pr-12 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+          <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">원</span>
+        </div>
+      </div>
+
+      <!-- 회원가입정보 -->
+      <div class="p-6 border-b border-gray-100">
+        <div class="flex items-center gap-2 mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">회원가입정보</h2>
+          <span class="text-xs text-gray-500">기부내역확인 등 마이페이지 이용시 필요합니다</span>
+        </div>
+        <div class="space-y-4">
+          <div class="flex gap-4">
+            <button class="btn-select flex-1 py-3 rounded-lg font-medium bg-orange-500 text-white" onclick="selectMemberType(this, 'individual')">개인</button>
+            <button class="btn-select flex-1 py-3 rounded-lg font-medium border border-gray-200 text-gray-600 hover:border-orange-500" onclick="selectMemberType(this, 'organization')">단체</button>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">이름 <span class="text-red-500">*</span></label>
+            <div class="flex gap-3 items-center">
+              <input type="text" placeholder="이름을 입력하세요" class="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+              <label class="flex items-center gap-2 text-sm text-gray-600 whitespace-nowrap">
+                <input type="checkbox" class="w-4 h-4 text-orange-500 rounded border-gray-300 focus:ring-orange-500">
+                만 14세 미만
+              </label>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">휴대전화 <span class="text-red-500">*</span></label>
+            <input type="tel" placeholder="010-0000-0000" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">이메일 <span class="text-red-500">*</span></label>
+            <input type="email" placeholder="example@email.com" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+          </div>
+        </div>
+      </div>
+
+      <!-- 추가정보 -->
+      <div class="p-6 border-b border-gray-100">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">추가정보</h2>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">기부자 한마디</label>
+          <textarea placeholder="응원의 메시지를 남겨주세요 (선택)" rows="3" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"></textarea>
+        </div>
+      </div>
+
+      <!-- 결제정보 -->
+      <div class="p-6 border-b border-gray-100">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">결제정보</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">결제수단</label>
+            <div class="flex gap-4">
+              <button class="btn-select flex-1 py-3 rounded-lg font-medium bg-orange-500 text-white" onclick="selectPayment(this, 'card')">신용카드</button>
+              <button class="btn-select flex-1 py-3 rounded-lg font-medium border border-gray-200 text-gray-600 hover:border-orange-500" onclick="selectPayment(this, 'transfer')">계좌이체</button>
+            </div>
+          </div>
+          
+          <div id="transferFields" class="hidden space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">은행명</label>
+              <select class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white">
+                <option value="">은행을 선택하세요</option>
+                <option value="kb">국민은행</option>
+                <option value="shinhan">신한은행</option>
+                <option value="woori">우리은행</option>
+                <option value="hana">하나은행</option>
+                <option value="nh">농협은행</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">계좌번호 <span class="text-xs text-gray-500">(전화번호 형식의 계좌번호 사용 불가)</span></label>
+              <input type="text" placeholder="계좌번호를 입력하세요 (- 없이)" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">예금주명</label>
+              <input type="text" placeholder="예금주명을 입력하세요" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">예금주 구분</label>
+              <div class="flex gap-4">
+                <button class="btn-select flex-1 py-3 rounded-lg font-medium bg-orange-500 text-white" onclick="selectDepositor(this, 'individual')">개인</button>
+                <button class="btn-select flex-1 py-3 rounded-lg font-medium border border-gray-200 text-gray-600 hover:border-orange-500" onclick="selectDepositor(this, 'business')">사업자(단체)</button>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">생년월일 <span class="text-xs text-gray-500">(주민번호 앞 6자리)</span></label>
+              <input type="text" placeholder="YYMMDD" maxlength="6" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 약관동의 -->
+      <div class="p-6 border-b border-gray-100">
+        <div class="space-y-3">
+          <label class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+            <input type="checkbox" id="agreeAll" class="w-5 h-5 text-orange-500 rounded border-gray-300 focus:ring-orange-500" onchange="toggleAllAgreements(this)">
+            <span class="font-semibold text-gray-900">전체 동의하기</span>
+          </label>
+          <div class="pl-2 space-y-2">
+            <label class="flex items-center justify-between cursor-pointer py-2">
+              <div class="flex items-center gap-3">
+                <input type="checkbox" class="agreement-item w-4 h-4 text-orange-500 rounded border-gray-300 focus:ring-orange-500" onchange="checkAgreements()">
+                <span class="text-gray-700"><span class="text-orange-500">[필수]</span> 이용약관 동의</span>
+              </div>
+              <button class="text-sm text-gray-500 hover:text-orange-500">보기</button>
+            </label>
+            <label class="flex items-center justify-between cursor-pointer py-2">
+              <div class="flex items-center gap-3">
+                <input type="checkbox" class="agreement-item w-4 h-4 text-orange-500 rounded border-gray-300 focus:ring-orange-500" onchange="checkAgreements()">
+                <span class="text-gray-700"><span class="text-orange-500">[필수]</span> 개인정보 수집 및 이용 동의</span>
+              </div>
+              <button class="text-sm text-gray-500 hover:text-orange-500">보기</button>
+            </label>
+            <label class="flex items-center justify-between cursor-pointer py-2">
+              <div class="flex items-center gap-3">
+                <input type="checkbox" class="agreement-item w-4 h-4 text-orange-500 rounded border-gray-300 focus:ring-orange-500" onchange="checkAgreements()">
+                <span class="text-gray-700"><span class="text-orange-500">[필수]</span> 제3자 제공 이용 동의</span>
+              </div>
+              <button class="text-sm text-gray-500 hover:text-orange-500">보기</button>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 기부하기 버튼 -->
+      <div class="p-6">
+        <button class="w-full bg-orange-500 text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition-colors shadow-lg hover:shadow-xl">기부하기</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="bg-gray-900 text-gray-400 py-12 mt-12">
+    <div class="max-w-7xl mx-auto px-8">
+      <div class="grid md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <h3 class="text-white text-lg font-bold mb-4">To-orange</h3>
+          <p class="text-sm">수용자 가족과 함께하는<br>따뜻한 연결 플랫폼</p>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">서비스</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="letter-service-flow.html" class="hover:text-white transition-colors">편지쓰기</a></li>
+            <li><a href="inbox.html" class="hover:text-white transition-colors">받은편지함</a></li>
+            <li><a href="legal-main.html" class="hover:text-white transition-colors">법률상담</a></li>
+            <li><a href="life-center.html" class="hover:text-white transition-colors">라이프센터</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">고객지원</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="guide.html" class="hover:text-white transition-colors">이용가이드</a></li>
+            <li><a href="notice.html" class="hover:text-white transition-colors">공지사항</a></li>
+            <li><a href="inquiry.html" class="hover:text-white transition-colors">1:1 문의</a></li>
+            <li><a href="faq.html" class="hover:text-white transition-colors">자주묻는질문</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">연락처</h4>
+          <ul class="space-y-2 text-sm">
+            <li>이메일: help@to-orange.kr</li>
+            <li>전화: 1588-0000</li>
+            <li>평일 09:00 - 18:00</li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+        <p>© 2025 To-orange. All rights reserved.</p>
+        <div class="flex gap-6 mt-4 md:mt-0">
+          <a href="privacy.html" class="hover:text-white transition-colors">개인정보처리방침</a>
+          <a href="terms.html" class="hover:text-white transition-colors">이용약관</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const CURRENT_PAGE = 'support.html';
+    const MENU_CONFIG = {
+      mainNav: [
+        { id: 'heart', title: '마음전하기', mainUrl: 'heart-main.html', submenu: [
+          { title: '편지쓰기', url: 'letter-service-flow.html' },
+          { title: '보낸편지함', url: 'sent-box.html' },
+          { title: '받은편지함', url: 'inbox.html', loginRequired: true },
+          { title: '임시보관함', url: 'draft-box.html' }
+        ]},
+        { id: 'legal', title: '법률도우미', mainUrl: 'legal-main.html', submenu: [
+          { title: '내 사연 보내기', url: 'legal-story.html' },
+          { title: '법률도우미 매칭', url: 'legal-matching.html' },
+          { title: '진행프로세스', url: 'legal-process.html' }
+        ]},
+        { id: 'community', title: '커뮤니티', mainUrl: 'community-main.html', submenu: [
+          { title: '자유게시판', url: 'free-board.html' },
+          { title: '법률지식 on', url: 'legal-knowledge.html' }
+        ]},
+        { id: 'donation', title: '기부나눔', mainUrl: 'donation-main.html', submenu: [
+          { title: '기부나눔캠페인', url: 'campaign.html' },
+          { title: '후원소식', url: 'support-news.html' },
+          { title: '후원하기', url: 'support.html' }
+        ]},
+        { id: 'life-center', title: '라이프센터', mainUrl: 'life-center.html', submenu: [
+          { title: '상황별 안내', url: 'life-situation.html' },
+          { title: '라이프 캘린더', url: 'life-calendar.html' },
+          { title: '재사회화 지원', url: 'life-resocialization.html' }
+        ]},
+        { id: 'support', title: '고객센터', mainUrl: 'support-main.html', submenu: [
+          { title: '이용가이드', url: 'guide.html' },
+          { title: '공지사항', url: 'notice.html' },
+          { title: '1:1문의', url: 'inquiry.html' }
+        ]}
+      ]
+    };
+
+    function generateMenu() {
+      const mainNav = document.querySelector('.main-nav');
+      if (!mainNav) return;
+      mainNav.innerHTML = '';
+
+      MENU_CONFIG.mainNav.forEach(menu => {
+        const li = document.createElement('li');
+        li.className = 'menu-item relative';
+        const isActive = menu.mainUrl === CURRENT_PAGE || menu.id === 'donation' || (menu.submenu && menu.submenu.some(sub => sub.url === CURRENT_PAGE));
+        
+        let submenuHtml = '';
+        if (menu.submenu && menu.submenu.length > 0) {
+          submenuHtml = `
+            <div class="submenu absolute top-full left-1/2 -translate-x-1/2 pt-2 min-w-[180px]">
+              <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2">
+                ${menu.submenu.map(sub => `
+                  <a href="${sub.url}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 ${sub.url === CURRENT_PAGE ? 'text-orange-500 bg-orange-50' : ''}" ${sub.loginRequired ? 'data-login-required="true"' : ''}>${sub.title}</a>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        li.innerHTML = `
+          <a href="${menu.mainUrl}" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5 block ${isActive ? 'nav-active text-orange-500' : ''}">${menu.title}</a>
+          ${submenuHtml}
+        `;
+        mainNav.appendChild(li);
+      });
+    }
+
+    // 버튼 선택 함수들
+    function selectDonationType(el, type) {
+      const parent = el.parentElement;
+      parent.querySelectorAll('.btn-select').forEach(btn => {
+        btn.classList.remove('bg-orange-500', 'text-white');
+        btn.classList.add('bg-gray-100', 'text-gray-600');
+      });
+      el.classList.remove('bg-gray-100', 'text-gray-600');
+      el.classList.add('bg-orange-500', 'text-white');
+    }
+
+    function selectAmount(el, amount) {
+      const parent = document.getElementById('amountButtons');
+      parent.querySelectorAll('.btn-select').forEach(btn => {
+        btn.classList.remove('bg-orange-500', 'text-white');
+        btn.classList.add('border', 'border-gray-200', 'text-gray-700');
+      });
+      el.classList.remove('border', 'border-gray-200', 'text-gray-700');
+      el.classList.add('bg-orange-500', 'text-white');
+      
+      const customWrapper = document.getElementById('customAmountWrapper');
+      if (amount === 'custom') {
+        customWrapper.classList.remove('hidden');
+      } else {
+        customWrapper.classList.add('hidden');
+      }
+    }
+
+    function selectMemberType(el, type) {
+      const parent = el.parentElement;
+      parent.querySelectorAll('.btn-select').forEach(btn => {
+        btn.classList.remove('bg-orange-500', 'text-white');
+        btn.classList.add('border', 'border-gray-200', 'text-gray-600');
+      });
+      el.classList.remove('border', 'border-gray-200', 'text-gray-600');
+      el.classList.add('bg-orange-500', 'text-white');
+    }
+
+    function selectPayment(el, method) {
+      const parent = el.parentElement;
+      parent.querySelectorAll('.btn-select').forEach(btn => {
+        btn.classList.remove('bg-orange-500', 'text-white');
+        btn.classList.add('border', 'border-gray-200', 'text-gray-600');
+      });
+      el.classList.remove('border', 'border-gray-200', 'text-gray-600');
+      el.classList.add('bg-orange-500', 'text-white');
+      
+      const transferFields = document.getElementById('transferFields');
+      if (method === 'transfer') {
+        transferFields.classList.remove('hidden');
+      } else {
+        transferFields.classList.add('hidden');
+      }
+    }
+
+    function selectDepositor(el, type) {
+      const parent = el.parentElement;
+      parent.querySelectorAll('.btn-select').forEach(btn => {
+        btn.classList.remove('bg-orange-500', 'text-white');
+        btn.classList.add('border', 'border-gray-200', 'text-gray-600');
+      });
+      el.classList.remove('border', 'border-gray-200', 'text-gray-600');
+      el.classList.add('bg-orange-500', 'text-white');
+    }
+
+    function toggleAllAgreements(el) {
+      const items = document.querySelectorAll('.agreement-item');
+      items.forEach(item => item.checked = el.checked);
+    }
+
+    function checkAgreements() {
+      const items = document.querySelectorAll('.agreement-item');
+      const allChecked = Array.from(items).every(item => item.checked);
+      document.getElementById('agreeAll').checked = allChecked;
+    }
+
+    document.addEventListener('DOMContentLoaded', generateMenu);
+  </script>
+</body>
+</html>

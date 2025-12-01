@@ -71,8 +71,6 @@
       <img src="https://github.com/heung-D/to-orange/blob/main/heart-tree.png?raw=true" alt="나무" class="h-[378px] w-auto">
       <img src="https://github.com/heung-D/to-orange/blob/main/heart-orange.png?raw=true" alt="오렌지" class="absolute w-[45px] -left-[10px] top-[28%] animate-drop">
       <img src="https://github.com/heung-D/to-orange/blob/main/heart-leaf.png?raw=true" alt="새잎" class="absolute w-[50px] left-[10px] top-[32%] rotate-45 grow-leaf animate-grow">
-      <!-- 말풍선: 나무 가운데 기준, 새잎과 함께 등장 -->
-      <!-- 말풍선 + 클릭용 새잎 (클릭 시 편지쓰기 팝업) -->
       <div class="absolute -left-[100px] top-[14%] cursor-pointer hover:scale-105 transition-transform" onclick="openModal()">
         <img src="https://github.com/heung-D/to-orange/blob/main/bubble-comment.png?raw=true" alt="말풍선" class="w-[100px] bubble-comment animate-bubble">
         <img src="https://github.com/heung-D/to-orange/blob/main/heart-leaf-6hover.png?raw=true" alt="클릭새잎" class="w-[65px] absolute -bottom-[30px] left-[55px] bubble-comment animate-bubble">
@@ -80,35 +78,6 @@
     </div>
   </div>
   <div class="absolute left-0 w-full z-0 bottom-0"><img src="https://github.com/heung-D/to-orange/blob/main/heart-bottom.png?raw=true" alt="풀밭" class="w-full min-h-[130px]"></div>
-</section>
-
-<!-- 섹션2: 편지가 어려운 이유 -->
-<section class="py-20 bg-[#B7E3B9]">
-  <div class="max-w-5xl mx-auto px-8">
-    <h2 class="text-[28px] font-bold leading-[145%] text-center mb-14 text-brown-800">왜 우리는 편지 한 줄<br>시작도 어려울까요?</h2>
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-      <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-all group">
-        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform text-2xl">✏️</div>
-        <h3 class="font-bold text-[17px] mb-2 text-brown-800">첫 문장이 어렵다</h3>
-        <p class="text-gray-500 text-sm">"뭐라고 시작해야 하지?"</p>
-      </div>
-      <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-all group">
-        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform text-2xl">📋</div>
-        <h3 class="font-bold text-[17px] mb-2 text-brown-800">구조가 막막하다</h3>
-        <p class="text-gray-500 text-sm">서론·본론·결론을<br>어떻게 나눠야 할지 모름</p>
-      </div>
-      <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-all group">
-        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform text-2xl">🤔</div>
-        <h3 class="font-bold text-[17px] mb-2 text-brown-800">할 말이 없다</h3>
-        <p class="text-gray-500 text-sm">식단, 방송, 교화 일정 같은<br>기본 정보조차 없음</p>
-      </div>
-      <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-all group">
-        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform text-2xl">⚖️</div>
-        <h3 class="font-bold text-[17px] mb-2 text-brown-800">사건 편지는 더 어렵다</h3>
-        <p class="text-gray-500 text-sm">변호사 일정, 상담 내용<br>정리가 안 됨</p>
-      </div>
-    </div>
-  </div>
 </section>
 
 <!-- 섹션3: 해결 -->
@@ -140,22 +109,110 @@
   </div>
 </section>
 
-<!-- 섹션4: 생활정보 -->
+<!-- 섹션4: 편지쓰기 미리보기 -->
 <section class="py-20 bg-orange-50">
-  <div class="max-w-5xl mx-auto px-8">
+  <div class="max-w-6xl mx-auto px-8">
     <div class="text-center mb-12">
-      <h2 class="text-[26px] font-bold mb-3 text-brown-800">수용자의 하루를 이해하면<br>편지가 더 따뜻해집니다</h2>
-      <p class="text-gray-500">주소만 입력하면 자동으로 보여드려요</p>
+      <h2 class="text-[26px] font-bold mb-3 text-brown-800">편지쓰기 작성화면 미리보기</h2>
+      <p class="text-gray-500">질문에 답하면 편지가 자동으로 완성됩니다</p>
     </div>
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md"><div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">🍱</div><h3 class="font-semibold text-[15px] text-brown-800">오늘의 식단</h3></div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md"><div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">📺</div><h3 class="font-semibold text-[15px] text-brown-800">방송편성표</h3></div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md"><div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">🙏</div><h3 class="font-semibold text-[15px] text-brown-800">종교·교화 프로그램</h3></div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md"><div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">📢</div><h3 class="font-semibold text-[15px] text-brown-800">공지사항</h3></div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md"><div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">🔧</div><h3 class="font-semibold text-[15px] text-brown-800">직업훈련 안내</h3></div>
-      <div class="bg-white rounded-2xl p-6 shadow-sm text-center hover:shadow-md"><div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-4 text-xl">📞</div><h3 class="font-semibold text-[15px] text-brown-800">전화·면회 가능시간</h3></div>
+    <div class="grid lg:grid-cols-2 gap-6">
+      <!-- 왼쪽: 작성 패널 -->
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <!-- 탭 -->
+        <div class="flex border-b border-gray-100">
+          <button class="flex-1 py-4 text-orange-500 font-semibold border-b-2 border-orange-500">서론</button>
+          <button class="flex-1 py-4 text-gray-400 font-medium">본론</button>
+          <button class="flex-1 py-4 text-gray-400 font-medium">마무리</button>
+        </div>
+        <div class="p-6 space-y-6">
+          <!-- 질문 -->
+          <div>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">어떤 마음으로 시작할까요?</h3>
+            <p class="text-sm text-gray-400 mb-4">1개 선택</p>
+            <div class="flex flex-wrap gap-2">
+              <button class="px-5 py-2.5 bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-full font-medium">따뜻하게</button>
+              <button class="px-5 py-2.5 border-2 border-gray-200 text-gray-600 rounded-full font-medium">걱정되는 마음</button>
+              <button class="px-5 py-2.5 border-2 border-gray-200 text-gray-600 rounded-full font-medium">담담하게</button>
+              <button class="px-5 py-2.5 border-2 border-gray-200 text-gray-600 rounded-full font-medium">반갑게</button>
+            </div>
+          </div>
+          <!-- 함께 보내는 정보 -->
+          <div class="border-t border-gray-100 pt-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">함께 보내는 정보</h3>
+            <!-- 사건 진행 상황 -->
+            <div class="mb-4">
+              <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                <div class="flex items-center gap-2">
+                  <span>⚖️</span>
+                  <span class="font-medium text-gray-700">사건 진행 상황</span>
+                </div>
+                <div class="w-6 h-6 bg-orange-500 rounded flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+              </div>
+              <div class="mt-2 ml-4 p-4 bg-white border border-gray-100 rounded-xl text-sm text-gray-600 space-y-1">
+                <p>• 2024.12.05 (목) 10:00 - 1차 공판기일</p>
+                <p>• 장소: 서울중앙지방법원 제301호 법정</p>
+                <p class="text-gray-500 mt-2">메모: 증거자료 정리 완료. 복장 단정히.</p>
+              </div>
+            </div>
+            <!-- 12월 날씨 -->
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl mb-3">
+              <div class="flex items-center gap-2">
+                <span>🌶️</span>
+                <span class="font-medium text-gray-700">12월 날씨</span>
+              </div>
+              <div class="w-6 h-6 bg-orange-500 rounded flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              </div>
+            </div>
+            <!-- 12월 식단표 -->
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+              <div class="flex items-center gap-2">
+                <span>🍚</span>
+                <span class="font-medium text-gray-700">12월 식단표</span>
+              </div>
+              <div class="w-6 h-6 bg-orange-500 rounded flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 오른쪽: 미리보기 -->
+      <div class="bg-white rounded-2xl shadow-sm p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-gray-800">미리보기</h3>
+          <button class="text-orange-500 text-sm font-medium">클릭해서 직접 수정</button>
+        </div>
+        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-200">
+          <p class="text-right text-sm text-gray-500 mb-6">2025년 12월 1일</p>
+          <h4 class="text-xl font-bold text-gray-800 mb-4">홍길동에게</h4>
+          <div class="space-y-4 text-gray-700 leading-relaxed">
+            <p>안녕, 홍길동아. 잘 지내고 있지?</p>
+            <p>날씨가 많이 추워졌는데, 거기는 어때? 건강하게 잘 지내고 있는지 궁금해서 편지 썼어.</p>
+            <p class="text-orange-500 underline">본론을 선택해주세요</p>
+            <p class="text-orange-500 underline">마무리를 선택해주세요</p>
+          </div>
+          <div class="border-t border-dashed border-orange-200 mt-6 pt-4 space-y-3 text-sm text-gray-600">
+            <div>
+              <p class="flex items-center gap-1 font-medium text-gray-700"><span>⚖️</span> 사건 진행</p>
+              <p class="ml-5">• 12/5 10:00 1차 공판</p>
+            </div>
+            <div>
+              <p class="flex items-center gap-1 font-medium text-gray-700"><span>🌶️</span> 12월 날씨</p>
+              <p class="ml-5">1주 3°~8° / 2주 -2°~5° / 3주 -1°~6°</p>
+            </div>
+            <div>
+              <p class="flex items-center gap-1 font-medium text-gray-700"><span>🍚</span> 식단</p>
+              <p class="ml-5">월-제육 / 화-고등어 / 수-닭볶음 / 목-카레</p>
+            </div>
+          </div>
+          <p class="text-right mt-6 text-gray-800">항상 응원하는 <strong>엄마</strong>가</p>
+        </div>
+      </div>
     </div>
-    <p class="text-center"><span class="inline-block bg-white text-orange-500 px-6 py-3 rounded-full text-sm font-medium shadow-sm border border-gray-100">"수용자가 가장 궁금해하는 외부 소식을 편지에 자연스럽게 담을 수 있어요"</span></p>
   </div>
 </section>
 
@@ -163,7 +220,7 @@
 <section class="py-20 bg-white">
   <div class="max-w-5xl mx-auto px-8 grid lg:grid-cols-2 gap-12 items-center">
     <div>
-      <div class="inline-flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-full mb-5"><span class="text-orange-500 font-semibold text-sm">⚖️ 변호사 연동</span></div>
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-full mb-5"><span class="text-orange-500 font-semibold text-sm">⚖️ 법률도우미 연동</span></div>
       <h2 class="text-[26px] font-bold mb-4 text-brown-800">사건 편지는<br>더 정확하고 부드럽게</h2>
       <p class="text-gray-500 mb-8">변호사님이 남겨주신 사건 진행상황을 반영해<br>문장을 정리해드립니다.</p>
       <div class="space-y-4">
@@ -172,46 +229,118 @@
         <div class="flex items-start gap-3 bg-gray-50 rounded-xl p-4"><span class="text-lg">💬</span><p class="text-sm text-gray-700">"걱정하는 마음이 클 것 같아, 꼭 힘내."</p></div>
       </div>
     </div>
-    <div class="bg-white rounded-3xl p-8 shadow-md border border-gray-100 relative">
-      <div class="absolute left-6 top-10 bottom-5 w-0.5 bg-gradient-to-b from-orange-500 to-gray-200"></div>
-      <div class="space-y-6 relative">
-        <div class="flex items-start gap-4"><div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center shrink-0 z-10 text-white text-sm">1</div><div class="pt-2"><p class="font-semibold text-sm text-brown-800">변호사 상담 메모</p><p class="text-xs text-gray-500 mt-1">2024.01.15 상담 완료</p></div></div>
-        <div class="flex items-start gap-4"><div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center shrink-0 z-10 text-white text-sm">2</div><div class="pt-2"><p class="font-semibold text-sm text-brown-800">서류 제출 완료</p><p class="text-xs text-gray-500 mt-1">2024.01.20 제출</p></div></div>
-        <div class="flex items-start gap-4"><div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center shrink-0 z-10 text-orange-600 text-sm">3</div><div class="pt-2"><p class="font-semibold text-sm text-brown-800">재판 일정 확정</p><p class="text-xs text-orange-500 mt-1 font-medium">2024.02.10 예정</p></div></div>
-        <div class="flex items-start gap-4"><div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center shrink-0 z-10 text-gray-400 text-sm">4</div><div class="pt-2"><p class="font-semibold text-sm text-gray-400">선고</p><p class="text-xs text-gray-400 mt-1">대기중</p></div></div>
+    <div class="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
+      <div class="flex items-center gap-2 mb-6 pb-4 border-b border-gray-100">
+        <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+        </div>
+        <span class="font-bold text-gray-800">사건 진행 현황</span>
+      </div>
+      <div class="space-y-4">
+        <div class="flex items-center gap-4 p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border border-orange-200">
+          <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center shrink-0 text-white font-bold">1</div>
+          <div class="flex-1">
+            <p class="font-semibold text-gray-800">변호사 상담 메모</p>
+            <p class="text-xs text-gray-500 mt-0.5">2024.01.15 상담 완료</p>
+          </div>
+          <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+        </div>
+        <div class="flex items-center gap-4 p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border border-orange-200">
+          <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center shrink-0 text-white font-bold">2</div>
+          <div class="flex-1">
+            <p class="font-semibold text-gray-800">서류 제출 완료</p>
+            <p class="text-xs text-gray-500 mt-0.5">2024.01.20 제출</p>
+          </div>
+          <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+        </div>
+        <div class="flex items-center gap-4 p-4 bg-orange-50 rounded-xl border-2 border-orange-400">
+          <div class="w-10 h-10 bg-orange-400 rounded-full flex items-center justify-center shrink-0 text-white font-bold">3</div>
+          <div class="flex-1">
+            <p class="font-semibold text-gray-800">재판 일정 확정</p>
+            <p class="text-xs text-orange-500 font-semibold mt-0.5">2024.02.10 예정</p>
+          </div>
+          <span class="px-2 py-1 bg-orange-500 text-white text-xs font-bold rounded">진행중</span>
+        </div>
+        <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+          <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center shrink-0 text-white font-bold">4</div>
+          <div class="flex-1">
+            <p class="font-semibold text-gray-400">선고</p>
+            <p class="text-xs text-gray-400 mt-0.5">대기중</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 섹션6: 프로세스 -->
+<!-- 섹션6: 마음전하기 서브메뉴 소개 -->
 <section class="py-20 bg-gray-50">
-  <div class="max-w-5xl mx-auto px-8 text-center">
-    <h2 class="text-[26px] font-bold mb-14 text-brown-800">편지는 이렇게 전달됩니다</h2>
-    <div class="flex flex-wrap justify-center gap-3 mb-6">
-      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm"><div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center text-white text-sm font-bold">1</div><span class="text-sm font-medium text-brown-800">편지쓰기</span></div>
-      <span class="text-gray-300 flex items-center">→</span>
-      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm"><div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center text-white text-sm font-bold">2</div><span class="text-sm font-medium text-brown-800">편지지 선택</span></div>
-      <span class="text-gray-300 flex items-center">→</span>
-      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm"><div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center text-white text-sm font-bold">3</div><span class="text-sm font-medium text-brown-800">사진 첨부</span></div>
+  <div class="max-w-5xl mx-auto px-8">
+    <div class="text-center mb-14">
+      <h2 class="text-[26px] font-bold mb-3 text-brown-800">마음전하기</h2>
+      <p class="text-gray-500">편지 작성부터 발송, 관리까지 한 곳에서</p>
     </div>
-    <div class="flex flex-wrap justify-center gap-3 mb-10">
-      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm"><div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center text-white text-sm font-bold">4</div><span class="text-sm font-medium text-brown-800">우편 발송 방식</span></div>
-      <span class="text-gray-300 flex items-center">→</span>
-      <div class="flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm"><div class="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-400 rounded-full flex items-center justify-center text-white text-sm font-bold">5</div><span class="text-sm font-medium text-brown-800">포인트 결제</span></div>
-      <span class="text-gray-300 flex items-center">→</span>
-      <div class="flex items-center gap-3 bg-gradient-to-r from-orange-500 to-orange-400 rounded-full px-5 py-3 shadow-lg"><div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-orange-500 text-sm font-bold">✓</div><span class="text-sm font-medium text-white">우편 발송 완료</span></div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <!-- 편지쓰기 -->
+      <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all group cursor-pointer">
+        <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-400 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+          <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+        </div>
+        <h3 class="font-bold text-lg mb-2 text-brown-800">편지쓰기</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">AI가 도와주는 편지 작성<br>질문에 답하면 편지 완성</p>
+      </div>
+      <!-- 보낸편지함 -->
+      <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all group cursor-pointer">
+        <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-400 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+          <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+        </div>
+        <h3 class="font-bold text-lg mb-2 text-brown-800">보낸편지함</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">발송한 편지 목록 확인<br>배송 상태 실시간 추적</p>
+      </div>
+      <!-- 받은편지함 -->
+      <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all group cursor-pointer">
+        <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-400 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+          <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+        </div>
+        <h3 class="font-bold text-lg mb-2 text-brown-800">받은편지함</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">수용자로부터 온 답장<br>소중한 마음을 확인하세요</p>
+      </div>
+      <!-- 임시보관함 -->
+      <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all group cursor-pointer">
+        <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-400 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+          <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+        </div>
+        <h3 class="font-bold text-lg mb-2 text-brown-800">임시보관함</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">작성 중인 편지 저장<br>언제든 이어서 작성 가능</p>
+      </div>
     </div>
-    <p class="text-gray-500 text-sm">"실제 우체국 발송까지 모든 과정을 대신 처리해드립니다"</p>
   </div>
 </section>
 
-<!-- CTA -->
+<!-- CTA - 새 디자인 -->
 <section class="py-24 bg-white text-center">
-  <div class="max-w-4xl mx-auto px-8">
-    <h2 class="text-[30px] font-bold mb-5 leading-[145%] text-brown-800">마음만 말씀하세요<br>문장은 저희가 완성해드릴게요</h2>
-    <p class="text-gray-500 mb-10">서툰 표현도 괜찮아요. 하고 싶은 말만 해주시면 진심이 닿도록 다듬어드릴게요</p>
-    <button onclick="openModal()" class="bg-gradient-to-r from-orange-500 to-orange-400 text-white px-12 py-4 rounded-full text-lg font-bold shadow-xl hover:-translate-y-1 hover:shadow-2xl transition-all">💌 첫 편지 쓰기</button>
+  <div class="max-w-2xl mx-auto px-8">
+    <p class="text-orange-500 font-medium mb-4">편지, 어렵게 생각하지 마세요</p>
+    <h2 class="text-[36px] font-bold mb-2 text-brown-800">마음만 전해주세요.</h2>
+    <h2 class="text-[36px] font-bold mb-8 text-orange-500">편지는 저희가 완성할게요.</h2>
+    <p class="text-gray-500 mb-8">한 줄이면 충분해요.</p>
+    
+    <!-- 전하고 싶은 마음 카드 -->
+    <div class="bg-gray-50 rounded-2xl p-6 mb-4 text-left border border-gray-200">
+      <p class="text-sm text-gray-400 mb-3">전하고 싶은 마음</p>
+      <p class="text-gray-800">"보고싶어, 건강하게 잘 지내고 있어"</p>
+    </div>
+    
+    <!-- 화살표 -->
+    <div class="text-orange-400 text-2xl mb-4">↓</div>
+    
+    <!-- 완성된 편지 카드 -->
+    <div class="bg-orange-50 rounded-2xl p-6 mb-10 text-left border border-orange-200">
+      <p class="text-sm text-orange-500 mb-3">완성된 편지</p>
+      <p class="text-gray-800">"많이 보고 싶었어요. 매일 건강히 잘 지내고 있으니 걱정하지 마세요. 곧 다시 만날 날을 기다리며..."</p>
+    </div>
+    
+    <button onclick="openModal()" class="bg-gradient-to-r from-orange-500 to-orange-400 text-white px-12 py-4 rounded-full text-lg font-bold shadow-xl hover:-translate-y-1 hover:shadow-2xl transition-all">첫 편지 쓰러가기 →</button>
   </div>
 </section>
 

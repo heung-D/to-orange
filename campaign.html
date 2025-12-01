@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기부나눔캠페인 - To-orange</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            orange: {
+              50: '#FFF5E5',
+              500: '#FF6B35',
+              600: '#E55A2B'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Pretendard Variable', sans-serif; }
+    .submenu { opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; }
+    .menu-item:hover .submenu { opacity: 1; visibility: visible; transform: translateY(0); }
+    .menu-item:hover > a { color: #FF6B35; }
+    .nav-active { color: #FF6B35 !important; border-bottom: 2px solid #FF6B35; }
+    .campaign-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
+    .campaign-card:hover .card-image { background: #FFE5E5; }
+    .campaign-card:hover .card-title { color: #FF6B35; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- 네비게이션 -->
+  <nav class="bg-white border-b border-gray-100 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="text-xl sm:text-2xl font-bold text-orange-500">To-orange</a>
+        <ul class="main-nav hidden md:flex items-center space-x-6"></ul>
+        <div class="flex items-center space-x-3 sm:space-x-4">
+          <a href="mypage-home.html" class="text-xs sm:text-sm text-gray-600 hover:text-orange-500 transition-colors">마이페이지</a>
+          <span class="text-gray-300">|</span>
+          <a href="login.html" class="text-xs sm:text-sm text-gray-600 hover:text-orange-500 transition-colors">로그인</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 메인 콘텐츠 -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-8 py-8 sm:py-12">
+    <!-- 헤더 -->
+    <div class="text-center mb-8 sm:mb-12">
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">기부나눔 캠페인</h1>
+      <p class="text-sm sm:text-base text-gray-500">따뜻한 마음을 모아 새로운 시작을 응원합니다</p>
+    </div>
+
+    <!-- 필터 탭 -->
+    <div class="flex flex-wrap gap-2 mb-6 sm:mb-8">
+      <button class="px-4 py-2 rounded-full text-sm font-medium bg-orange-500 text-white">전체</button>
+      <button class="px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 border border-gray-200 hover:border-orange-500 hover:text-orange-500 transition-colors">생활지원</button>
+      <button class="px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 border border-gray-200 hover:border-orange-500 hover:text-orange-500 transition-colors">자립지원</button>
+      <button class="px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 border border-gray-200 hover:border-orange-500 hover:text-orange-500 transition-colors">소통지원</button>
+      <button class="px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 border border-gray-200 hover:border-orange-500 hover:text-orange-500 transition-colors">법률지원</button>
+    </div>
+
+    <!-- 캠페인 그리드 (반응형) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12" id="campaignGrid"></div>
+
+    <!-- 페이지네이션 -->
+    <div class="flex items-center justify-center gap-1 sm:gap-2" id="pagination"></div>
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="bg-gray-900 text-gray-400 py-12 mt-8 sm:mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+        <div class="col-span-2 md:col-span-1">
+          <h3 class="text-white text-lg font-bold mb-4">To-orange</h3>
+          <p class="text-sm">수용자 가족과 함께하는<br>따뜻한 연결 플랫폼</p>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">서비스</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="letter-service-flow.html" class="hover:text-white transition-colors">편지쓰기</a></li>
+            <li><a href="inbox.html" class="hover:text-white transition-colors">받은편지함</a></li>
+            <li><a href="legal-main.html" class="hover:text-white transition-colors">법률상담</a></li>
+            <li><a href="life-center.html" class="hover:text-white transition-colors">라이프센터</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">고객지원</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="guide.html" class="hover:text-white transition-colors">이용가이드</a></li>
+            <li><a href="notice.html" class="hover:text-white transition-colors">공지사항</a></li>
+            <li><a href="inquiry.html" class="hover:text-white transition-colors">1:1 문의</a></li>
+            <li><a href="faq.html" class="hover:text-white transition-colors">자주묻는질문</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-semibold mb-4">연락처</h4>
+          <ul class="space-y-2 text-sm">
+            <li>이메일: help@to-orange.kr</li>
+            <li>전화: 1588-0000</li>
+            <li>평일 09:00 - 18:00</li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+        <p>© 2025 To-orange. All rights reserved.</p>
+        <div class="flex items-center gap-4 mt-4 md:mt-0">
+          <a href="#" class="hover:text-white transition-colors">이용약관</a>
+          <span class="text-gray-700">|</span>
+          <a href="#" class="hover:text-white transition-colors">개인정보처리방침</a>
+          <span class="text-gray-700">|</span>
+          <a href="#" class="hover:text-white transition-colors">사업자정보</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const CURRENT_PAGE = 'campaign.html';
+    const MENU_CONFIG = {
+      mainNav: [
+        { id: 'heart', title: '마음전하기', mainUrl: 'heart-main.html', submenu: [{ title: '편지쓰기', url: 'letter-service-flow.html' }, { title: '보낸편지함', url: 'sent-box.html' }, { title: '받은편지함', url: 'inbox.html' }, { title: '임시보관함', url: 'draft-box.html' }] },
+        { id: 'legal', title: '법률도우미', mainUrl: 'legal-main.html', submenu: [{ title: '내 사연 보내기', url: 'legal-story.html' }, { title: '법률도우미 매칭', url: 'legal-matching.html' }, { title: '진행프로세스', url: 'legal-process.html' }] },
+        { id: 'community', title: '커뮤니티', mainUrl: 'community-main.html', submenu: [{ title: '자유게시판', url: 'free-board.html' }, { title: '법률지식 on', url: 'legal-knowledge.html' }] },
+        { id: 'donation', title: '기부나눔', mainUrl: 'donation-main.html', submenu: [{ title: '기부나눔캠페인', url: 'campaign.html' }, { title: '후원소식', url: 'support-news.html' }, { title: '후원하기', url: 'support.html' }] },
+        { id: 'life-center', title: '라이프센터', mainUrl: 'life-center.html', submenu: [{ title: '상황별 안내', url: 'life-situation.html' }, { title: '라이프 캘린더', url: 'life-calendar.html' }, { title: '재사회화 지원', url: 'life-resocialization.html' }] },
+        { id: 'support', title: '고객센터', mainUrl: 'support-main.html', submenu: [{ title: '이용가이드', url: 'guide.html' }, { title: '공지사항', url: 'notice.html' }, { title: '1:1문의', url: 'inquiry.html' }] }
+      ]
+    };
+
+    const campaigns = [
+      { title: '따뜻한 겨울나기 캠페인', category: '생활지원', progress: 78, target: 5000000, current: 3900000 },
+      { title: '출소자 취업 지원 프로젝트', category: '자립지원', progress: 45, target: 10000000, current: 4500000 },
+      { title: '가족과의 재회를 위한 편지비', category: '소통지원', progress: 92, target: 2000000, current: 1840000 },
+      { title: '법률상담 지원 기금', category: '법률지원', progress: 63, target: 8000000, current: 5040000 },
+      { title: '교육 도서 지원 사업', category: '교육지원', progress: 35, target: 3000000, current: 1050000 },
+      { title: '심리상담 프로그램 후원', category: '심리지원', progress: 81, target: 6000000, current: 4860000 },
+      { title: '주거안정 지원 캠페인', category: '자립지원', progress: 56, target: 15000000, current: 8400000 },
+      { title: '직업훈련 장비 마련', category: '자립지원', progress: 42, target: 7000000, current: 2940000 },
+      { title: '건강검진 지원 프로젝트', category: '의료지원', progress: 70, target: 4000000, current: 2800000 },
+      { title: '가족 화해 프로그램', category: '소통지원', progress: 88, target: 5000000, current: 4400000 },
+      { title: '희망의 첫걸음 기금', category: '생활지원', progress: 25, target: 20000000, current: 5000000 },
+      { title: '재사회화 멘토링 후원', category: '자립지원', progress: 67, target: 9000000, current: 6030000 }
+    ];
+
+    let currentPage = 1;
+    const itemsPerPage = 8;
+
+    function generateMenu() {
+      const mainNav = document.querySelector('.main-nav');
+      if (!mainNav) return;
+      
+      let html = '';
+      MENU_CONFIG.mainNav.forEach(menu => {
+        const isActive = menu.id === 'donation';
+        let submenuHtml = '';
+        
+        if (menu.submenu) {
+          submenuHtml = `<div class="submenu absolute top-full left-1/2 -translate-x-1/2 pt-2 min-w-[180px] z-50">
+            <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2">
+              ${menu.submenu.map(sub => {
+                const subActive = sub.url === CURRENT_PAGE;
+                return `<a href="${sub.url}" class="block px-4 py-2.5 text-sm transition-colors ${subActive ? 'text-orange-500 bg-orange-50' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-500'}">${sub.title}</a>`;
+              }).join('')}
+            </div>
+          </div>`;
+        }
+        
+        html += `<li class="menu-item relative">
+          <a href="${menu.mainUrl}" class="text-base font-medium py-5 block transition-colors ${isActive ? 'nav-active' : 'text-gray-700'}">${menu.title}</a>
+          ${submenuHtml}
+        </li>`;
+      });
+      mainNav.innerHTML = html;
+    }
+
+    function formatMoney(num) {
+      if (num >= 10000) return (num / 10000).toFixed(0) + '만원';
+      return num.toLocaleString() + '원';
+    }
+
+    function generateCampaigns() {
+      const grid = document.getElementById('campaignGrid');
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pageItems = campaigns.slice(start, end);
+      
+      grid.innerHTML = pageItems.map(c => `
+        <div class="campaign-card bg-white rounded-xl border border-gray-200 overflow-hidden transition-all duration-300 cursor-pointer">
+          <div class="card-image h-36 sm:h-40 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center transition-colors">
+            <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+          </div>
+          <div class="p-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-orange-50 text-orange-500">${c.category}</span>
+            </div>
+            <h3 class="card-title font-semibold text-gray-900 mb-3 transition-colors line-clamp-2">${c.title}</h3>
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-500">달성률</span>
+                <span class="text-orange-500 font-bold">${c.progress}%</span>
+              </div>
+              <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full rounded-full bg-gradient-to-r from-orange-400 to-orange-500 transition-all duration-500" style="width:${c.progress}%"></div>
+              </div>
+              <div class="flex justify-between text-xs text-gray-400 pt-1">
+                <span>${formatMoney(c.current)} 달성</span>
+                <span>목표 ${formatMoney(c.target)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function generatePagination() {
+      const pagination = document.getElementById('pagination');
+      const totalPages = Math.ceil(campaigns.length / itemsPerPage);
+      
+      let html = `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''} class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:border-orange-500 hover:text-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>`;
+      
+      for (let i = 1; i <= totalPages; i++) {
+        html += `<button onclick="changePage(${i})" class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg font-medium transition-colors ${i === currentPage ? 'bg-orange-500 text-white' : 'border border-gray-200 text-gray-600 hover:border-orange-500 hover:text-orange-500'}">${i}</button>`;
+      }
+      
+      html += `<button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:border-orange-500 hover:text-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>`;
+      
+      pagination.innerHTML = html;
+    }
+
+    function changePage(page) {
+      const totalPages = Math.ceil(campaigns.length / itemsPerPage);
+      if (page < 1 || page > totalPages) return;
+      currentPage = page;
+      generateCampaigns();
+      generatePagination();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      generateMenu();
+      generateCampaigns();
+      generatePagination();
+    });
+  </script>
+</body>
+</html>

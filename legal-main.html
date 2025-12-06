@@ -1,957 +1,884 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>법률도우미 - To-orange</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { pretendard: ['Pretendard Variable', 'sans-serif'] },
-          colors: { orange: { 50: '#FFF5E5', 100: '#FFE5CC', 500: '#FF6B35', 600: '#E55A2B' } }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>법률도우미 - To-orange</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --black: #000000;
+            --white: #FFFFFF;
+            --gray-50: #F7F7F7;
+            --gray-100: #E8E8E8;
+            --gray-200: #D1D1D1;
+            --gray-400: #999999;
+            --gray-600: #666666;
+            --orange: #FF6B35;
+            --orange-light: #FF8C61;
         }
-      }
-    }
-  </script>
-  <style>
-    body { font-family: 'Pretendard Variable', sans-serif; }
-    .submenu { opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease; }
-    .menu-item:hover .submenu { opacity: 1; visibility: visible; transform: translateY(0); }
-    .nav-active { color: #FF6B35; border-bottom: 2px solid #FF6B35; }
-    .card-hover { transition: all 0.3s ease; }
-    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
-    .chip-active { background: #FF6B35; color: white; border-color: #FF6B35; }
-    @keyframes scrollUp { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
-    .live-scroll { animation: scrollUp 20s linear infinite; }
-    .live-scroll:hover { animation-play-state: paused; }
-    @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .live-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
-    .gradient-text { background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  </style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: var(--gray-50);
+            color: var(--black);
+        }
+
+        /* 헤더 */
+        header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-100);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 60px;
+            height: 70px;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+        .nav-right { display: flex; gap: 20px; }
+        .nav-right a {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* 메인 컨테이너 */
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px 100px;
+        }
+
+        /* 페이지 헤더 */
+        .page-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        .page-title {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--gray-600);
+            line-height: 1.6;
+            margin-bottom: 48px;
+        }
+
+        /* 사연 작성 섹션 */
+        .story-section {
+            background: white;
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        .section-label {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 12px;
+            display: block;
+        }
+        .section-desc {
+            font-size: 15px;
+            color: var(--gray-600);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        /* 텍스트 에어리어 */
+        .story-textarea {
+            width: 100%;
+            min-height: 280px;
+            padding: 24px;
+            border: 2px solid var(--orange);
+            border-radius: 16px;
+            font-size: 16px;
+            font-family: inherit;
+            line-height: 1.7;
+            resize: vertical;
+            transition: all 0.3s;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+        }
+        .story-textarea:focus {
+            outline: none;
+            border-color: var(--orange);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15);
+        }
+        .story-textarea::placeholder {
+            color: var(--gray-400);
+        }
+
+        /* 글자 수 카운터 */
+        .char-counter {
+            text-align: right;
+            font-size: 13px;
+            color: var(--gray-400);
+            margin-top: 8px;
+        }
+
+        /* 도움말 */
+        .help-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--gray-600);
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--gray-50);
+            border-radius: 12px;
+        }
+
+        /* 사건유형 카테고리 */
+        .category-section {
+            margin-top: 32px;
+            padding: 32px;
+            background: white;
+            border-radius: 20px;
+            border: 2px solid var(--gray-100);
+        }
+        .category-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--black);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .category-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+            justify-content: center;
+        }
+        .category-chip {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .category-chip:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-400);
+            color: var(--black);
+        }
+        .category-chip.selected {
+            background: var(--orange);
+            color: white;
+            border-color: var(--orange);
+        }
+        .category-help {
+            font-size: 13px;
+            color: var(--gray-500);
+            text-align: center;
+        }
+
+        /* 제출 버튼 */
+        .submit-section {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            border: none;
+            padding: 18px 60px;
+            border-radius: 50px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.3);
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .safety-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-top: 16px;
+        }
+
+        /* 정보 카드 */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 48px;
+        }
+        .info-card {
+            background: white;
+            border: 1px solid var(--gray-100);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+        .info-card .icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        .info-card .title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 6px;
+        }
+        .info-card .desc {
+            font-size: 13px;
+            color: var(--gray-600);
+            line-height: 1.4;
+        }
+
+        /* FAQ 섹션 */
+        .faq-section {
+            background: white;
+            border-radius: 20px;
+            border: 2px solid var(--gray-100);
+            padding: 40px 32px;
+            margin-top: 40px;
+        }
+        .faq-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 24px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--gray-100);
+            padding: 20px 0;
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        .faq-question {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--black);
+            text-align: left;
+            transition: all 0.3s;
+        }
+        .faq-question:hover {
+            color: var(--orange);
+        }
+        .faq-arrow {
+            font-size: 12px;
+            color: var(--gray-400);
+            transition: transform 0.3s;
+            flex-shrink: 0;
+            margin-left: 16px;
+        }
+        .faq-question.active .faq-arrow {
+            transform: rotate(180deg);
+            color: var(--orange);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding-top: 0;
+        }
+        .faq-answer.show {
+            max-height: 1000px;
+            padding-top: 16px;
+        }
+        .faq-answer p {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--gray-600);
+            margin-bottom: 12px;
+        }
+        .faq-answer p:last-child {
+            margin-bottom: 0;
+        }
+        .faq-answer ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+        .faq-answer li {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+        }
+        .faq-answer strong {
+            color: var(--black);
+            font-weight: 600;
+        }
+
+        /* 연락처 입력 폼 */
+        .contact-form-section {
+            background: white;
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-top: 32px;
+            animation: slideDown 0.4s ease;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .form-title {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            color: var(--black);
+        }
+        .form-desc {
+            font-size: 16px;
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .form-label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--black);
+            margin-bottom: 8px;
+        }
+        .required {
+            color: var(--orange);
+        }
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--gray-100);
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: var(--gray-50);
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--orange);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.1);
+        }
+        .form-input::placeholder {
+            color: var(--gray-400);
+        }
+        select.form-input {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            padding-right: 50px;
+        }
+        select.form-input option {
+            padding: 10px;
+        }
+        .form-help {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: 6px;
+        }
+        .form-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 32px;
+        }
+        .back-btn {
+            background: white;
+            color: var(--gray-600);
+            border: 2px solid var(--gray-200);
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .back-btn:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .main-container { padding: 40px 20px 80px; }
+            .page-title { font-size: 36px; }
+            .story-section { padding: 32px 24px; }
+            .contact-form-section { padding: 32px 24px; }
+            .form-title { font-size: 28px; }
+            .info-cards { grid-template-columns: 1fr; }
+            .category-section { padding: 24px 20px; }
+            .faq-section { padding: 32px 24px; }
+            .faq-title { font-size: 20px; }
+            .faq-question { font-size: 15px; }
+            .faq-answer p, .faq-answer li { font-size: 14px; }
+            .submit-btn { width: 100%; }
+            .back-btn { width: 100%; }
+        }
+    </style>
 </head>
-<body class="bg-white">
-
-<!-- 네비게이션 -->
-<nav class="bg-white border-b border-gray-100 sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-8">
-    <div class="flex items-center justify-between h-16">
-      <a href="index.html" class="text-2xl font-bold text-orange-500">To-orange</a>
-      <div class="flex items-center space-x-8">
-        <ul class="main-nav flex items-center space-x-6">
-          <li class="menu-item relative">
-            <a href="heart-main.html" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5 block">마음전하기</a>
-            <div class="submenu absolute top-full left-1/2 -translate-x-1/2 pt-2 min-w-[180px]">
-              <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2">
-                <a href="letter-service-flow.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500">편지쓰기</a>
-                <a href="sent-box.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500">보낸편지함</a>
-                <a href="inbox.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500">받은편지함</a>
-              </div>
+<body>
+    <!-- 헤더 -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo">To-orange</a>
+            <div class="nav-right">
+                <a href="mypage-home.html">마이페이지</a>
+                <a href="login.html">로그인</a>
             </div>
-          </li>
-          <li class="menu-item relative">
-            <a href="legal-main.html" class="text-base font-medium text-orange-500 py-5 block nav-active">법률도우미</a>
-            <div class="submenu absolute top-full left-1/2 -translate-x-1/2 pt-2 min-w-[180px]">
-              <div class="bg-white rounded-lg shadow-lg border border-gray-100 py-2">
-                <a href="legal-story.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500">내 사연 보내기</a>
-                <a href="legal-matching.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500">법률도우미 매칭</a>
-                <a href="legal-process.html" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500">진행프로세스</a>
-              </div>
-            </div>
-          </li>
-          <li class="menu-item relative">
-            <a href="community-main.html" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5 block">커뮤니티</a>
-          </li>
-          <li class="menu-item relative">
-            <a href="donation-main.html" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5 block">기부나눔</a>
-          </li>
-          <li class="menu-item relative">
-            <a href="life-center.html" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5 block">라이프센터</a>
-          </li>
-          <li class="menu-item relative">
-            <a href="support-main.html" class="text-base font-medium text-gray-700 hover:text-orange-500 py-5 block">고객센터</a>
-          </li>
-        </ul>
-      </div>
-      <div class="flex items-center space-x-4">
-        <a href="mypage-home.html" class="text-sm text-gray-600 hover:text-gray-900">마이페이지</a>
-        <span class="text-gray-300">|</span>
-        <a href="login.html" class="text-sm text-gray-600 hover:text-gray-900">로그인</a>
-      </div>
-    </div>
-  </div>
-</nav>
+        </nav>
+    </header>
 
-<!-- HERO 섹션 -->
-<section class="py-16 bg-gradient-to-br from-orange-50 via-white to-white">
-  <div class="max-w-7xl mx-auto px-8">
-    <div class="grid lg:grid-cols-2 gap-12 items-center">
-      <div>
-        <div class="inline-flex items-center gap-2 bg-orange-100 text-orange-600 px-4 py-2 rounded-full text-sm font-medium mb-6">
-          <span class="live-dot w-2 h-2 bg-orange-500 rounded-full"></span>
-          지금 32명이 상담 중
-        </div>
-        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-6 leading-tight">
-          처음 듣는 단어, 처음 겪는 상황.<br>
-          <span class="gradient-text">어디서부터 시작해야 할지 모르겠다면.</span>
-        </h1>
-        <p class="text-lg text-gray-500 mb-8 leading-relaxed">
-          복잡한 상황, 혼자 고민하지 마세요.<br>
-          투오렌지 변호사들이 먼저 다가갑니다.
+    <!-- 메인 컨테이너 -->
+    <div class="main-container">
+        <!-- 페이지 헤더 -->
+        <div class="page-badge">투오렌지 법률도우미 서비스</div>
+        <h1 class="page-title">혼자 고민하지<br>않으셔도 돼요</h1>
+        <p class="page-subtitle">
+            어떤 일이든 편하게 말씀해주세요.<br>
+            당신의 이야기를 들을 준비가 되어 있습니다.
         </p>
-        <div class="flex flex-wrap gap-4">
-          <button onclick="openModal()" class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full font-bold transition-all shadow-lg shadow-orange-500/30">
-            내 상황 이야기하기
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </button>
-          <a href="legal-matching.html" class="inline-flex items-center gap-2 border-2 border-gray-200 text-gray-700 px-6 py-4 rounded-full font-medium hover:border-orange-500 hover:text-orange-500 transition-all">
-            변호사 직접 찾기
-          </a>
-        </div>
-      </div>
-      
-      <!-- 실시간 상담 피드 -->
-      <div class="bg-white rounded-2xl border border-gray-200 shadow-xl overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
-          <div class="flex items-center gap-2">
-            <span class="live-dot w-2 h-2 bg-green-500 rounded-full"></span>
-            <span class="text-sm font-semibold text-gray-800">실시간 상담 현황</span>
-          </div>
-          <span class="text-xs text-gray-400 bg-white px-2 py-1 rounded">LIVE</span>
-        </div>
-        <div class="p-4 overflow-hidden h-[360px]">
-          <div class="live-scroll space-y-3">
-            <div class="p-4 bg-gradient-to-r from-orange-50 to-white rounded-xl border border-orange-100">
-              <div class="flex items-center gap-2 mb-2">
-                <span class="font-semibold text-gray-900 text-sm">김OO님</span>
-                <span class="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full">방금 전</span>
-              </div>
-              <p class="text-sm text-gray-600 mb-3">"남편이 구속됐는데 면회는 어떻게 가나요?"</p>
-              <div class="flex items-center justify-between">
-                <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs font-medium rounded">형사</span>
-                <div class="flex items-center gap-2">
-                  <img src="https://images.unsplash.com/photo-1556157382-97edd2f9e3a7?w=40&h=40&fit=crop&crop=face" class="w-6 h-6 rounded-full object-cover" alt="">
-                  <span class="text-xs text-green-600 font-medium">김정훈 변호사 답변 중</span>
-                </div>
-              </div>
-            </div>
-            <div class="p-4 bg-gray-50 rounded-xl">
-              <div class="flex items-center gap-2 mb-2">
-                <span class="font-semibold text-gray-900 text-sm">이OO님</span>
-                <span class="text-xs text-gray-400">3분 전</span>
-              </div>
-              <p class="text-sm text-gray-600 mb-3">"가석방 심사 준비는 뭐부터 해야 하나요?"</p>
-              <div class="flex items-center justify-between">
-                <span class="px-2 py-0.5 bg-purple-100 text-purple-600 text-xs font-medium rounded">가석방</span>
-                <div class="flex items-center gap-2">
-                  <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=40&h=40&fit=crop&crop=face" class="w-6 h-6 rounded-full object-cover" alt="">
-                  <span class="text-xs text-orange-500 font-medium">박서연 변호사 ✓</span>
-                </div>
-              </div>
-            </div>
-            <div class="p-4 bg-gray-50 rounded-xl">
-              <div class="flex items-center gap-2 mb-2">
-                <span class="font-semibold text-gray-900 text-sm">박OO님</span>
-                <span class="text-xs text-gray-400">5분 전</span>
-              </div>
-              <p class="text-sm text-gray-600 mb-3">"탄원서 작성 도움받을 수 있을까요?"</p>
-              <div class="flex items-center justify-between">
-                <span class="px-2 py-0.5 bg-orange-100 text-orange-600 text-xs font-medium rounded">탄원서</span>
-                <div class="flex items-center gap-2">
-                  <img src="https://images.unsplash.com/photo-1556157382-97edd2f9e3a7?w=40&h=40&fit=crop&crop=face" class="w-6 h-6 rounded-full object-cover" alt="">
-                  <span class="text-xs text-orange-500 font-medium">김정훈 변호사 ✓</span>
-                </div>
-              </div>
-            </div>
-            <div class="p-4 bg-gray-50 rounded-xl">
-              <div class="flex items-center gap-2 mb-2">
-                <span class="font-semibold text-gray-900 text-sm">최OO님</span>
-                <span class="text-xs text-gray-400">8분 전</span>
-              </div>
-              <p class="text-sm text-gray-600 mb-3">"마약 초범인데 집행유예 가능할까요?"</p>
-              <div class="flex items-center justify-between">
-                <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs font-medium rounded">마약</span>
-                <div class="flex items-center gap-2">
-                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" class="w-6 h-6 rounded-full object-cover" alt="">
-                  <span class="text-xs text-orange-500 font-medium">이준혁 변호사 ✓</span>
-                </div>
-              </div>
-            </div>
-            <div class="p-4 bg-gray-50 rounded-xl">
-              <div class="flex items-center gap-2 mb-2">
-                <span class="font-semibold text-gray-900 text-sm">정OO님</span>
-                <span class="text-xs text-gray-400">12분 전</span>
-              </div>
-              <p class="text-sm text-gray-600 mb-3">"음주운전 2회째인데 실형 나올까요?"</p>
-              <div class="flex items-center justify-between">
-                <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs font-medium rounded">교통</span>
-                <div class="flex items-center gap-2">
-                  <img src="https://images.unsplash.com/photo-1556157382-97edd2f9e3a7?w=40&h=40&fit=crop&crop=face" class="w-6 h-6 rounded-full object-cover" alt="">
-                  <span class="text-xs text-orange-500 font-medium">김정훈 변호사 ✓</span>
-                </div>
-              </div>
-            </div>
-            <!-- 복제 -->
-            <div class="p-4 bg-gray-50 rounded-xl">
-              <div class="flex items-center gap-2 mb-2">
-                <span class="font-semibold text-gray-900 text-sm">김OO님</span>
-                <span class="text-xs text-gray-400">15분 전</span>
-              </div>
-              <p class="text-sm text-gray-600 mb-3">"남편이 구속됐는데 면회는 어떻게 가나요?"</p>
-              <div class="flex items-center justify-between">
-                <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs font-medium rounded">형사</span>
-                <div class="flex items-center gap-2">
-                  <img src="https://images.unsplash.com/photo-1556157382-97edd2f9e3a7?w=40&h=40&fit=crop&crop=face" class="w-6 h-6 rounded-full object-cover" alt="">
-                  <span class="text-xs text-orange-500 font-medium">김정훈 변호사 ✓</span>
-                </div>
-              </div>
-            </div>
-            <div class="p-4 bg-gray-50 rounded-xl">
-              <div class="flex items-center gap-2 mb-2">
-                <span class="font-semibold text-gray-900 text-sm">이OO님</span>
-                <span class="text-xs text-gray-400">18분 전</span>
-              </div>
-              <p class="text-sm text-gray-600 mb-3">"가석방 심사 준비는 뭐부터 해야 하나요?"</p>
-              <div class="flex items-center justify-between">
-                <span class="px-2 py-0.5 bg-purple-100 text-purple-600 text-xs font-medium rounded">가석방</span>
-                <div class="flex items-center gap-2">
-                  <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=40&h=40&fit=crop&crop=face" class="w-6 h-6 rounded-full object-cover" alt="">
-                  <span class="text-xs text-orange-500 font-medium">박서연 변호사 ✓</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- 이달의 검증된 변호사 -->
-<section class="py-20 bg-white">
-  <div class="max-w-7xl mx-auto px-8">
-    <div class="flex-1">
-        <div class="flex items-end justify-between mb-6">
-          <div>
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">이달의 검증된 변호사</h2>
-            <p class="text-gray-500">투오렌지가 선별한 <span class="text-orange-500 font-semibold">TOP3</span> 전문 변호사들입니다.</p>
-          </div>
-          <a href="lawyer-list.html" class="text-orange-500 font-medium text-sm hover:underline">전체보기 →</a>
-        </div>
-        
-        <div class="flex gap-2 flex-wrap mb-6">
-          <button class="chip-active px-4 py-2 rounded-full text-sm font-medium border-2 transition">전체</button>
-          <button class="px-4 py-2 rounded-full text-sm font-medium border-2 border-gray-200 text-gray-600 hover:border-orange-500 hover:text-orange-500 transition">형사전문</button>
-          <button class="px-4 py-2 rounded-full text-sm font-medium border-2 border-gray-200 text-gray-600 hover:border-orange-500 hover:text-orange-500 transition">마약전문</button>
-          <button class="px-4 py-2 rounded-full text-sm font-medium border-2 border-gray-200 text-gray-600 hover:border-orange-500 hover:text-orange-500 transition">성범죄전문</button>
-          <button class="px-4 py-2 rounded-full text-sm font-medium border-2 border-gray-200 text-gray-600 hover:border-orange-500 hover:text-orange-500 transition">가석방</button>
-        </div>
-        
-        <div class="space-y-4">
-          <!-- 변호사 카드 -->
-          <a href="lawyer-profile.html" class="card-hover flex gap-5 bg-white border border-gray-200 rounded-2xl p-5 cursor-pointer">
-            <div class="w-28 h-36 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden flex-shrink-0">
-              <img src="https://images.unsplash.com/photo-1556157382-97edd2f9e3a7?w=200&h=260&fit=crop&crop=face" class="w-full h-full object-cover" alt="">
-            </div>
-            <div class="flex-1 py-1">
-              <div class="flex items-center gap-2 mb-2">
-                <h3 class="text-lg font-bold text-gray-900">김정훈 변호사</h3>
-                <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs font-semibold rounded">형사전문</span>
-                <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-              </div>
-              <p class="text-gray-500 text-sm mb-1">법무법인 정의 · 경력 15년</p>
-              <p class="text-gray-400 text-sm mb-3 italic">"형사 초기 대응이 결과를 좌우합니다"</p>
-              <div class="flex items-center gap-4 text-sm">
-                <span class="text-gray-600">수임 <strong class="text-orange-500">320건</strong></span>
-                <span class="flex items-center gap-1"><span class="text-yellow-400">★</span><strong>4.9</strong><span class="text-gray-400">(128)</span></span>
-                <span class="text-green-600 font-medium">응답률 98%</span>
-              </div>
-            </div>
-          </a>
-          
-          <a href="#" class="card-hover flex gap-5 bg-white border border-gray-200 rounded-2xl p-5 cursor-pointer">
-            <div class="w-28 h-36 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden flex-shrink-0">
-              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=260&fit=crop&crop=face" class="w-full h-full object-cover" alt="">
-            </div>
-            <div class="flex-1 py-1">
-              <div class="flex items-center gap-2 mb-2">
-                <h3 class="text-lg font-bold text-gray-900">박서연 변호사</h3>
-                <span class="px-2 py-0.5 bg-purple-100 text-purple-600 text-xs font-semibold rounded">가석방전문</span>
-                <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-              </div>
-              <p class="text-gray-500 text-sm mb-1">법률사무소 온유 · 경력 12년</p>
-              <p class="text-gray-400 text-sm mb-3 italic">"가석방은 준비한 만큼 결과가 달라집니다"</p>
-              <div class="flex items-center gap-4 text-sm">
-                <span class="text-gray-600">수임 <strong class="text-orange-500">280건</strong></span>
-                <span class="flex items-center gap-1"><span class="text-yellow-400">★</span><strong>4.8</strong><span class="text-gray-400">(96)</span></span>
-                <span class="text-green-600 font-medium">응답률 95%</span>
-              </div>
-            </div>
-          </a>
-          
-          <a href="#" class="card-hover flex gap-5 bg-white border border-gray-200 rounded-2xl p-5 cursor-pointer">
-            <div class="w-28 h-36 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden flex-shrink-0">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=260&fit=crop&crop=face" class="w-full h-full object-cover" alt="">
-            </div>
-            <div class="flex-1 py-1">
-              <div class="flex items-center gap-2 mb-2">
-                <h3 class="text-lg font-bold text-gray-900">이준혁 변호사</h3>
-                <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs font-semibold rounded">마약전문</span>
-                <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-              </div>
-              <p class="text-gray-500 text-sm mb-1">법무법인 희망 · 경력 18년</p>
-              <p class="text-gray-400 text-sm mb-3 italic">"재범 방지까지 함께 고민합니다"</p>
-              <div class="flex items-center gap-4 text-sm">
-                <span class="text-gray-600">수임 <strong class="text-orange-500">450건</strong></span>
-                <span class="flex items-center gap-1"><span class="text-yellow-400">★</span><strong>4.9</strong><span class="text-gray-400">(201)</span></span>
-                <span class="text-green-600 font-medium">응답률 92%</span>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 유사 사건 수행 사례 -->
-<section class="py-20 bg-gray-50">
-  <div class="max-w-7xl mx-auto px-8">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl font-bold text-gray-900 mb-4">유사 사건 수행 사례</h2>
-      <p class="text-gray-500 text-lg">비슷한 상황, 어떻게 해결했는지 확인하세요.</p>
-    </div>
-    
-    <div class="grid md:grid-cols-3 gap-6 mb-10">
-      <!-- 사례 카드 1 -->
-      <div class="card-hover bg-white border border-gray-200 rounded-2xl p-6">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden flex-shrink-0">
-            <img src="https://images.unsplash.com/photo-1556157382-97edd2f9e3a7?w=80&h=80&fit=crop&crop=face" class="w-full h-full object-cover" alt="">
-          </div>
-          <div>
-            <p class="font-semibold text-gray-900">김정훈 변호사</p>
-            <p class="text-xs text-gray-400">형사전문</p>
-          </div>
-        </div>
-        <div class="flex gap-2 mb-4">
-          <span class="px-3 py-1.5 bg-red-100 text-red-600 text-xs font-semibold rounded-full">형사</span>
-          <span class="px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">초범</span>
-        </div>
-        <h3 class="text-lg font-bold text-gray-900 mb-3">음주운전 초범, 면허 취소 위기</h3>
-        <p class="text-gray-500 text-sm leading-relaxed mb-5">신속한 반성문 제출과 재발방지 서약으로 구약식 청구, 벌금형으로 종결</p>
-        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-          <span class="text-orange-500 font-bold">결과: 벌금형</span>
-          <a href="lawyer-profile.html" class="text-sm text-gray-500 hover:text-orange-500 transition">상세보기 →</a>
-        </div>
-      </div>
-      
-      <!-- 사례 카드 2 -->
-      <div class="card-hover bg-white border border-gray-200 rounded-2xl p-6">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden flex-shrink-0">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" class="w-full h-full object-cover" alt="">
-          </div>
-          <div>
-            <p class="font-semibold text-gray-900">이준혁 변호사</p>
-            <p class="text-xs text-gray-400">마약전문</p>
-          </div>
-        </div>
-        <div class="flex gap-2 mb-4">
-          <span class="px-3 py-1.5 bg-blue-100 text-blue-600 text-xs font-semibold rounded-full">마약</span>
-          <span class="px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">초범</span>
-        </div>
-        <h3 class="text-lg font-bold text-gray-900 mb-3">대마 단순 투약, 집행유예 목표</h3>
-        <p class="text-gray-500 text-sm leading-relaxed mb-5">재활 프로그램 이수 증빙 및 가족 탄원서 제출로 집행유예 선고</p>
-        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-          <span class="text-orange-500 font-bold">결과: 집행유예</span>
-          <a href="#" class="text-sm text-gray-500 hover:text-orange-500 transition">상세보기 →</a>
-        </div>
-      </div>
-      
-      <!-- 사례 카드 3 -->
-      <div class="card-hover bg-white border border-gray-200 rounded-2xl p-6">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden flex-shrink-0">
-            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop&crop=face" class="w-full h-full object-cover" alt="">
-          </div>
-          <div>
-            <p class="font-semibold text-gray-900">박서연 변호사</p>
-            <p class="text-xs text-gray-400">가석방 전문</p>
-          </div>
-        </div>
-        <div class="flex gap-2 mb-4">
-          <span class="px-3 py-1.5 bg-purple-100 text-purple-600 text-xs font-semibold rounded-full">가석방</span>
-          <span class="px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">형기 2/3</span>
-        </div>
-        <h3 class="text-lg font-bold text-gray-900 mb-3">가석방 심사 준비 지원</h3>
-        <p class="text-gray-500 text-sm leading-relaxed mb-5">취업 확인서, 신원보증서, 재사회화 계획서 작성 지원으로 가석방 승인</p>
-        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-          <span class="text-orange-500 font-bold">결과: 가석방 승인</span>
-          <a href="#" class="text-sm text-gray-500 hover:text-orange-500 transition">상세보기 →</a>
-        </div>
-      </div>
-    </div>
-    
-    <div class="text-center">
-      <button onclick="openModal()" class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full font-bold transition-all shadow-lg shadow-orange-500/30">
-        유사 사건 기준으로 변호사 찾기
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-      </button>
-    </div>
-  </div>
-</section>
-
-<!-- 공포심리 섹션 - 사용자가 겪는 문제점 -->
-<section class="py-20 bg-white">
-  <div class="max-w-7xl mx-auto px-8">
-    <div class="text-center mb-12">
-      <span class="inline-block bg-red-100 text-red-600 text-xs font-bold px-4 py-2 rounded-full mb-4">WHY IT MATTERS</span>
-      <h2 class="text-3xl font-bold text-gray-900 mb-4">많은 분들이 같은 이유로<br class="md:hidden"> <span class="text-red-500">위험해집니다.</span></h2>
-      <p class="text-gray-500 text-lg">처음 겪는 상황, 어디서부터 잘못된 걸까요?</p>
-    </div>
-    
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mb-12">
-      <!-- 문제 카드 1 -->
-      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
-        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-5">
-          <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2">비용이 두려워서</h3>
-        <p class="text-sm text-gray-500 leading-relaxed">수임료가 비싸 보인다는 두려움에 전문가 상담을 미루고 혼자 대응합니다.</p>
-      </div>
-      
-      <!-- 문제 카드 2 -->
-      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
-        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-5">
-          <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2">타이밍을 놓쳐서</h3>
-        <p class="text-sm text-gray-500 leading-relaxed">초기 대응 방법을 몰라 중요한 진술 타이밍을 놓치고 맙니다.</p>
-      </div>
-      
-      <!-- 문제 카드 3 -->
-      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
-        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-5">
-          <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2">잘못된 정보로</h3>
-        <p class="text-sm text-gray-500 leading-relaxed">인터넷이나 주변 조언으로 대응하다 상황이 더 불리해지는 경우가 많습니다.</p>
-      </div>
-      
-      <!-- 문제 카드 4 -->
-      <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
-        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-5">
-          <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2">되돌리기 어려워서</h3>
-        <p class="text-sm text-gray-500 leading-relaxed">한 번 흘러간 흐름은 뒤에서 뒤집기 어려운 경우가 대부분입니다.</p>
-      </div>
-    </div>
-    
-    <!-- 마무리 메시지 -->
-    <div class="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-8 md:p-10 text-center">
-      <p class="text-white text-lg md:text-xl leading-relaxed mb-2">
-        이런 불안은 대부분 <span class="text-orange-400 font-bold">"몰라서 생기는 공포"</span>입니다.
-      </p>
-      <p class="text-gray-400">
-        그리고, 공포는 상황을 더 위험하게 만듭니다.
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- 초기 방어막 - 해결 제안 섹션 -->
-<section class="py-20 bg-gray-50">
-  <div class="max-w-4xl mx-auto px-8">
-    <div class="text-center mb-12">
-      <span class="inline-block bg-orange-100 text-orange-600 text-xs font-bold px-4 py-2 rounded-full mb-4">SOLUTION</span>
-      <h2 class="text-3xl font-bold text-gray-900 mb-4">투오렌지는 처음부터 함께합니다.</h2>
-      <p class="text-gray-500 text-lg">궁금한 점, 미리 확인하세요.</p>
-    </div>
-    
-    <!-- FAQ 아코디언 -->
-    <div class="space-y-3 mb-10">
-      <div class="faq-main bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <button onclick="toggleFaqMain(this)" class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
-          <span class="font-semibold text-gray-900">당장 돈이 없는데, 그래도 상담이나 수임이 가능할까요?</span>
-          <svg class="faq-icon-main w-5 h-5 text-orange-500 transition-transform flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div class="faq-content-main hidden px-5 pb-5 text-gray-600 leading-relaxed">
-          걱정하지 않으셔도 됩니다. To-Orange는 누구나 필요한 순간 법률 도움을 받을 수 있어야 한다고 믿습니다. <span class="text-orange-500 font-medium">초기 상담은 무료</span>이며, 수임이 필요할 경우 분납·할부, 단계별 비용 청구, 보증보험증권 등 고객의 상황을 고려한 맞춤형 비용 플랜을 안내해드립니다. 경제적 부담 때문에 도움을 놓치는 일이 없도록 끝까지 함께합니다.
-        </div>
-      </div>
-      
-      <div class="faq-main bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <button onclick="toggleFaqMain(this)" class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
-          <span class="font-semibold text-gray-900">보증보험증권은 어떤 절차인가요?</span>
-          <svg class="faq-icon-main w-5 h-5 text-orange-500 transition-transform flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div class="faq-content-main hidden px-5 pb-5 text-gray-600 leading-relaxed">
-          보증보험증권은 보험사가 변호사 비용을 대신 보증해주는 제도로, 초기 비용이 부담스러운 분들에게 가장 실질적인 대안입니다. 간단한 신용 확인 후 모바일로 5~10분 정도 신청하면, <span class="text-orange-500 font-medium">대부분 당일 승인</span>되어 즉시 사건 진행이 가능합니다. 이후 비용은 사용자께서 보험사에 분납·할부로 상환하시면 됩니다.
-        </div>
-      </div>
-      
-      <div class="faq-main bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <button onclick="toggleFaqMain(this)" class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
-          <span class="font-semibold text-gray-900">수임료를 대략이라도 먼저 알 수 있을까요?</span>
-          <svg class="faq-icon-main w-5 h-5 text-orange-500 transition-transform flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div class="faq-content-main hidden px-5 pb-5 text-gray-600 leading-relaxed">
-          네. To-Orange는 수임료를 투명하게 제공합니다. 각 변호사 프로필 상세 페이지에 <span class="text-orange-500 font-medium">사건 유형별 예상 수임료가 기재</span>되어 있으며, 상담 전에 미리 확인하실 수 있어 불필요한 걱정이나 불안 없이 선택이 가능합니다. 분납·할부 가능 여부 또한 상담 과정에서 세심하게 안내해드립니다.
-        </div>
-      </div>
-      
-      <div class="faq-main bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <button onclick="toggleFaqMain(this)" class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
-          <span class="font-semibold text-gray-900">얼마나 빨리 변호사를 만날 수 있나요?</span>
-          <svg class="faq-icon-main w-5 h-5 text-orange-500 transition-transform flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div class="faq-content-main hidden px-5 pb-5 text-gray-600 leading-relaxed">
-          신속한 대응은 사건의 결과를 바꾸는 핵심입니다. <span class="text-orange-500 font-medium">대부분 당일 또는 익일로 상담이 조율</span>되며, 필요하면 바로 오프라인 미팅이 연결됩니다. 급박한 상황일수록, 한시라도 빨리 전문가가 함께하고 있다는 안정감을 드립니다.
-        </div>
-      </div>
-      
-      <div class="faq-main bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <button onclick="toggleFaqMain(this)" class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
-          <span class="font-semibold text-gray-900">상담 신청했다고 해서 무조건 수임해야 하나요?</span>
-          <svg class="faq-icon-main w-5 h-5 text-orange-500 transition-transform flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div class="faq-content-main hidden px-5 pb-5 text-gray-600 leading-relaxed">
-          전혀 그렇지 않습니다. To-Orange는 사용자의 선택을 존중합니다. 상담을 통해 충분히 안내받은 뒤, <span class="text-orange-500 font-medium">가장 편안한 시점에 결정</span>하시면 됩니다. 강요하거나 부담을 드리는 절차는 일절 없습니다.
-        </div>
-      </div>
-      
-      <div class="faq-main bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <button onclick="toggleFaqMain(this)" class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
-          <span class="font-semibold text-gray-900">제가 불리한 상황인데도 도와줄 수 있나요?</span>
-          <svg class="faq-icon-main w-5 h-5 text-orange-500 transition-transform flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div class="faq-content-main hidden px-5 pb-5 text-gray-600 leading-relaxed">
-          네, 오히려 그런 순간일수록 전문가의 역할이 가장 절실합니다. 초기 전략, 진술 방향 설정, 증거 정리는 사건의 결과를 크게 좌우합니다. To-Orange는 현재 상황을 면밀히 진단하고, <span class="text-orange-500 font-medium">가능한 모든 시나리오를 검토해 가장 유리한 방향</span>을 찾아드리는 데 집중합니다. 혼자 감당하기엔 벅찬 순간, 옆에서 함께 버티는 힘이 되어드립니다.
-        </div>
-      </div>
-      
-      <div class="faq-main bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <button onclick="toggleFaqMain(this)" class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
-          <span class="font-semibold text-gray-900">가족이 대신 상담 신청해도 되나요?</span>
-          <svg class="faq-icon-main w-5 h-5 text-orange-500 transition-transform flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div class="faq-content-main hidden px-5 pb-5 text-gray-600 leading-relaxed">
-          가능합니다. 많은 형사 사건이 가족·지인의 대리 상담으로 시작됩니다. 당사자의 상황이 급박하거나 접근이 어려울 수 있기에, <span class="text-orange-500 font-medium">대리 상담 절차 또한 빠르고 편리하게</span> 준비되어 있습니다. 가족의 마음까지 함께 책임지는 자세로 지원합니다.
-        </div>
-      </div>
-    </div>
-    
-    <!-- 강조 메시지 -->
-    <div class="bg-orange-500 rounded-2xl p-8 text-center">
-      <p class="text-white text-lg md:text-xl font-medium leading-relaxed">
-        돈 때문에, 정보가 없어서, 겁이 나서…<br>
-        그 어떤 이유로도 초기 대응이 늦어지지 않도록<br>
-        <span class="font-bold">우리는 '첫 순간'부터 함께합니다.</span>
-      </p>
-    </div>
-  </div>
-</section>
-
-<script>
-function toggleFaqMain(btn) {
-  const content = btn.nextElementSibling;
-  const icon = btn.querySelector('.faq-icon-main');
-  const isOpen = !content.classList.contains('hidden');
-  
-  document.querySelectorAll('.faq-content-main').forEach(c => c.classList.add('hidden'));
-  document.querySelectorAll('.faq-icon-main').forEach(i => i.style.transform = '');
-  
-  if (!isOpen) {
-    content.classList.remove('hidden');
-    icon.style.transform = 'rotate(180deg)';
-  }
-}
-</script>
-
-<!-- Why To-Orange -->
-<section class="py-20 bg-gray-50">
-  <div class="max-w-4xl mx-auto px-8 text-center">
-    <span class="inline-block bg-orange-100 text-orange-600 text-sm font-semibold px-4 py-2 rounded-full mb-6">Why To-Orange</span>
-    <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-      광고가 아닌,<br>
-      <span class="gradient-text">실력으로 검증된 변호사</span>
-    </h2>
-    <p class="text-gray-500 text-lg mb-10 leading-relaxed">
-      To-Orange는 광고비를 많이 낸 변호사가 아니라,<br>
-      실제 수임 실적과 의뢰인 만족도로 검증된 변호사만 추천합니다.
-    </p>
-    <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-10">
-      <div class="flex items-center gap-3 text-gray-700">
-        <div class="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-          <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-        </div>
-        내 사건 유형에 맞는 전문 변호사 매칭
-      </div>
-      <div class="flex items-center gap-3 text-gray-700">
-        <div class="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-          <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-        </div>
-        실제 승소 사례와 수임 건수 투명 공개
-      </div>
-      <div class="flex items-center gap-3 text-gray-700">
-        <div class="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-          <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-        </div>
-        의뢰인 후기로 소통 방식까지 미리 확인
-      </div>
-      <div class="flex items-center gap-3 text-gray-700">
-        <div class="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-          <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-        </div>
-        첫 상담 무료, 수임 전까지 비용 없음
-      </div>
-    </div>
-    <button onclick="openModal()" class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full font-bold transition-all shadow-lg shadow-orange-500/30">
-      무료 상담 시작하기
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-    </button>
-  </div>
-</section>
-
-<!-- 변호사 Q&A -->
-<section class="py-20 bg-white">
-  <div class="max-w-7xl mx-auto px-8">
-    <div class="flex items-center justify-between mb-10">
-      <div>
-        <span class="inline-block bg-orange-100 text-orange-600 text-xs font-bold px-3 py-1.5 rounded-full mb-3">DIFFERENT</span>
-        <h2 class="text-2xl font-bold text-gray-900 mb-3">타 전문 서비스 앱과 다른 이유</h2>
-        <p class="text-gray-500 leading-relaxed">단순히 상담료 5분당 비용을 받기 위해 동행하지 않습니다.<br class="hidden md:block">커뮤니티에서 우리가 어려워하는 법률지식에 대한 고민을 함께 들어주고 있습니다.</p>
-      </div>
-      <a href="legal-knowledge.html" class="text-orange-500 hover:text-orange-600 font-medium flex-shrink-0">더보기 →</a>
-    </div>
-    
-    <div class="grid md:grid-cols-2 gap-6">
-      <div class="card-hover bg-white rounded-2xl p-6 border border-gray-200">
-        <span class="inline-block bg-red-100 text-red-600 text-xs font-semibold px-3 py-1 rounded-full mb-4">형사</span>
-        <h3 class="font-bold text-gray-900 mb-3 text-lg">첫 경찰 조사에서 진술거부권을 행사해도 불이익이 없나요?</h3>
-        <p class="text-sm text-gray-500 mb-4 leading-relaxed">진술거부권은 헌법상 보장된 권리로, 이를 행사한다고 해서 불이익한 추정을 받지 않습니다. 다만 사안에 따라 적극적인 해명이...</p>
-        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1556157382-97edd2f9e3a7?w=80&h=80&fit=crop&crop=face" class="w-full h-full object-cover" alt="">
-            </div>
-            <div>
-              <p class="font-semibold text-gray-900 text-sm">김정훈 변호사</p>
-              <p class="text-xs text-gray-400">형사전문</p>
-            </div>
-          </div>
-          <a href="#" class="text-orange-500 hover:text-orange-600 text-sm font-medium">상담 요청 →</a>
-        </div>
-      </div>
-      
-      <div class="card-hover bg-white rounded-2xl p-6 border border-gray-200">
-        <span class="inline-block bg-purple-100 text-purple-600 text-xs font-semibold px-3 py-1 rounded-full mb-4">가석방</span>
-        <h3 class="font-bold text-gray-900 mb-3 text-lg">가석방 심사 전 가족이 준비할 수 있는 것이 있나요?</h3>
-        <p class="text-sm text-gray-500 mb-4 leading-relaxed">가석방 심사에서는 출소 후 재사회화 가능성이 중요합니다. 가족의 신원보증서, 취업확인서, 거주지 증빙 등을 미리...</p>
-        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-gray-200 rounded-full overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop&crop=face" class="w-full h-full object-cover" alt="">
-            </div>
-            <div>
-              <p class="font-semibold text-gray-900 text-sm">박서연 변호사</p>
-              <p class="text-xs text-gray-400">가석방 전문</p>
-            </div>
-          </div>
-          <a href="#" class="text-orange-500 hover:text-orange-600 text-sm font-medium">상담 요청 →</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 칼럼 섹션 -->
-<section class="py-20 bg-white">
-  <div class="max-w-7xl mx-auto px-8">
-    <div class="text-center mb-12">
-      <span class="inline-block bg-orange-100 text-orange-600 text-xs font-bold px-4 py-2 rounded-full mb-4 tracking-wide">COLUMN</span>
-      <h2 class="text-2xl font-bold text-gray-900 mb-3">처음 듣는 말, 쉽게 풀어드릴게요</h2>
-      <p class="text-gray-500">어려운 법률 용어도 변호사가 알기 쉽게 설명해드려요.</p>
-    </div>
-    
-    <div class="grid md:grid-cols-3 gap-6">
-      <a href="#" class="card-hover bg-white border border-gray-200 rounded-2xl p-6 group">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden flex-shrink-0">
-            <img src="https://images.unsplash.com/photo-1556157382-97edd2f9e3a7?w=80&h=80&fit=crop&crop=face" class="w-full h-full object-cover" alt="">
-          </div>
-          <div>
-            <p class="font-semibold text-gray-900">김정훈 변호사</p>
-            <p class="text-xs text-gray-400">형사전문</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-orange-500 text-sm font-medium">형사</span>
-          <span class="text-gray-300">·</span>
-          <span class="text-gray-400 text-sm">5분 읽기</span>
-        </div>
-        <h3 class="font-bold text-lg text-gray-900 mb-2 group-hover:text-orange-500 transition-colors">첫 조사에서 반드시 알아야 할 3가지</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">경찰 조사를 처음 받게 되었을 때, 많은 분들이 당황하십니다...</p>
-      </a>
-      
-      <a href="#" class="card-hover bg-white border border-gray-200 rounded-2xl p-6 group">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden flex-shrink-0">
-            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=80&h=80&fit=crop&crop=face" class="w-full h-full object-cover" alt="">
-          </div>
-          <div>
-            <p class="font-semibold text-gray-900">박서연 변호사</p>
-            <p class="text-xs text-gray-400">가석방 전문</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-orange-500 text-sm font-medium">가석방</span>
-          <span class="text-gray-300">·</span>
-          <span class="text-gray-400 text-sm">7분 읽기</span>
-        </div>
-        <h3 class="font-bold text-lg text-gray-900 mb-2 group-hover:text-orange-500 transition-colors">가석방 조건, 이렇게 준비하세요</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">가석방 심사에서 가장 중요하게 보는 것은 '재범 가능성'...</p>
-      </a>
-      
-      <a href="#" class="card-hover bg-white border border-gray-200 rounded-2xl p-6 group">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden flex-shrink-0">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" class="w-full h-full object-cover" alt="">
-          </div>
-          <div>
-            <p class="font-semibold text-gray-900">이준혁 변호사</p>
-            <p class="text-xs text-gray-400">마약전문</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-orange-500 text-sm font-medium">탄원서</span>
-          <span class="text-gray-300">·</span>
-          <span class="text-gray-400 text-sm">6분 읽기</span>
-        </div>
-        <h3 class="font-bold text-lg text-gray-900 mb-2 group-hover:text-orange-500 transition-colors">탄원서에서 가장 위험한 문장</h3>
-        <p class="text-gray-500 text-sm leading-relaxed">탄원서를 쓸 때 흔히 하는 실수가 있습니다...</p>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- 최종 CTA -->
-<section class="py-24 bg-gradient-to-br from-gray-900 to-gray-800">
-  <div class="max-w-3xl mx-auto px-8 text-center">
-    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">지금이 가장 중요한 순간일 수 있습니다.</h2>
-    <p class="text-gray-400 text-lg mb-10">혼자 고민하지 마세요. 가장 먼저 해야 할 일부터 알려드릴게요.</p>
-    <button onclick="openModal()" class="inline-flex items-center justify-center gap-3 bg-orange-500 hover:bg-orange-600 text-white px-12 py-5 rounded-full text-lg font-bold transition-all shadow-xl shadow-orange-500/30">
-      첫 상담 시작하기
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-    </button>
-  </div>
-</section>
-
-<!-- 상담 신청 모달 -->
-<div id="consultModal" class="fixed inset-0 z-[100] hidden">
-  <!-- 오버레이 -->
-  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal()"></div>
-  
-  <!-- 모달 컨텐츠 -->
-  <div class="absolute inset-0 overflow-y-auto py-8 px-4">
-    <div class="max-w-2xl mx-auto relative">
-      <!-- 닫기 버튼 -->
-      <button onclick="closeModal()" class="absolute -top-2 -right-2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-900 transition z-10">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
-      
-      <!-- 상담 신청 폼 -->
-      <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
-        <div class="p-8 md:p-10">
-          <div class="text-center mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">지금 바로 시작하세요</h2>
-            <p class="text-gray-500">첫 상담은 무료입니다. 부담 없이 문의하세요.</p>
-          </div>
-          
-          <form class="space-y-5">
-            <div class="grid md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">이름 <span class="text-orange-500">*</span></label>
-                <input type="text" placeholder="홍길동" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">연락처 <span class="text-orange-500">*</span></label>
-                <input type="tel" placeholder="010-0000-0000" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition">
-              </div>
-            </div>
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">현재 상황 <span class="text-orange-500">*</span></label>
-              <div class="relative">
-                <select class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition appearance-none cursor-pointer">
-                  <option>경찰 조사를 받았거나 받을 예정</option>
-                  <option>검찰 조사/기소 단계</option>
-                  <option>재판 진행 중</option>
-                  <option>수감 중 (본인 또는 가족)</option>
-                  <option>가석방 준비 중</option>
-                  <option>기타 상담</option>
-                </select>
-                <svg class="w-5 h-5 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-              </div>
-            </div>
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">간단한 상황 설명</label>
-              <textarea rows="4" placeholder="어떤 일이 있었는지 간단히 알려주세요. (선택사항)" class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition resize-none"></textarea>
-            </div>
-            
-            <div class="flex items-start gap-3">
-              <input type="checkbox" id="privacy" class="w-5 h-5 mt-0.5 rounded border-gray-300 text-orange-500 focus:ring-orange-500 cursor-pointer">
-              <label for="privacy" class="text-sm text-gray-600 cursor-pointer">
-                <span class="text-gray-900 font-medium">개인정보 수집 및 이용에 동의합니다.</span> (필수)
-                <a href="#" class="text-orange-500 hover:underline ml-1">내용보기</a>
-              </label>
-            </div>
-            
-            <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-orange-500/30">
-              무료 상담 신청하기
-            </button>
-            
-            <p class="text-center text-sm text-gray-500">
-              급하신가요? <a href="tel:1588-0000" class="font-semibold text-gray-900 hover:text-orange-500">📞 1588-0000</a> <span class="text-gray-400">(24시간 상담 가능)</span>
+        <!-- 사연 작성 섹션 -->
+        <div class="story-section">
+            <label class="section-label">당신의 사연을 들려주세요</label>
+            <p class="section-desc">
+                구체적으로 작성해주실수록 정확한 법률 상담이 가능합니다.<br>
+                아래 사건유형을 선택하시면 작성 가이드가 제공됩니다.
             </p>
-          </form>
-        </div>
-      </div>
-      
-      <!-- 자주 묻는 질문 -->
-      <div class="bg-white rounded-3xl shadow-2xl mt-6 p-8">
-        <h3 class="text-xl font-bold text-gray-900 mb-6">자주 묻는 질문</h3>
-        <div class="space-y-3">
-          <div class="faq-item border border-gray-200 rounded-xl overflow-hidden">
-            <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition">
-              <span class="font-medium text-gray-900">변호사를 선임하지 않고 혼자 조사받으면 안 되나요?</span>
-              <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-            </button>
-            <div class="faq-content hidden px-4 pb-4 text-sm text-gray-600 leading-relaxed">
-              법적으로 변호사 선임 없이 조사를 받을 수 있지만, 초기 진술이 이후 재판 결과에 큰 영향을 미칩니다. 전문가의 조력을 받으면 불리한 진술을 방지하고 권리를 보호받을 수 있습니다.
-            </div>
-          </div>
-          <div class="faq-item border border-gray-200 rounded-xl overflow-hidden">
-            <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition">
-              <span class="font-medium text-gray-900">비용을 한 번에 낼 수 없는데 어떻게 하나요?</span>
-              <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-            </button>
-            <div class="faq-content hidden px-4 pb-4 text-sm text-gray-600 leading-relaxed">
-              To-Orange에서는 분할 납부, 착수금 후불 등 다양한 결제 방식을 지원합니다. 상담 시 재정 상황을 말씀해주시면 가능한 방법을 안내해드립니다.
-            </div>
-          </div>
-          <div class="faq-item border border-gray-200 rounded-xl overflow-hidden">
-            <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition">
-              <span class="font-medium text-gray-900">얼마나 빨리 변호사를 만날 수 있나요?</span>
-              <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-            </button>
-            <div class="faq-content hidden px-4 pb-4 text-sm text-gray-600 leading-relaxed">
-              상담 신청 후 평균 2시간 내 변호사가 연락드립니다. 긴급 사안의 경우 당일 대면 상담도 가능합니다. 24시간 전화 상담도 운영하고 있습니다.
-            </div>
-          </div>
-          <div class="faq-item border border-gray-200 rounded-xl overflow-hidden">
-            <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition">
-              <span class="font-medium text-gray-900">변호사를 바꿀 수 있나요?</span>
-              <svg class="faq-icon w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-            </button>
-            <div class="faq-content hidden px-4 pb-4 text-sm text-gray-600 leading-relaxed">
-              네, 가능합니다. 매칭된 변호사와 상담 후 맞지 않는다고 느끼시면 다른 변호사로 변경 요청하실 수 있습니다. 의뢰인의 만족이 가장 중요합니다.
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 하단 CTA -->
-      <div class="bg-orange-50 rounded-3xl mt-6 p-8 text-center">
-        <h3 class="text-xl font-bold text-gray-900 mb-2">혼자 고민하지 마세요</h3>
-        <p class="text-gray-600 mb-6">지금 바로 전문가의 도움을 받으세요. 첫 상담은 무료입니다.</p>
-        <div class="flex flex-col sm:flex-row gap-3 justify-center">
-          <button onclick="document.querySelector('form').scrollIntoView({behavior:'smooth'})" class="bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-3.5 rounded-xl transition-all shadow-lg shadow-orange-500/30">
-            무료 상담 신청
-          </button>
-          <a href="tel:1588-0000" class="bg-white border-2 border-gray-200 text-gray-700 font-medium px-8 py-3.5 rounded-xl hover:border-orange-500 hover:text-orange-500 transition-all">
-            전화로 문의하기
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<script>
-function openModal() {
-  document.getElementById('consultModal').classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
-}
-function closeModal() {
-  document.getElementById('consultModal').classList.add('hidden');
-  document.body.style.overflow = '';
-}
-function toggleFaq(btn) {
-  const content = btn.nextElementSibling;
-  const icon = btn.querySelector('.faq-icon');
-  const isOpen = !content.classList.contains('hidden');
-  
-  document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
-  document.querySelectorAll('.faq-icon').forEach(i => i.style.transform = '');
-  
-  if (!isOpen) {
-    content.classList.remove('hidden');
-    icon.style.transform = 'rotate(180deg)';
-  }
-}
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-</script>
+            <textarea 
+                class="story-textarea" 
+                id="userStory" 
+                placeholder="어떤 상황인지 편하게 말씀해주세요.
 
-<!-- 푸터 -->
-<footer class="bg-gray-900 text-gray-400 py-12">
-  <div class="max-w-7xl mx-auto px-8">
-    <div class="grid md:grid-cols-4 gap-8 mb-8">
-      <div>
-        <h3 class="text-white text-lg font-bold mb-4">To-orange</h3>
-        <p class="text-sm leading-relaxed">수용자 가족과 함께하는<br>따뜻한 연결 플랫폼</p>
-      </div>
-      <div>
-        <h4 class="text-white font-semibold mb-4">서비스</h4>
-        <ul class="space-y-2 text-sm">
-          <li><a href="letter-service-flow.html" class="hover:text-white transition-colors">편지쓰기</a></li>
-          <li><a href="inbox.html" class="hover:text-white transition-colors">받은편지함</a></li>
-          <li><a href="legal-main.html" class="hover:text-white transition-colors">법률상담</a></li>
-          <li><a href="life-center.html" class="hover:text-white transition-colors">라이프센터</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-white font-semibold mb-4">고객지원</h4>
-        <ul class="space-y-2 text-sm">
-          <li><a href="guide.html" class="hover:text-white transition-colors">이용가이드</a></li>
-          <li><a href="notice.html" class="hover:text-white transition-colors">공지사항</a></li>
-          <li><a href="inquiry.html" class="hover:text-white transition-colors">1:1 문의</a></li>
-          <li><a href="faq.html" class="hover:text-white transition-colors">자주묻는질문</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-white font-semibold mb-4">연락처</h4>
-        <ul class="space-y-2 text-sm">
-          <li>이메일: help@to-orange.kr</li>
-          <li>전화: 1588-0000</li>
-          <li>평일 09:00 - 18:00</li>
-        </ul>
-      </div>
-    </div>
-    <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
-      <p>© 2025 To-orange. All rights reserved.</p>
-      <div class="flex gap-6 mt-4 md:mt-0">
-        <a href="privacy.html" class="hover:text-white transition-colors">개인정보처리방침</a>
-        <a href="terms.html" class="hover:text-white transition-colors">이용약관</a>
-      </div>
-    </div>
-  </div>
-</footer>
+아래 사건유형 버튼을 클릭하시면
+작성 가이드가 자동으로 입력됩니다.
 
+또는 직접 작성하셔도 좋습니다."
+                oninput="updateCharCount()"
+            ></textarea>
+            <div class="char-counter" id="charCounter">0자</div>
+
+            <div class="help-text">
+                💡 자세히 작성해주실수록 더 정확한 상담을 받으실 수 있어요
+            </div>
+
+            <!-- 사건유형 카테고리 -->
+            <div class="category-section">
+                <div class="category-label">사건유형을 선택하시면 작성에 도움이 됩니다</div>
+                <div class="category-chips">
+                    <div class="category-chip" onclick="selectCategory('형사', '형사 사건입니다.\n\n혐의 내용: \n발생 시기: \n현재 상황: ')">형사 사건</div>
+                    <div class="category-chip" onclick="selectCategory('민사', '민사 분쟁입니다.\n\n분쟁 상대방: \n분쟁 내용: \n발생 시기: ')">민사 사건</div>
+                    <div class="category-chip" onclick="selectCategory('가족법', '가족 문제로 상담 드립니다.\n\n관계: \n문제 내용: \n원하는 해결: ')">가족법 (이혼/양육)</div>
+                    <div class="category-chip" onclick="selectCategory('채무', '채무 문제로 고민입니다.\n\n채무 금액: \n채권자: \n상황: ')">채무/파산</div>
+                    <div class="category-chip" onclick="selectCategory('출소', '출소 관련 문의입니다.\n\n예정일: \n준비하고 싶은 것: ')">출소 관련</div>
+                    <div class="category-chip" onclick="selectCategory('보석', '보석/구속 관련입니다.\n\n현재 상태: \n사건 내용: \n긴급도: ')">보석/구속</div>
+                    <div class="category-chip" onclick="selectCategory('행정', '행정 소송 관련입니다.\n\n상대 기관: \n처분 내용: ')">행정 소송</div>
+                    <div class="category-chip" onclick="selectCategory('기타', '상담 내용:\n\n')">기타</div>
+                </div>
+                <div class="category-help">선택하시면 작성 가이드가 자동으로 입력됩니다</div>
+            </div>
+
+            <!-- 제출 버튼 -->
+            <div class="submit-section">
+                <button class="submit-btn" id="submitBtn" onclick="showContactForm()">
+                    무료 법률상담 신청하기
+                </button>
+                <div class="safety-badge">
+                    🔒 모든 정보는 안전하게 보호됩니다. 초기 상담에는 어떤 비용도 발생하지 않습니다.
+                </div>
+            </div>
+        </div>
+
+        <!-- 연락처 입력 폼 (숨김 상태) -->
+        <div class="contact-form-section" id="contactFormSection" style="display: none;">
+            <div class="form-header">
+                <h2 class="form-title">거의 다 됐어요! 👏</h2>
+                <p class="form-desc">
+                    연락 가능한 정보를 남겨주시면<br>
+                    전문 상담사가 24시간 내에 연락드립니다.
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">이름 <span class="required">*</span></label>
+                <input 
+                    type="text" 
+                    class="form-input" 
+                    id="userName" 
+                    placeholder="홍길동"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">전화번호 <span class="required">*</span></label>
+                <input 
+                    type="tel" 
+                    class="form-input" 
+                    id="userPhone" 
+                    placeholder="010-1234-5678"
+                    pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
+                    required
+                >
+                <div class="form-help">하이픈(-)을 포함해서 입력해주세요</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">이메일 (선택)</label>
+                <input 
+                    type="email" 
+                    class="form-input" 
+                    id="userEmail" 
+                    placeholder="example@email.com"
+                >
+            </div>
+
+            <div class="form-actions">
+                <button class="submit-btn" onclick="submitFinalForm()">
+                    최종 제출하기
+                </button>
+                <button class="back-btn" onclick="hideContactForm()">
+                    이전으로
+                </button>
+            </div>
+
+            <div class="safety-badge" style="margin-top: 16px;">
+                🔒 모든 정보는 안전하게 보호됩니다. 초기 상담에는 어떤 비용도 발생하지 않습니다.
+            </div>
+        </div>
+
+        <!-- FAQ 섹션 -->
+        <div class="faq-section">
+            <h2 class="faq-title">자주 묻는 질문</h2>
+            
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>변호사를 선임하지 않고 혼자 조사받으면 안 되나요?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p>혼자 대응하시면 법률 지식 부족으로 불리한 진술을 하거나 중요한 권리를 놓칠 수 있습니다. 특히 형사 사건의 경우 초기 대응이 매우 중요하며, 전문가의 도움을 받는 것이 유리합니다.</p>
+                    <p><strong>초기 무료 상담</strong>으로 먼저 상황을 파악하신 후 결정하시는 것을 권장드립니다.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>비용을 한 번에 낼 수 없는데 어떻게 하나요?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p>걱정하지 마세요. 다양한 납부 방법이 있습니다:</p>
+                    <ul>
+                        <li><strong>보증보험 활용</strong>: 초기 비용 0원으로 시작 가능 (승인률 90% 이상)</li>
+                        <li><strong>분할 납부</strong>: 3개월~12개월 할부 가능</li>
+                        <li><strong>법률구조공단</strong>: 소득 기준 충족 시 무료 또는 저렴한 비용</li>
+                        <li><strong>국선변호인</strong>: 경제적 어려움 시 국가 지원</li>
+                    </ul>
+                    <p>상담 시 경제 상황을 편하게 말씀해주시면 가장 적합한 방법을 안내드립니다.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>변호사 수임료는 평균 얼마나 하나요?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p>사건 유형과 난이도에 따라 다르지만, 일반적인 범위는 다음과 같습니다:</p>
+                    <ul>
+                        <li><strong>형사 사건</strong>: 300만원~1,000만원 (사안에 따라 변동)</li>
+                        <li><strong>민사 소송</strong>: 500만원~2,000만원 (소송 금액의 10~15%)</li>
+                        <li><strong>이혼/가족</strong>: 300만원~800만원</li>
+                        <li><strong>채무 정리</strong>: 200만원~500만원</li>
+                    </ul>
+                    <p><strong>투오렌지는 투명한 비용 안내를 원칙으로 합니다.</strong> 상담 시 구체적인 견적을 먼저 받아보실 수 있습니다.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>얼마나 빨리 변호사를 만날 수 있나요?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p><strong>24시간 내 투오렌지 검토</strong> → <strong>2~3일 내 변호사 매칭</strong> → <strong>일주일 내 상담 가능</strong></p>
+                    <p>긴급한 사안(구속, 영장실질심사 등)의 경우 더 빠른 대응이 가능합니다. 신청 시 긴급 상황임을 명시해주세요.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>변호사를 바꿀 수 있나요?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p>네, 가능합니다. 매칭된 변호사와 상담 후 신뢰가 가지 않거나 소통이 어렵다면 다른 변호사로 교체를 요청하실 수 있습니다.</p>
+                    <p><strong>투오렌지는 의뢰인과 변호사 간의 신뢰 관계를 가장 중요하게 생각합니다.</strong></p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>정말 돈이 없는데 어떻게 해야 하나요?</span>
+                    <span class="faq-arrow">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <p>경제적으로 어려운 상황이시라면 다음 지원을 받으실 수 있습니다:</p>
+                    <ul>
+                        <li><strong>대한법률구조공단</strong>: 월 소득 419만원 이하 시 무료 지원 (☎ 132)</li>
+                        <li><strong>한국가정법률상담소</strong>: 가족 문제 무료 상담</li>
+                        <li><strong>국선변호인</strong>: 형사 사건 무료 변호</li>
+                        <li><strong>보증보험</strong>: 승인 시 초기 비용 없이 진행 가능</li>
+                    </ul>
+                    <p>투오렌지에 신청하시면 상황에 맞는 <strong>최적의 지원 방법</strong>을 함께 찾아드립니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 정보 카드 -->
+        <div class="info-cards">
+            <div class="info-card">
+                <div class="icon">🔒</div>
+                <div class="title">비밀 보장</div>
+                <div class="desc">모든 대화는 안전하게 보호됩니다</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">💯</div>
+                <div class="title">무료 상담</div>
+                <div class="desc">모든 상담은 완전 무료입니다</div>
+            </div>
+            <div class="info-card">
+                <div class="icon">⚡</div>
+                <div class="title">24시간</div>
+                <div class="desc">언제든 편한 시간에</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateCharCount() {
+            const textarea = document.getElementById('userStory');
+            const counter = document.getElementById('charCounter');
+            const length = textarea.value.length;
+            
+            counter.textContent = `${length}자`;
+            
+            // 버튼은 항상 활성화 (글자수 제한 없음)
+            if (length > 0) {
+                counter.style.color = 'var(--orange)';
+            } else {
+                counter.style.color = 'var(--gray-400)';
+            }
+        }
+
+        function selectCategory(categoryName, template) {
+            const textarea = document.getElementById('userStory');
+            
+            // 텍스트 에어리어가 비어있으면 템플릿 입력
+            if (!textarea.value.trim()) {
+                textarea.value = template;
+            } else {
+                // 내용이 있으면 확인 후 교체
+                if (confirm('작성 중인 내용이 있습니다. 새로운 템플릿으로 바꾸시겠어요?')) {
+                    textarea.value = template;
+                }
+            }
+            
+            // 선택된 칩 하이라이트
+            document.querySelectorAll('.category-chip').forEach(chip => {
+                chip.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            // 포커스 및 글자 수 업데이트
+            textarea.focus();
+            updateCharCount();
+            
+            // 작성 시작 위치로 커서 이동 (템플릿 끝)
+            textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+        }
+
+        function showContactForm() {
+            const story = document.getElementById('userStory').value.trim();
+            
+            if (!story) {
+                alert('사연을 입력해주세요.');
+                return;
+            }
+
+            // 사연 섹션 숨기고 연락처 폼 표시
+            document.getElementById('contactFormSection').style.display = 'block';
+            
+            // 스크롤을 연락처 폼으로 이동
+            document.getElementById('contactFormSection').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        function hideContactForm() {
+            document.getElementById('contactFormSection').style.display = 'none';
+            
+            // 사연 섹션으로 스크롤
+            window.scrollTo({ 
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        function toggleFAQ(button) {
+            const answer = button.nextElementSibling;
+            const isActive = button.classList.contains('active');
+            
+            // 모든 FAQ 닫기
+            document.querySelectorAll('.faq-question').forEach(q => {
+                q.classList.remove('active');
+            });
+            document.querySelectorAll('.faq-answer').forEach(a => {
+                a.classList.remove('show');
+            });
+            
+            // 클릭한 FAQ가 닫혀있었다면 열기
+            if (!isActive) {
+                button.classList.add('active');
+                answer.classList.add('show');
+            }
+        }
+
+        function submitFinalForm() {
+            const story = document.getElementById('userStory').value.trim();
+            const name = document.getElementById('userName').value.trim();
+            const phone = document.getElementById('userPhone').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
+
+            // 필수 항목 검증
+            if (!name) {
+                alert('이름을 입력해주세요.');
+                document.getElementById('userName').focus();
+                return;
+            }
+
+            if (!phone) {
+                alert('전화번호를 입력해주세요.');
+                document.getElementById('userPhone').focus();
+                return;
+            }
+
+            // 전화번호 형식 검증
+            const phonePattern = /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/;
+            if (!phonePattern.test(phone)) {
+                alert('전화번호를 올바른 형식으로 입력해주세요.\n예: 010-1234-5678');
+                document.getElementById('userPhone').focus();
+                return;
+            }
+
+            // 실제로는 서버로 전송
+            const submitData = {
+                story: story,
+                name: name,
+                phone: phone,
+                email: email,
+                timestamp: new Date().toISOString()
+            };
+
+            console.log('제출 데이터:', submitData);
+
+            alert(`${name}님, 상담 신청이 완료되었습니다! ✅
+
+📋 처리 절차 안내
+
+1️⃣ 투오렌지 검토
+   접수하신 사연을 검토한 후 24시간 내 연락드립니다.
+
+2️⃣ 전문 변호사 매칭
+   유사 사례로 승소한 실제 변호사가 확인 후 안내드립니다.
+
+3️⃣ 법률 상담 진행
+   담당 변호사가 직접 연락하여 상담을 진행합니다.
+
+📞 연락처: ${phone}
+✉️ 이메일: ${email || '미입력'}
+
+입력하신 사연:
+"${story.substring(0, 100)}${story.length > 100 ? '...' : ''}"
+
+감사합니다.`);
+            
+            // 완료 페이지로 이동 (실제 구현시)
+            // window.location.href = 'legal-story-confirm.html?name=' + encodeURIComponent(name);
+        }
+
+        // 페이지 로드 시 자동 포커스
+        document.addEventListener('DOMContentLoaded', function() {
+            // 페이지 로드 시 텍스트 에어리어에 자동 포커스
+            const textarea = document.getElementById('userStory');
+            if (textarea) {
+                textarea.focus();
+            }
+        });
+    </script>
 </body>
 </html>
